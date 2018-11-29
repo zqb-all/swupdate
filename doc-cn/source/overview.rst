@@ -11,96 +11,104 @@ in an absolutely reliable way.
 On a Linux-based system, we can find in most cases
 the following elements:
 
-- the boot loader.
-- the kernel and the DT (Device Tree) file.
-- the root file system
-- other file systems, mounted at a later point
-- customer data, in raw format or on a file system
-- application specific software. For example, firmware
-  to be downloaded on connected micro-controllers, and so on.
+=======================================
+嵌入式系统的软件管理
+=======================================
+嵌入式系统变得越来越复杂，
+它们的软件也反映了这种复杂性的增加。
+为了支持新的特性和修复，很有必要让嵌入式系统上的软件
+能够以绝对可靠的方式更新。
+在基于linux的系统上，我们可以在大多数情况下找到
+以下元素:
 
-Generally speaking, in most cases it is required to update
-kernel and root file system, preserving user data - but cases vary.
+- 引导装载程序
+- 内核和设备树
+- 根文件系统
+- 其他在后续挂载的文件系统，other file systems, mounted at a later point
+- 用户资料，以裸数据格式存在或者保存在文件系统中
+- 特定用途的软件. 如，用于下载到相连接的微控制器的固件等
 
-In only a few cases it is required to update the boot loader,
-too. In fact, updating the boot loader is quite always risky,
-because a failure in the update breaks the board.
-Restoring a broken board is possible in some cases,
-but this is not left in most cases to the end user
-and the system must be sent back to the manufacturer.
 
-There are a lot of different concepts about updating
-the software. I like to expose some of them, and then
-explain why I have implemented this project.
 
-Updating through the boot loader
+一般来说，在大多数情况下是需要更新
+内核和根文件系统，保存用户数据-但实际情况各不相同。
+
+
+仅在少数情况下，还需要更新引导加载程序，
+事实上，更新引导加载程序总是很危险的，
+因为更新中的失败会破坏设备。
+在某些情况下，从损坏状态中恢复是可能的，
+但这通常无法由最终用户完成，即设备需要返厂维修。
+
+关于软件更新有很多不同的概念。
+我将解释其中的一些概念，
+然后解释为什么我实施了这个项目。
+
+通过引导加载程序完成更新
 ================================
 
-Boot loaders do much more as simply start the kernel.
-They have their own shell and can be managed using
-a processor's peripheral, in most cases a serial line.
-They are often script-able, letting possible to implement
-some kind of software update mechanism.
+引导加载程序所做的工作远不止启动内核那么简单。
+它们有自己的shell，且可以使用处理器的外围设备
+进行管理，在大多数情况下是通过串行通讯。
+它们通常是可执行脚本的，这使得
+实现某种软件更新机制成为了可能。
 
-However, I found some drawbacks in this approach, that
-let me search for another solution, based on an application
-running on Linux:
+然而，我发现这种方法有一些缺点，
+这让我另行寻找基于运行在Linux上的应用程序的解决方案。
 
-Boot loaders have limited access to peripherals
+引导加载程序对外围设备的使用有局限性
 -----------------------------------------------
 
-Not all peripherals supported by the kernel are
-available with the boot loader. When it makes sense to add
-support to the kernel, because the peripheral is then available
-by the main application, it does not always make sense to duplicate
-the effort to port the driver to the boot loader.
+并不是所有内核中支持的设备都可以在引导加载程序使用。
+向内核添加设备支持是有意义的，因为这可以让外围设备对主应用程序可用，
+但将驱动程序移植到引导加载程序中，就并不总是有意义的了。
 
-Boot loader's drivers are not updated
+引导加载程序的驱动程序不会被更新
 -------------------------------------
 
-Boot loader's drivers are mostly ported from the Linux kernel,
-but due to adaptations they are not later fixed or synchronized
-with the kernel, while bug fixes flow regularly in the Linux kernel.
-Some peripherals can then work in a not reliable ways,
-and fixing the issues can be not easy. Drivers in boot loaders
-are more or less a fork of the respective drivers in kernel.
+引导加载程序的驱动程序大多是从Linux内核移植过来的，
+但是由于经过调整的原因，它们以后不会被修复或与内核同步，
+而bug修复则会定期在Linux内核中进行。
 
-As example, the UBI / UBIFS for NAND devices contains a lot of
-fixes in the kernel, that are not ported back to the boot loaders.
-The same can be found for the USB stack. The effort to support
-new peripherals or protocols is better to be used for the kernel
-as for the boot loaders.
+一些外围设备可能以不可靠的方式工作，
+并且修复问题可能并不容易。引导加载程序中的驱动程序
+或多或少是内核中相应驱动程序的复刻(fork)。
 
-Reduced file systems
+例如，用于NAND设备的UBI/UBIFS在内核中包含
+了许多修复程序，这些修复程序并没有移植回引导加载程序。
+
+USB协议栈也可以找到相同的情况。支持新外围设备或协议的工作,
+在内核中进行得更好，而不是在引导加载程序中。
+
+简化版的文件系统
 --------------------
 
-The number of supported file systems is limited and
-porting a file system to the boot loader requires high effort.
+支持的文件系统的数量是有限的。
+将文件系统支持移植到引导加载程序需要付出很大的努力。
 
-Network support is limited
+网络支持有限
 --------------------------
 
-Network stack is limited, generally an update is possible via
-UDP but not via TCP.
+网络协议栈是有限的，通常通过一个更新只能通过
+UDP但不能通过TCP完成。
 
-Interaction with the operator
+与操作人员交互
 -----------------------------
 
-It is difficult to expose an interface to the operator,
-such as a GUI with a browser or on a display.
+很难将接口暴露给操作员，
+比如浏览器中的GUI或显示器上的GUI。
 
-A complex logic can be easier implemented inside an application
-else in the boot loader. Extending the boot loader becomes complicated
-because the whole range of services and libraries are not available.
+比起在引导加载程序中，复杂的逻辑可以在应用程序内部更容易实现。
+扩展引导加载程序是复杂的，因为所有的服务和库都不可用。
 
-Boot loader's update advantages
+引导加载程序更新的优点
 -------------------------------
-However, this approach has some advantages, too:
+然而，这种方法也有一些优点：
 
-- software for update is generally simpler.  - smaller footprint: a stand-alone
-  application only for software management requires an own kernel and a root
-  file system. Even if their size can be trimmed dropping what is not required
-  for updating the software, their size is not negligible.
+-更新软件通常更简单。
+-占用空间更小：即使是一个仅用于软件管理的独立应用程序
+也需要自己的内核和根文件系统。即使它们的大小能够被裁剪，
+将更新软件不需要的部分去掉，它们的大小也是不可忽略的。
 
 Updating through a package manager
 ==================================
