@@ -1,17 +1,4 @@
 =======================================
-Software Management on embedded systems
-=======================================
-
-Embedded Systems become more and more complex,
-and their software reflects the augmented complexity.
-New features and fixes let much more as desirable that
-the software on an embedded system can be updated
-in an absolutely reliable way.
-
-On a Linux-based system, we can find in most cases
-the following elements:
-
-=======================================
 嵌入式系统的软件管理
 =======================================
 嵌入式系统变得越来越复杂，
@@ -28,11 +15,8 @@ the following elements:
 - 用户资料，以裸数据格式存在或者保存在文件系统中
 - 特定用途的软件. 如，用于下载到相连接的微控制器的固件等
 
-
-
 一般来说，在大多数情况下是需要更新
 内核和根文件系统，保存用户数据-但实际情况各不相同。
-
 
 仅在少数情况下，还需要更新引导加载程序，
 事实上，更新引导加载程序总是很危险的，
@@ -110,182 +94,160 @@ UDP但不能通过TCP完成。
 也需要自己的内核和根文件系统。即使它们的大小能够被裁剪，
 将更新软件不需要的部分去掉，它们的大小也是不可忽略的。
 
-Updating through a package manager
+通过包管理器更新
 ==================================
 
-All Linux distributions are updating with a package manager.
-Why is it not suitable for embedded ?
+所有的Linux发行版都使用包管理器做更新，
+为什么这不适用于嵌入式系统？
 
-I cannot say it cannot be used, but there is an important drawback
-using this approach. Embedded systems are well tested
-with a specific software. Using a package manager
-can put weirdness because the software itself
-is not anymore *atomic*, but split into a long
-list of packages. How can we be assured that an application
-with library version x.y works, and also with different
-versions of the same library? How can it be successfully tested?
+我不能说它不能被使用，但是使用这种方法有一个重要的缺点。
+嵌入式系统是使用特定的软件进行过良好测试的。
+使用包管理器可能会让人觉得奇怪，因为软件本身不再是 *原子的* ，
+而是分裂成一系列包。
+我们怎样才能保证一个能基于库版本x.y正常工作的应用程序，
+同样也能基于同一个库的不同版本工作呢?如何才能成功地做好测试?
 
-For a manufacturer, it is generally better to say that
-a new release of software (well tested by its test
-engineers) is released, and the new software (or firmware)
-is available for updating. Splitting in packages can
-generate nightmare and high effort for the testers.
+对于制造商来说，通常更好的说法是发布了一个新的软件版本
+(经过测试工程师的良好测试)，并且可以更新新的软件(或固件)。
+对测试人员来说，在包中进行拆分可能会产生噩梦和巨大的工作量。
 
-The ease of replacing single files can speed up the development,
-but it is a software-versions nightmare at the customer site.
-If a customer report a bug, how can it is possible that software
-is "version 2.5" when a patch for some files were sent previously
-to the customer ?
+简单地替换单个文件可以加快开发速度，
+但是对于客户站点来说，这是一个软件版本的噩梦。
+如果客户报告了一个bug，那么在之前已经向客户发送过
+一些文件的补丁时，软件怎么可能还算是“2.5版本”呢?
 
-An atomic update is generally a must feature for an embedded system.
+原子更新通常是嵌入式系统的必备特性。
 
-
-Strategies for an application doing software upgrade
+应用程序进行软件升级的策略
 ====================================================
 
-Instead of using the boot loader, an application can take
-into charge to upgrade the system. The application can
-use all services provided by the OS. The proposed solution
-is a stand-alone software, that follow customer rules and
-performs checks to determine if a software is installable,
-and then install the software on the desired storage.
+应用程序也可以用于升级系统，而不是使用引导加载程序。
+应用程序可以使用操作系统提供的所有服务。
+建议的解决方案是一个独立的软件，
+它遵循客户规则，执行检查以确定软件是否可安装，
+然后将软件安装到所需的存储上。
 
-The application can detect if the provided new software
-is suitable for the hardware, and it is can also check if
-the software is released by a verified authority. The range
-of features can grow from small system to a complex one,
-including the possibility to have pre- and post- install
-scripts, and so on.
+应用程序可以检测所提供的新软件是否适合硬件，
+也可以检查软件是否由经过验证的权威机构发布。
+支持的特性范围可以从小型系统扩展到复杂系统，
+包括安装前和安装后脚本等等。
 
-Different strategies can be used, depending on the system's
-resources. I am listing some of them.
+根据系统的资源，可以使用不同的策略。
+下面我将列出其中一些。
 
-Double copy with fall-back
+
+双备份系统 - 支持回退
 --------------------------
 
-If there is enough space on the storage to save
-two copies of the whole software, it is possible to guarantee
-that there is always a working copy even if the software update
-is interrupted or a power off occurs.
+如果存储空间足够保存整个软件的两个副本，
+那么即使软件更新被中断或断电，也可以保证始终有一个可用的副本。
 
-Each copy must contain the kernel, the root file system, and each
-further component that can be updated. It is required
-a mechanism to identify which version is running.
+每个副本必须包含内核、根文件系统和每个可以更新的组件。
+需要一种机制来识别正在运行的版本。
 
-SWUpdate should be inserted in the application software, and
-the application software will trigger it when an update is required.
-The duty of SWUpdate is to update the stand-by copy, leaving the
-running copy of the software untouched.
+SWUpdate应该集成到应用程序软件中，
+当需要更新时，应用程序软件将触发它。
+SWUpdate的职责是更新备用副本，
+不修改正在运行的软件副本。
 
-A synergy with the boot loader is often necessary, because the boot loader must
-decide which copy should be started. Again, it must be possible
-to switch between the two copies.
-After a reboot, the boot loader decides which copy should run.
+与引导加载程序的协作通常是必要的，
+因为引导加载程序必须决定应该启动哪个副本。
+同样，必须能够在两个副本之间进行切换。
+
+重新启动后，引导加载程序决定应该运行哪个副本。
 
 .. image:: images/double_copy_layout.png
 
-Check the chapter about boot loader to see which mechanisms can be
-implemented to guarantee that the target is not broken after an update.
+请参阅有关引导加载程序的章节，
+了解可以实现哪些机制来确保更新后目标不会被破坏。
 
-The most evident drawback is the amount of required space. The
-available space for each copy is less than half the size
-of the storage. However, an update is always safe even in case of power off.
+最明显的缺点是所需的空间量。
+每个副本的可用空间小于存储空间的一半。
+然而，即使在断电的情况下，更新也总是安全的。
 
-This project supports this strategy. The application as part of this project
-should be installed in the root file system and started
-or triggered as required. There is no
-need of an own kernel, because the two copies guarantees that
-it is always possible to upgrade the not running copy.
+这个项目支持这个策略。
+作为该项目一部分的应用程序应该安装在根文件系统中，
+并根据需要启动或触发。不需要额外的内核，
+因为这两个副本保证总是可以升级不运行的副本。
 
-SWUpdate will set bootloader's variable to signal the that a new image is
-successfully installed.
+SWUpdate将设置bootloader变量以通知新映像已成功安装。
 
-Single copy - running as standalone image
+单系统 - 以独立镜像形式运行
 -----------------------------------------
 
-The software upgrade application consists of kernel (maybe reduced
-dropping not required drivers) and a small root file system, with the
-application and its libraries. The whole size is much less than a single copy of
-the system software. Depending on set up, I get sizes from 2.5 until 8 MB
-for the stand-alone root file system. If the size is very important on small
-systems, it becomes negligible on systems with a lot of storage
-or big NANDs.
+软件升级应用程序由内核（可裁剪掉不必要的驱动等）
+和一个小的根文件系统以及应用程序及其库组成。
+整个大小远远小于系统软件的一个副本。
+根据设置，这个独立根文件系统的大小从 2.5MB 到 8MB 不等。
+如果说大小对于小型系统非常重要，
+那么对于具有大量存储或大容量NAND的系统，
+其大小则可以忽略不计。
 
-The system can be put in "upgrade" mode, simply signaling to the
-boot loader that the upgrading software must be started. The way
-can differ, for example setting a boot loader environment or using
-and external GPIO.
+系统可以进入“升级”模式，只需向引导加载程序发出必须启动升级软件的信号。
+具体方法可能有所不同，例如设置引导加载程序环境或使用和外部GPIO。
 
-The boot loader starts "SWUpdate", booting the
-SWUpdate kernel and the initrd image as root file system. Because it runs in
-RAM, it is possible to upgrade the whole storage. Differently as in the
-double-copy strategy, the systems must reboot to put itself in
-update mode.
+引导加载程序启动“SWUpdate”，
+引导SWUpdate内核并将initrd映像作为根文件系统。
+因为它在RAM中运行，所以可以升级整个存储。
+与双拷贝策略不同，系统必须重新启动以将其自身置于更新模式。
 
-This concept consumes less space in storage as having two copies, but
-it does not guarantee a fall-back without updating again the software.
-However, it can be guaranteed that
-the system goes automatically in upgrade mode when the productivity
-software is not found or corrupted, as well as when the upgrade process
-is interrupted for some reason.
-
+这个方案比起使用两个副本，占用的存储空间更少，
+但是它不能保证在不再次更新软件的情况下进行回退。
+不过，至少它可以保证，当主应用不存在或损坏时，
+以及当升级过程由于某种原因而中断时，系统自动进入升级模式。
 
 .. image:: images/single_copy_layout.png
 
-In fact, it is possible to consider
-the upgrade procedure as a transaction, and only after the successful
-upgrade the new software is set as "boot-able". With these considerations,
-an upgrade with this strategy is safe: it is always guaranteed that the
-system boots and it is ready to get a new software, if the old one
-is corrupted or cannot run.
-With U-Boot as boot loader, SWUpdate is able to manage U-Boot's environment
-setting variables to indicate the start and the end of a transaction and
-that the storage contains a valid software.
-A similar feature for GRUB environment block modification as well as for
-EFI Boot Guard has been introduced.
+事实上，可以将升级过程视为事务，
+只有成功升级后，新软件才设置为“可引导”。
+考虑到这些因素，使用此策略进行升级是安全的:
+如果旧软件损坏或无法运行，
+始终确保系统启动并准备好获得新软件。
 
-SWUpdate is mainly used in this configuration. The recipes for Yocto
-generate an initrd image containing the SWUpdate application, that is
-automatically started after mounting the root file system.
+使用U-Boot作为引导加载程序，
+SWUpdate能够管理U-Boot的环境设置变量，
+以指示事务的开始和结束，以及包含有效的软件的存储区域。
+针对GRUB环境块修改和EFI引导保护的类似特性也已被引入。
+
+SWUpdate主要以如下配置的方式使用。
+Yocto生成包含SWUpdate应用程序的initrd映像，
+该映像在挂载根文件系统之后自动启动。
 
 .. image:: images/swupdate_single.png
 
-Something went wrong ?
+有些事情出错了 ?
 ======================
 
-Many things can go wrong, and it must be guaranteed that the system
-is able to run again and maybe able to reload a new software to fix
-a damaged image. SWUpdate works together with the boot loader to identify the
-possible causes of failures. Currently U-Boot, GRUB, and EFI Boot Guard
-are supported.
+许多事情都可能出错，必须保证系统能够再次运行，
+并且可能能够重新加载新的软件来修复损坏的映像。
+SWUpdate与引导加载程序一起工作，以识别失败的可能原因。
+目前支持U-Boot、GRUB和EFI引导保护。
 
-We can at least group some of the common causes:
+我们至少可以列出一些常见的原因:
 
-- damage / corrupted image during installing.
-  SWUpdate is able to recognize it and the update process
-  is interrupted. The old software is preserved and nothing
-  is really copied into the target's storage.
+-安装过程中镜像损坏。
+ SWUpdate能够识别它，并且更新过程会被中止。
+ 旧的软件被保存下来，没有任何东西被真正复制到目标的存储中
 
-- corrupted image in the storage (flash)
+- 存储(flash)中损坏的镜像
 
-- remote update interrupted due to communication problem.
+- 远程更新由于通信问题而中断
 
-- power-failure
+- 意外掉电
 
-SWUpdate works as transaction process. The boot loader environment variable
-"recovery_status" is set to signal the update's status to the boot loader. Of
-course, further variables can be added to fine tuning and report error causes.
-recovery_status can have the values "progress", "failed", or it can be unset.
+SWUpdate的工作流程是事务性的。引导加载程序的环境变量“recovery_status”
+被设置为向引导加载程序发出更新状态的信号。
+当然，还可以添加更多变量，用于微调和报告错误原因。
+recovery_status可以取值为“progress”，“failed”，或者它也可以被取消设置。
 
-When SWUpdate starts, it sets recovery_status to "progress". After an update is
-finished with success, the variable is erased. If the update ends with an
-error, recovery_status has the value "failed".
+当SWUpdate启动时，它将recovery_status设置为“progress”。
+更新成功完成后，变量将被删除。如果更新以错误结束，
+recovery_status的值为“failed”。
 
-When an update is interrupted, independently from the cause, the boot loader
-recognizes it because the recovery_status variable is in "progress" or "failed".
-The boot loader can then start again SWUpdate to load again the software
-(single-copy case) or run the old copy of the application
-(double-copy case).
+当更新被中断时，不管什么原因，引导加载程序都能识别到，
+因为recovery_status变量处于“progress”或“failed”状态。
+然后，引导加载程序可以再次启动SWUpdate，以再次
+加载软件(单副本情况)或运行应用程序的旧副本(双副本情况)。
 
 Power Failure
 -------------
