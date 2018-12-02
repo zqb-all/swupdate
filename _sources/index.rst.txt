@@ -5,12 +5,12 @@
         :align: center
 
 ############################################
-Updating an embedded system
+更新一个嵌入式系统
 ############################################
 
-SWUpdate provides a reliable way to update
-the software on an embedded system.
-Sources are hosted at https://github.com/sbabic/swupdate
+SWUpdate提供了一种可靠的方式来更新
+嵌入式系统上的软件。
+源代码托管在https://github.com/sbabic/swupdate
 
 .. raw:: html
 
@@ -26,7 +26,7 @@ Sources are hosted at https://github.com/sbabic/swupdate
    licensing.rst
 
 ############################################
-SWUpdate Documentation
+SWUpdate 文档
 ############################################
 
 .. toctree::
@@ -44,7 +44,7 @@ SWUpdate Documentation
    building-with-yocto.rst
 
 ############################################
-Help and support
+帮助和支持
 ############################################
 
 .. toctree::
@@ -54,7 +54,7 @@ Help and support
    contributing.rst
 
 ############################################
-Roadmap
+路线图
 ############################################
 
 .. toctree::
@@ -62,7 +62,7 @@ Roadmap
 
    roadmap.rst
 
-Indices and tables
+索引和表格
 ==================
 
 * :ref:`genindex`

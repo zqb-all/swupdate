@@ -1,14 +1,14 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Updating an embedded system &mdash; Embedded Software Update Documentation 2018.11 documentation</title>
+  <title>更新一个嵌入式系统 &mdash; Embedded Software Update Documentation 2018.11 文档</title>
   
 
   
@@ -26,26 +26,18 @@
 
   
 
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Embedded Software Update Documentation 2018.11 documentation" href="#"/>
-        <link rel="next" title="Software Management on embedded systems" href="overview.html"/> 
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="嵌入式系统的软件管理" href="overview.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -92,7 +84,7 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="overview.html">Software Management on embedded systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">嵌入式系统的软件管理</a></li>
 <li class="toctree-l1"><a class="reference internal" href="licensing.html">License</a></li>
 </ul>
 <ul>
@@ -124,7 +116,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="#">Embedded Software Update Documentation</a>
@@ -132,9 +124,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -157,7 +150,7 @@
     
       <li><a href="#">Docs</a> &raquo;</li>
         
-      <li>Updating an embedded system</li>
+      <li>更新一个嵌入式系统</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -177,29 +170,29 @@
            <div itemprop="articleBody">
             
   <a class="reference internal image-reference" href="_images/SWUpdate.png"><img alt="_images/SWUpdate.png" class="align-center" src="_images/SWUpdate.png" style="width: 256.25px; height: 256.25px;" /></a>
-<div class="section" id="updating-an-embedded-system">
-<h1>Updating an embedded system<a class="headerlink" href="#updating-an-embedded-system" title="Permalink to this headline">¶</a></h1>
-<p>SWUpdate provides a reliable way to update
-the software on an embedded system.
-Sources are hosted at <a class="reference external" href="https://github.com/sbabic/swupdate">https://github.com/sbabic/swupdate</a></p>
+<div class="section" id="id1">
+<h1>更新一个嵌入式系统<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>SWUpdate提供了一种可靠的方式来更新
+嵌入式系统上的软件。
+源代码托管在https://github.com/sbabic/swupdate</p>
 <center>
 <a class="github-button" href="https://github.com/sbabic/swupdate" data-icon="octicon-star" data-size="large" aria-label="Star sbabic/swupdate on GitHub">Star SWUpdate</a>
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 </center><div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="overview.html">Software Management on embedded systems</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#updating-through-the-boot-loader">Updating through the boot loader</a></li>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#updating-through-a-package-manager">Updating through a package manager</a></li>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#strategies-for-an-application-doing-software-upgrade">Strategies for an application doing software upgrade</a></li>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#something-went-wrong">Something went wrong ?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">嵌入式系统的软件管理</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#id2">通过引导加载程序完成更新</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#id9">通过包管理器更新</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#id10">应用程序进行软件升级的策略</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#id13">有些事情出错了 ?</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="licensing.html">License</a></li>
 </ul>
 </div>
 </div>
-<div class="section" id="swupdate-documentation">
-<h1>SWUpdate Documentation<a class="headerlink" href="#swupdate-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="swupdate">
+<h1>SWUpdate 文档<a class="headerlink" href="#swupdate" title="永久链接至标题">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="swupdate.html">SWUpdate: software update for embedded system</a><ul>
@@ -295,8 +288,8 @@ Sources are hosted at <a class="reference external" href="https://github.com/sba
 </ul>
 </div>
 </div>
-<div class="section" id="help-and-support">
-<h1>Help and support<a class="headerlink" href="#help-and-support" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id2">
+<h1>帮助和支持<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="help_and_support.html">Help and support</a><ul>
@@ -315,8 +308,8 @@ Sources are hosted at <a class="reference external" href="https://github.com/sba
 </ul>
 </div>
 </div>
-<div class="section" id="roadmap">
-<h1>Roadmap<a class="headerlink" href="#roadmap" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id3">
+<h1>路线图<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="roadmap.html">Project’s road-map</a><ul>
@@ -332,27 +325,25 @@ Sources are hosted at <a class="reference external" href="https://github.com/sba
 </li>
 </ul>
 </div>
-<div class="section" id="indices-and-tables">
-<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id4">
+<h2>索引和表格<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
 <ul class="simple">
-<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
-<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
-<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">索引</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">模块索引</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">搜索页面</span></a></li>
 </ul>
 </div>
 </div>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="overview.html" class="btn btn-neutral float-right" title="Software Management on embedded systems" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="overview.html" class="btn btn-neutral float-right" title="嵌入式系统的软件管理" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
     </div>
@@ -362,11 +353,11 @@ Sources are hosted at <a class="reference external" href="https://github.com/sba
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2013-2018, Stefano Babic.
+        &copy; Copyright 2013-2018, Stefano Babic
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -381,35 +372,24 @@ Sources are hosted at <a class="reference external" href="https://github.com/sba
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'2018.11',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+    
 
   
 
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

@@ -1,14 +1,14 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Handlers &mdash; Embedded Software Update Documentation 2018.11 documentation</title>
+  <title>Handlers &mdash; Embedded Software Update Documentation 2018.11 文档</title>
   
 
   
@@ -26,27 +26,19 @@
 
   
 
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Embedded Software Update Documentation 2018.11 documentation" href="index.html"/>
-        <link rel="next" title="Mongoose daemon mode" href="mongoose.html"/>
-        <link rel="prev" title="Symmetrically Encrypted Update Images" href="encrypted_images.html"/> 
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="Mongoose daemon mode" href="mongoose.html" />
+    <link rel="prev" title="Symmetrically Encrypted Update Images" href="encrypted_images.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -93,7 +85,7 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="overview.html">Software Management on embedded systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">嵌入式系统的软件管理</a></li>
 <li class="toctree-l1"><a class="reference internal" href="licensing.html">License</a></li>
 </ul>
 <ul class="current">
@@ -135,7 +127,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">Embedded Software Update Documentation</a>
@@ -143,9 +135,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -188,9 +181,9 @@
            <div itemprop="articleBody">
             
   <div class="section" id="handlers">
-<h1>Handlers<a class="headerlink" href="#handlers" title="Permalink to this headline">¶</a></h1>
+<h1>Handlers<a class="headerlink" href="#handlers" title="永久链接至标题">¶</a></h1>
 <div class="section" id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<h2>Overview<a class="headerlink" href="#overview" title="永久链接至标题">¶</a></h2>
 <p>It is quite difficult to foresee all possible installation cases.
 Instead of trying to find all use cases, SWUpdate let the
 developer free to add his own installer (that is, a new <strong>handler</strong>),
@@ -203,7 +196,7 @@ with the required handler to execute the installation. Each image
 can have a different installer.</p>
 </div>
 <div class="section" id="supplied-handlers">
-<h2>Supplied handlers<a class="headerlink" href="#supplied-handlers" title="Permalink to this headline">¶</a></h2>
+<h2>Supplied handlers<a class="headerlink" href="#supplied-handlers" title="永久链接至标题">¶</a></h2>
 <dl class="docutils">
 <dt>In mainline there are the handlers for the most common cases. They include:</dt>
 <dd><ul class="first last simple">
@@ -221,12 +214,12 @@ and filling the other fields required for this handler: name of volume, size,
 and so on.</p>
 </div>
 <div class="section" id="creating-own-handlers">
-<h2>Creating own handlers<a class="headerlink" href="#creating-own-handlers" title="Permalink to this headline">¶</a></h2>
+<h2>Creating own handlers<a class="headerlink" href="#creating-own-handlers" title="永久链接至标题">¶</a></h2>
 <p>SWUpdate can be extended with new handlers. The user needs to register his own
 handler with the core and he must provide the callback that SWUpdate uses when
 an image required to be installed with the new handler.</p>
 <p>The prototype for the callback is:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">my_handler</span><span class="p">(</span><span class="n">struct</span> <span class="n">img_type</span> <span class="o">*</span><span class="n">img</span><span class="p">,</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">my_handler</span><span class="p">(</span><span class="n">struct</span> <span class="n">img_type</span> <span class="o">*</span><span class="n">img</span><span class="p">,</span>
         <span class="n">void</span> <span class="n">__attribute__</span> <span class="p">((</span><span class="n">__unused__</span><span class="p">))</span> <span class="o">*</span><span class="n">data</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -239,7 +232,7 @@ of the image to be installed. The handler must read the whole image, and when it
 back SWUpdate can go on with the next image in the stream.</p>
 <p>SWUpdate provides a general function to extract data from the stream and copy
 to somewhere else:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">copyfile</span><span class="p">(</span><span class="nb">int</span> <span class="n">fdin</span><span class="p">,</span> <span class="nb">int</span> <span class="n">fdout</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nbytes</span><span class="p">,</span> <span class="n">unsigned</span> <span class="n">long</span> <span class="o">*</span><span class="n">offs</span><span class="p">,</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">copyfile</span><span class="p">(</span><span class="nb">int</span> <span class="n">fdin</span><span class="p">,</span> <span class="nb">int</span> <span class="n">fdout</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nbytes</span><span class="p">,</span> <span class="n">unsigned</span> <span class="n">long</span> <span class="o">*</span><span class="n">offs</span><span class="p">,</span>
         <span class="nb">int</span> <span class="n">skip_file</span><span class="p">,</span> <span class="nb">int</span> <span class="n">compressed</span><span class="p">,</span> <span class="n">uint32_t</span> <span class="o">*</span><span class="n">checksum</span><span class="p">,</span> <span class="n">unsigned</span> <span class="n">char</span> <span class="o">*</span><span class="nb">hash</span><span class="p">);</span>
 </pre></div>
 </div>
@@ -250,7 +243,7 @@ does not need to bother with them.
 How the handler manages the copied data, is specific to the handler itself. See
 supplied handlers code for a better understanding.</p>
 <p>The handler’s developer registers his own handler with a call to:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">__attribute__</span><span class="p">((</span><span class="n">constructor</span><span class="p">))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">__attribute__</span><span class="p">((</span><span class="n">constructor</span><span class="p">))</span>
 <span class="n">void</span> <span class="n">my_handler_init</span><span class="p">(</span><span class="n">void</span><span class="p">)</span>
 <span class="p">{</span>
         <span class="n">register_handler</span><span class="p">(</span><span class="s2">&quot;mytype&quot;</span><span class="p">,</span> <span class="n">my_handler</span><span class="p">,</span> <span class="n">my_mask</span><span class="p">,</span> <span class="n">data</span><span class="p">);</span>
@@ -260,14 +253,14 @@ supplied handlers code for a better understanding.</p>
 <p>SWUpdate uses the gcc constructors, and all supplied handlers are registered
 when SWUpdate is initialized.</p>
 <p>register_handler has the syntax:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">register_handler</span><span class="p">(</span><span class="n">my_image_type</span><span class="p">,</span> <span class="n">my_handler</span><span class="p">,</span> <span class="n">my_mask</span><span class="p">,</span> <span class="n">data</span><span class="p">);</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">register_handler</span><span class="p">(</span><span class="n">my_image_type</span><span class="p">,</span> <span class="n">my_handler</span><span class="p">,</span> <span class="n">my_mask</span><span class="p">,</span> <span class="n">data</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>Where:</p>
 <ul class="simple">
 <li>my_image_type : string identifying the own new image type.</li>
 <li>my_handler : pointer to the installer to be registered.</li>
-<li>my_mask : <code class="docutils literal"><span class="pre">HANDLER_MASK</span></code> enum value(s) specifying what
+<li>my_mask : <code class="docutils literal notranslate"><span class="pre">HANDLER_MASK</span></code> enum value(s) specifying what
 input type(s) my_handler can process.</li>
 <li>data : an optional pointer to an own structure, that SWUpdate
 saves in the handlers’ list and pass to the handler when it will
@@ -275,7 +268,7 @@ be executed.</li>
 </ul>
 </div>
 <div class="section" id="handler-for-ubi-volumes">
-<h2>Handler for UBI Volumes<a class="headerlink" href="#handler-for-ubi-volumes" title="Permalink to this headline">¶</a></h2>
+<h2>Handler for UBI Volumes<a class="headerlink" href="#handler-for-ubi-volumes" title="永久链接至标题">¶</a></h2>
 <p>The handler for UBI volumes is thought to update UBI volumes
 without changing the layout of the storage.
 Volumes must be set before: the handler does not create volumes
@@ -298,44 +291,44 @@ preinstall script. Building with meta-SWUpdate, the original
 mtd-utils are available and can be called by a Lua script.</p>
 </div>
 <div class="section" id="lua-handlers">
-<h2>Lua Handlers<a class="headerlink" href="#lua-handlers" title="Permalink to this headline">¶</a></h2>
+<h2>Lua Handlers<a class="headerlink" href="#lua-handlers" title="永久链接至标题">¶</a></h2>
 <p>In addition to the handlers written in C, it is possible to extend
 SWUpdate with handlers written in Lua that get loaded at SWUpdate
 startup. The Lua handler source code file may either be embedded
-into the SWUpdate binary via the <code class="docutils literal"><span class="pre">CONFIG_EMBEDDED_LUA_HANDLER</span></code>
+into the SWUpdate binary via the <code class="docutils literal notranslate"><span class="pre">CONFIG_EMBEDDED_LUA_HANDLER</span></code>
 config option or has to be installed on the target system in Lua’s
-search path as <code class="docutils literal"><span class="pre">swupdate_handlers.lua</span></code> so that it can be loaded
+search path as <code class="docutils literal notranslate"><span class="pre">swupdate_handlers.lua</span></code> so that it can be loaded
 by the embedded Lua interpreter at run-time.</p>
 <p>In analogy to C handlers, the prototype for a Lua handler is</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">function</span> <span class="n">lua_handler</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">function</span> <span class="n">lua_handler</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
     <span class="o">...</span>
 <span class="n">end</span>
 </pre></div>
 </div>
-<p>where <code class="docutils literal"><span class="pre">image</span></code> is a Lua table (with attributes according to
+<p>where <code class="docutils literal notranslate"><span class="pre">image</span></code> is a Lua table (with attributes according to
 <a class="reference internal" href="sw-description.html#sw-description-attribute-reference"><span class="std std-ref">sw-description’s attribute reference</span></a>)
 that describes a single artifact to be processed by the handler.</p>
 <p>Note that dashes in the attributes’ names are replaced with
 underscores for the Lua domain to make them idiomatic, e.g.,
-<code class="docutils literal"><span class="pre">installed-directly</span></code> becomes <code class="docutils literal"><span class="pre">installed_directly</span></code> in the
+<code class="docutils literal notranslate"><span class="pre">installed-directly</span></code> becomes <code class="docutils literal notranslate"><span class="pre">installed_directly</span></code> in the
 Lua domain.</p>
-<p>To register a Lua handler, the <code class="docutils literal"><span class="pre">swupdate</span></code> module provides the
-<code class="docutils literal"><span class="pre">swupdate.register_handler()</span></code> method that takes the handler’s
+<p>To register a Lua handler, the <code class="docutils literal notranslate"><span class="pre">swupdate</span></code> module provides the
+<code class="docutils literal notranslate"><span class="pre">swupdate.register_handler()</span></code> method that takes the handler’s
 name, the Lua handler function to be registered under that name,
 and, optionally, the types of artifacts for which the handler may
 be called. If the latter is not given, the Lua handler is registered
 for all types of artifacts. The following call registers the
-above function <code class="docutils literal"><span class="pre">lua_handler</span></code> as <em>my_handler</em> which may be
+above function <code class="docutils literal notranslate"><span class="pre">lua_handler</span></code> as <em>my_handler</em> which may be
 called for images:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">swupdate</span><span class="o">.</span><span class="n">register_handler</span><span class="p">(</span><span class="s2">&quot;my_handler&quot;</span><span class="p">,</span> <span class="n">lua_handler</span><span class="p">,</span> <span class="n">swupdate</span><span class="o">.</span><span class="n">HANDLER_MASK</span><span class="o">.</span><span class="n">IMAGE_HANDLER</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">swupdate</span><span class="o">.</span><span class="n">register_handler</span><span class="p">(</span><span class="s2">&quot;my_handler&quot;</span><span class="p">,</span> <span class="n">lua_handler</span><span class="p">,</span> <span class="n">swupdate</span><span class="o">.</span><span class="n">HANDLER_MASK</span><span class="o">.</span><span class="n">IMAGE_HANDLER</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>A Lua handler may call C handlers (“chaining”) via the
-<code class="docutils literal"><span class="pre">swupdate.call_handler()</span></code> method. The callable and registered
+<code class="docutils literal notranslate"><span class="pre">swupdate.call_handler()</span></code> method. The callable and registered
 C handlers are available (as keys) in the table
-<code class="docutils literal"><span class="pre">swupdate.handler</span></code>. The following Lua code is an example of
-a simple handler chain-calling the <code class="docutils literal"><span class="pre">rawfile</span></code> C handler:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">function</span> <span class="n">lua_handler</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+<code class="docutils literal notranslate"><span class="pre">swupdate.handler</span></code>. The following Lua code is an example of
+a simple handler chain-calling the <code class="docutils literal notranslate"><span class="pre">rawfile</span></code> C handler:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">function</span> <span class="n">lua_handler</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">swupdate</span><span class="o">.</span><span class="n">handler</span><span class="p">[</span><span class="s2">&quot;rawfile&quot;</span><span class="p">]</span> <span class="n">then</span>
         <span class="n">swupdate</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;rawfile handler not available&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="mi">1</span>
@@ -352,25 +345,25 @@ a simple handler chain-calling the <code class="docutils literal"><span class="p
 </div>
 <p>Note that when chaining handlers and calling a C handler for
 a different type of artifact than the Lua handler is registered
-for, the <code class="docutils literal"><span class="pre">image</span></code> table’s values must satisfy the called
+for, the <code class="docutils literal notranslate"><span class="pre">image</span></code> table’s values must satisfy the called
 C handler’s expectations: Consider the above Lua handler being
-registered for “images” (<code class="docutils literal"><span class="pre">swupdate.HANDLER_MASK.IMAGE_HANDLER</span></code>)
-via the <code class="docutils literal"><span class="pre">swupdate.register_handler()</span></code> call shown above. As per the
+registered for “images” (<code class="docutils literal notranslate"><span class="pre">swupdate.HANDLER_MASK.IMAGE_HANDLER</span></code>)
+via the <code class="docutils literal notranslate"><span class="pre">swupdate.register_handler()</span></code> call shown above. As per the
 <a class="reference internal" href="sw-description.html#sw-description-attribute-reference"><span class="std std-ref">sw-description’s attribute reference</span></a>,
-the “images” artifact type doesn’t have the <code class="docutils literal"><span class="pre">path</span></code> attribute
-but the “file” artifact type does. So, for calling the <code class="docutils literal"><span class="pre">rawfile</span></code>
-handler, <code class="docutils literal"><span class="pre">image.path</span></code> has to be set prior to chain-calling the
-<code class="docutils literal"><span class="pre">rawfile</span></code> handler, as done in the example above. Usually, however,
+the “images” artifact type doesn’t have the <code class="docutils literal notranslate"><span class="pre">path</span></code> attribute
+but the “file” artifact type does. So, for calling the <code class="docutils literal notranslate"><span class="pre">rawfile</span></code>
+handler, <code class="docutils literal notranslate"><span class="pre">image.path</span></code> has to be set prior to chain-calling the
+<code class="docutils literal notranslate"><span class="pre">rawfile</span></code> handler, as done in the example above. Usually, however,
 no such adaptation is necessary if the Lua handler is registered for
-handling the type of artifact that <code class="docutils literal"><span class="pre">image</span></code> represents.</p>
-<p>In addition to calling C handlers, the <code class="docutils literal"><span class="pre">image</span></code> table passed as
-parameter to a Lua handler has a <code class="docutils literal"><span class="pre">image:copy2file()</span></code> method that
+handling the type of artifact that <code class="docutils literal notranslate"><span class="pre">image</span></code> represents.</p>
+<p>In addition to calling C handlers, the <code class="docutils literal notranslate"><span class="pre">image</span></code> table passed as
+parameter to a Lua handler has a <code class="docutils literal notranslate"><span class="pre">image:copy2file()</span></code> method that
 implements the common use case of writing the input stream’s data
 to a file, which is passed as this method’s argument. On success,
-<code class="docutils literal"><span class="pre">image:copy2file()</span></code> returns <code class="docutils literal"><span class="pre">0</span></code> or <code class="docutils literal"><span class="pre">-1</span></code> plus an error
+<code class="docutils literal notranslate"><span class="pre">image:copy2file()</span></code> returns <code class="docutils literal notranslate"><span class="pre">0</span></code> or <code class="docutils literal notranslate"><span class="pre">-1</span></code> plus an error
 message on failure. The following Lua code is an example of
-a simple handler calling <code class="docutils literal"><span class="pre">image:copy2file()</span></code>:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">function</span> <span class="n">lua_handler</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+a simple handler calling <code class="docutils literal notranslate"><span class="pre">image:copy2file()</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">function</span> <span class="n">lua_handler</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
     <span class="n">local</span> <span class="n">err</span><span class="p">,</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">image</span><span class="p">:</span><span class="n">copy2file</span><span class="p">(</span><span class="s2">&quot;/tmp/destination.path&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">err</span> <span class="o">~=</span> <span class="mi">0</span> <span class="n">then</span>
         <span class="n">swupdate</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;Error calling copy2file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">msg</span><span class="p">))</span>
@@ -380,15 +373,15 @@ a simple handler calling <code class="docutils literal"><span class="pre">image:
 <span class="n">end</span>
 </pre></div>
 </div>
-<p>Beyond using <code class="docutils literal"><span class="pre">image:copy2file()</span></code> or chain-calling C handlers,
-the <code class="docutils literal"><span class="pre">image</span></code> table passed as parameter to a Lua handler has
-a <code class="docutils literal"><span class="pre">image:read(&lt;callback()&gt;)</span></code> method that reads from the input
-stream and calls the Lua callback function <code class="docutils literal"><span class="pre">&lt;callback()&gt;</span></code> for
+<p>Beyond using <code class="docutils literal notranslate"><span class="pre">image:copy2file()</span></code> or chain-calling C handlers,
+the <code class="docutils literal notranslate"><span class="pre">image</span></code> table passed as parameter to a Lua handler has
+a <code class="docutils literal notranslate"><span class="pre">image:read(&lt;callback()&gt;)</span></code> method that reads from the input
+stream and calls the Lua callback function <code class="docutils literal notranslate"><span class="pre">&lt;callback()&gt;</span></code> for
 every chunk read, passing this chunk as parameter. On success,
-<code class="docutils literal"><span class="pre">0</span></code> is returned by <code class="docutils literal"><span class="pre">image:read()</span></code>. On error, <code class="docutils literal"><span class="pre">-1</span></code> plus an
+<code class="docutils literal notranslate"><span class="pre">0</span></code> is returned by <code class="docutils literal notranslate"><span class="pre">image:read()</span></code>. On error, <code class="docutils literal notranslate"><span class="pre">-1</span></code> plus an
 error message is returned. The following Lua code is an example
 of a simple handler printing the artifact’s content:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">function</span> <span class="n">lua_handler</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">function</span> <span class="n">lua_handler</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
     <span class="n">err</span><span class="p">,</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">image</span><span class="p">:</span><span class="n">read</span><span class="p">(</span><span class="n">function</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="n">end</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">err</span> <span class="o">~=</span> <span class="mi">0</span> <span class="n">then</span>
         <span class="n">swupdate</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;Error reading image: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">msg</span><span class="p">))</span>
@@ -398,22 +391,22 @@ of a simple handler printing the artifact’s content:</p>
 <span class="n">end</span>
 </pre></div>
 </div>
-<p>Using the <code class="docutils literal"><span class="pre">image:read()</span></code> method, an artifact’s contents may be
+<p>Using the <code class="docutils literal notranslate"><span class="pre">image:read()</span></code> method, an artifact’s contents may be
 (post-)processed in and leveraging the power of Lua without relying
 on preexisting C handlers for the purpose intended.</p>
 <p>Just as C handlers, a Lua handler must consume the artifact
-described in its <code class="docutils literal"><span class="pre">image</span></code> parameter so that SWUpdate can
+described in its <code class="docutils literal notranslate"><span class="pre">image</span></code> parameter so that SWUpdate can
 continue with the next artifact in the stream after the Lua handler
-returns. Chaining handlers, calling <code class="docutils literal"><span class="pre">image:copy2file()</span></code>, or using
-<code class="docutils literal"><span class="pre">image:read()</span></code> satisfies this requirement.</p>
+returns. Chaining handlers, calling <code class="docutils literal notranslate"><span class="pre">image:copy2file()</span></code>, or using
+<code class="docutils literal notranslate"><span class="pre">image:read()</span></code> satisfies this requirement.</p>
 <p>Note that although the dynamic nature of Lua handlers would
-technically allow to embed them into a to be processed <code class="docutils literal"><span class="pre">.swu</span></code>
+technically allow to embed them into a to be processed <code class="docutils literal notranslate"><span class="pre">.swu</span></code>
 image, this is not implemented as it carries some security
 implications since the behavior of SWUpdate is changed
 dynamically.</p>
 </div>
 <div class="section" id="remote-handler">
-<h2>Remote handler<a class="headerlink" href="#remote-handler" title="Permalink to this headline">¶</a></h2>
+<h2>Remote handler<a class="headerlink" href="#remote-handler" title="永久链接至标题">¶</a></h2>
 <p>Remote handlers are thought for binding legacy installers
 without having the necessity to rewrite them in Lua. The remote
 handler forward the image to be installed to another process,
@@ -426,7 +419,7 @@ is quite general, describing in sw-description with the
 The remote handler always acts as client, and try a connect()
 using the socket identified by the “data” attribute. For example,
 a possible setup using a remote handler could be:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">images</span><span class="p">:</span> <span class="p">(</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">images</span><span class="p">:</span> <span class="p">(</span>
         <span class="p">{</span>
             <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;myimage&quot;&quot;;</span>
             <span class="nb">type</span> <span class="o">=</span> <span class="s2">&quot;remote&quot;</span><span class="p">;</span>
@@ -447,7 +440,7 @@ Each Zeromq Message from SWUpdate is a multi-part message split into two frames:
 <p>There are currently just two possible commands: INIT and DATA. After
 a successful connect, SWUpdate sends the initialization string in the
 format:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">INIT</span><span class="p">:</span><span class="o">&lt;</span><span class="n">size</span> <span class="n">of</span> <span class="n">image</span> <span class="n">to</span> <span class="n">be</span> <span class="n">installed</span><span class="o">&gt;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INIT</span><span class="p">:</span><span class="o">&lt;</span><span class="n">size</span> <span class="n">of</span> <span class="n">image</span> <span class="n">to</span> <span class="n">be</span> <span class="n">installed</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <p>The external installer is informed about the size of the image to be
@@ -462,7 +455,7 @@ is received. For each DATA message, the external process answers with a
 <em>ACK</em> or <em>NACK</em> message.</p>
 </div>
 <div class="section" id="swu-forwarder">
-<h2>SWU forwarder<a class="headerlink" href="#swu-forwarder" title="Permalink to this headline">¶</a></h2>
+<h2>SWU forwarder<a class="headerlink" href="#swu-forwarder" title="永久链接至标题">¶</a></h2>
 <p>The SWU forwarder handler can be used to update other systems where SWUpdate
 is running. It can be used in case of master / slaves systems, where the master
 is connected to the network and the “slaves” are hidden to the external world.
@@ -475,11 +468,11 @@ The SWU handler expects to talk with SWUpdate’s embedded webserver. This helps
 to update systems where an old version of SWUpdate is running, because the
 embedded webserver is a common feature present in all versions.
 The handler will send the embedded SWU to all URLs at the same time, and setting
-<code class="docutils literal"><span class="pre">installed-directly</span></code> is supported by this handler.</p>
+<code class="docutils literal notranslate"><span class="pre">installed-directly</span></code> is supported by this handler.</p>
 <img alt="_images/SWUGateway.png" src="_images/SWUGateway.png" />
 <p>The following example shows how to set a SWU as artifact and enables
 the SWU forwarder:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">images</span><span class="p">:</span> <span class="p">(</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">images</span><span class="p">:</span> <span class="p">(</span>
         <span class="p">{</span>
                 <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;image.swu&quot;</span><span class="p">;</span>
                 <span class="nb">type</span> <span class="o">=</span> <span class="s2">&quot;swuforward&quot;</span><span class="p">;</span>
@@ -492,7 +485,7 @@ the SWU forwarder:</p>
 </div>
 </div>
 <div class="section" id="ucfw-handler">
-<h2>ucfw handler<a class="headerlink" href="#ucfw-handler" title="Permalink to this headline">¶</a></h2>
+<h2>ucfw handler<a class="headerlink" href="#ucfw-handler" title="永久链接至标题">¶</a></h2>
 <p>This handler allows to update the firmware on a microcontroller connected to
 the main controller via UART.
 Parameters for setup are passed via sw-description file.  Its behavior can be
@@ -514,14 +507,14 @@ microcontroller.</p>
 <li><p class="first">Send programming message</p>
 </li>
 </ol>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$PROG;&lt;&lt;CS&gt;&gt;&lt;CR&gt;&lt;LF&gt;
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$PROG;&lt;&lt;CS&gt;&gt;&lt;CR&gt;&lt;LF&gt;
 </pre></div>
 </div>
 <p>to the microcontroller.  (microcontroller will remain in programming state)</p>
 <ol class="arabic simple" start="3">
 <li>microcontroller confirms with</li>
 </ol>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$READY;&lt;&lt;CS&gt;&gt;&lt;CR&gt;&lt;LF&gt;
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$READY;&lt;&lt;CS&gt;&gt;&lt;CR&gt;&lt;LF&gt;
 
 4. Data transmissions package based from mainboard to microcontroller
 </pre></div>
@@ -552,14 +545,14 @@ the modulo-256 sum over all bytes of the message
 string except for the start marker “$”.
 The handler expects to get in the properties the setup for the reset
 and prog gpios. They should be in this format:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">properties</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">properties</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">reset</span> <span class="o">=</span> <span class="s2">&quot;&lt;gpiodevice&gt;:&lt;gpionumber&gt;:&lt;activelow&gt;&quot;</span><span class="p">;</span>
         <span class="n">prog</span> <span class="o">=</span> <span class="s2">&quot;&lt;gpiodevice&gt;:&lt;gpionumber&gt;:&lt;activelow&gt;&quot;</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">properties</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">properties</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">reset</span> <span class="o">=</span>  <span class="s2">&quot;/dev/gpiochip0:38:false&quot;</span><span class="p">;</span>
         <span class="n">prog</span> <span class="o">=</span>  <span class="s2">&quot;/dev/gpiochip0:39:false&quot;</span><span class="p">;</span>
 <span class="p">}</span>
@@ -570,9 +563,7 @@ and prog gpios. They should be in this format:</p>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -590,11 +581,11 @@ and prog gpios. They should be in this format:</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2013-2018, Stefano Babic.
+        &copy; Copyright 2013-2018, Stefano Babic
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -609,35 +600,24 @@ and prog gpios. They should be in this format:</p>
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'2018.11',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+    
 
   
 
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>
