@@ -1,40 +1,36 @@
 =======
-License
+许可证
 =======
 
-SWUpdate is Free Software.  It is copyrighted by Stefano Babic and
-many others who contributed code (see the actual source code and the
-git commit messages for details).  You can redistribute SWUpdate and/or
-modify it under the terms of version 2 of the GNU General Public
-License as published by the Free Software Foundation.  Most of it can
-also be distributed, at your option, under any later version of the
-GNU General Public License -- see individual files for exceptions.
+SWUpdate是免费软件。它的版权属于Stefano Babic和其他
+许多贡献代码的人(详情请参阅实际源代码和git提交信息)。
+您可以根据自由软件基金会发布的GNU通用公共许可证第2版
+的条款重新分发SWUpdate和/或修改它。
+它的大部分还可以根据您的选择，在GNU通用公共许可证的
+任何后续版本下发布——有关例外情况，请参阅个别文件。
 
-To make this easier, license headers in the source files will be
-replaced with a single line reference to Unique License Identifiers
-as defined by the Linux Foundation's SPDX project [1].  For example,
-in a source file the full "GPL v2.0 or later" header text will be
-replaced by a single line:
+为了更容易地表示许可证，源文件中的许可证头将被替换为
+对由Linux基金会的SPDX项目[1]定义的唯一许可证标识符的一行引用。
+例如，在源文件中，完整的“GPL v2.0或更高版本”标题文本将被一行替换:
 
 ::
 
 	SPDX-License-Identifier:	GPL-2.0+
 
-Ideally, the license terms of all files in the source tree should be
-defined by such License Identifiers; in no case a file can contain
-more than one such License Identifier list.
+理想情况下，源码树中所有文件的许可证条款都应该由这样的许可证
+标识符定义；在任何情况下，文件都不能包含一个以上的许可证标识符列表。
 
-If a "SPDX-License-Identifier:" line references more than one Unique
-License Identifier, then this means that the respective file can be
-used under the terms of either of these licenses, i. e. with
+如果“SPDX-License-Identifier:”行引用了多个不同的许可证标识符，
+则这意味着可以在这些许可证中的任意一个的条款下使用相应的文件,
+例如，若带有如下标志
 
 ::
 
 	SPDX-License-Identifier:	GPL-2.0+	BSD-3-Clause
 
-you can choose between GPL-2.0+ and BSD-3-Clause licensing.
+则您可以在 GPL-2.0+和 BSD-3-Clause 许可证之间进行选择。
 
-We use the SPDX_ Unique License Identifiers (SPDX-Identifiers_)
+我们使用 SPDX_ 唯一许可标识符(SPDX-identifiers_)
 
 .. _SPDX: http://spdx.org/
 .. _SPDX-Identifiers: http://spdx.org/licenses/
