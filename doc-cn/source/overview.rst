@@ -183,7 +183,7 @@ SWUpdate将设置bootloader变量以通知新映像已成功安装。
 那么对于具有大量存储或大容量NAND的系统，
 其大小则可以忽略不计。
 
-系统可以进入“升级”模式，只需向引导加载程序发出必须启动升级软件的信号。
+系统可以进入 "升级" 模式，只需向引导加载程序发出必须启动升级软件的信号。
 具体方法可能有所不同，例如设置引导加载程序环境或使用和外部GPIO。
 
 引导加载程序启动“SWUpdate”，
@@ -252,65 +252,61 @@ recovery_status的值为“failed”。
 Power Failure
 -------------
 
-If a power off occurs, it must be guaranteed that the system is able
-to work again - starting again SWUpdate or restoring an old copy of the software.
+如果发生断电，必须保证系统能够再次工作 —— 重新
+启动SWUpdate或恢复软件的旧副本。
 
-Generally, the behavior can be split according to the chosen scenario:
+一般情况下，行为可以根据所选择的场景进行划分：
 
+- 单拷贝：SWUpdate被中断，更新事务没有以成功结束。
+  引导加载程序能够再次启动SWUpdate，从而有可能再次更新软件。
 - single copy: SWUpdate is interrupted and the update transaction did not end
   with a success. The boot loader is able to start SWUpdate again, having the
   possibility to update the software again.
 
-- double copy: SWUpdate did not switch between stand-by and current copy.
-  The same version of software, that was not touched by the update, is
-  started again.
+- 双拷贝：SWUpdate没有在备份系统和当前系统之间做切换。
+  当前版本的软件，并没有被更新触及到，会再次启动。
 
-To be completely safe, SWUpdate and the bootloader need to exchange some
-information. The bootloader must detect if an update was interrupted due
-to a power-off, and restart SWUpdate until an update is successful.
-SWUpdate supports the U-Boot, GRUB, and EFI Boot Guard bootloaders.
-U-Boot and EFI Boot Guard have a power-safe environment which SWUpdate is
-able to read and change in order to communicate with them. In case of GRUB,
-a fixed 1024-byte environment block file is used instead. SWUpdate sets
-a variable as flag when it starts to update the system and resets the same
-variable after completion. The bootloader can read this flag to check if an
-update was running before a power-off.
+为了完全安全，SWUpdate和引导加载程序需要交换一些信息。
+引导加载程序必须检测更新是否由于断电而中断，
+并重新启动SWUpdate，直到更新成功。
+
+SWUpdate支持U-Boot、GRUB和EFI Boot Guard引导加载程序。
+U-Boot和EFI Boot Guard有用于保证掉电安全的环境变量，
+SWUpdate能够读取和更改这些变量，以此与引导加载程序通信。
+对于GRUB，则使用固定的1024字节环境变量块文件。
+SWUpdate在开始更新系统时设置一个变量作为标志，
+并在完成之后重置同一变量。引导加载程序可以读取此标志，
+以检查在上次关机之前是否正在运行更新。
 
 .. image:: images/SoftwareUpdateU-Boot.png
 
-What about upgrading SWUpdate itself ?
+升级SWUpdate本身会如何?
 --------------------------------------
 
-SWUpdate is thought to be used in the whole development process, replacing
-customized process to update the software during the development. Before going
-into production, SWUpdate is well tested for a project.
+SWUpdate被认为用于整个开发过程，代替定制过程以在开发过程中更新软件。
+在投产前，SWUpdate被针对这个项目进行过很好的测试。
 
-If SWUpdate itself should be updated, the update cannot be safe if there is only
-one copy of SWUpdate in the storage. Safe update can be guaranteed only if
-SWUpdate is duplicated.
+如果SWUpdate本身应该被更新，那么当存储中只有一个SWUpdate副本时，
+更新就不是安全的。只有当SWUpdate拥有两个副本时，才能保证安全更新。
 
-There are some ways to circumvent this issue if SWUpdate is part of the
-upgraded image:
+如果SWUpdate是升级映像的一部分，则有一些方法可以避免这个问题:
 
-- have two copies of SWUpdate
-- take the risk, but have a rescue procedure using the boot loader.
+- 有两份SWUpdate
+- 承担风险，但准备一个在引导加载程序中可使用的救援程序。
 
-What about upgrading the Boot loader ?
+升级引导加载程序会如何?
 --------------------------------------
 
-Updating the boot loader is in most cases a one-way process. On most SOCs,
-there is no possibility to have multiple copies of the boot loader, and when
-boot loader is broken, the board does not simply boot.
+更新引导加载程序在大多数情况下无法做到的。
+在大多数SOC上，不存在多个引导加载程序的副本，
+当引导加载程序被破坏时，板子就无法引导启动了。
 
-Some SOCs allow to have multiple copies of the
-boot loader. But again, there is no general solution for this because it
-is *very* hardware specific.
+一些soc允许拥有多个引导加载程序副本。
+但同样，没有通用的解决方案，因为它是 *非常* 特定于硬件的。
 
-In my experience, most targets do not allow to update the boot loader. It
-is very uncommon that the boot loader must be updated when the product
-is ready for production.
+根据我的经验，大多数产品不允许更新引导加载程序。
+当产品准备好量产时，还必须要更新引导加载程序，这种情况是非常少见的。
 
-It is different if the U-Boot environment must be updated, that is a
-common practice. U-Boot provides a double copy of the whole environment,
-and updating the environment from SWUpdate is power-off safe. Other boot loaders
-can or cannot have this feature.
+以上结论不适用于更新U-Boot环境变量，这是一种常见的情况。
+U-Boot提供整个环境变量的两个副本，从SWUpdate中更新环境是
+掉电安全的。其他引导加载程序则不一定具有此功能。
