@@ -1,127 +1,99 @@
 =============================================
-SWUpdate: software update for embedded system
+SWUpdate: 嵌入式系统的软件升级
 =============================================
 
-Overview
+概述
 ========
 
-This project is thought to help to update an embedded
-system from a storage media or from network. However,
-it should be mainly considered as a framework, where
-further protocols or installers (in SWUpdate they are called handlers)
-can be easily added to the application.
+本项目被认为有助于从存储媒体或网络更新嵌入式系统。
+但是，它应该主要作为一个框架来考虑，在这个框架中可以方便地
+向应用程序添加更多的协议或安装程序(在SWUpdate中称为处理程序)。
 
-One use case is to update from an external local media, as
-USB-Pen or SD-Card. In this case, the update is done
-without any intervention by an operator: it is thought
-as "one-key-update", and the software is started at reset
-simply pressing a key (or in any way that can be recognized
-by the target), making all checks automatically. At the end,
-the updating process reports only the status to the operator
-(successful or failed).
+一个用例是从外部本地媒体(如USB-Pen或sd卡)进行更新。
+在这种情况下，更新是在没有操作员干预的情况下完成的:
+它被认为是“一键更新”，软件在复位时启动，只需按下一个键
+(或者以任何目标可以识别的方式)，自动进行所有检查。
+最后，更新过程只向操作员报告状态(成功或失败)。
 
-The output can be displayed on a LCD using the frame-buffer
-device or directed to a serial line (Linux console).
+输出可以使用帧缓冲设备显示在LCD上，
+也可以定向到串行通讯端口上(Linux控制台)。
 
-It is generally used in the single copy approach, running in an initrd
-(recipes are provided to generate with Yocto).  However, it is
-possible to use it in a double-copy approach by use of :ref:`collections`.
+它通常用于单拷贝方案中，在initrd中运行(用Yocto提供的配方生成)。
+但是，通过使用软件集合( :ref:`collections` )，可以在双拷贝方案中使用它。
 
-If started for a remote update, SWUpdate starts an embedded
-Web-server and waits for requests. The operator must upload
-a suitable image, that SWUpdate checks and then install.
-All output is notified to the operator's browser via AJAX
-notifications.
+如果启动了远程更新，SWUpdate将启动嵌入式web服务器并等待请求。
+操作者必须上传一个合适的映像，然后SWUpdate会进行检查并安装。
+所有输出都通过AJAX通知的方式通知操作人员的浏览器。
 
-Features
+功能
 ========
 
-General Overview
+总体概览
 ----------------
 
-- Install on embedded Media (eMMC, SD, Raw NAND,
-  NOR and SPI-NOR flashes)
+- 安装在嵌入式介质上(eMMC、SD、Raw NAND、NOR、SPI-NOR flash)
 
-- check if an image is available. The image is built
-  in a specified format (cpio) and it must contain
-  a file describing the software that must be updated.
+- 检查镜像是否可用。镜像以指定的格式(cpio)构建，它必须包含一个描述文件，
+  以描述必须更新的软件。
 
-- SWUpdate is thought to update UBI volumes (mainly for NAND, but not only)
-  and images on devices. Passing a whole image can still be updated
-  as a partition on the SD card, or a MTD partition.
+- SWUpdate被认为可以更新设备上的UBI卷(主要用于NAND，
+  但不限于NAND)和镜像。传递整个镜像仍然用于对SD卡上
+  的分区或MTD分区进行更新。
 
-- new partition schema. This is bound with UBI volume.
-  SWUpdate can recreate UBI volumes, resizing them and
-  copying the new software. A special UBI volume with the name "data"
-  is saved and restored after repartitioning with all data
-  it contains,  to maintain user's data.
+- 新分区模式。这与UBI容量有关。SWUpdate可以重新创建UBI卷，
+  调整它们的大小并复制新软件。一个名为“data”的特殊UBI卷
+  在重新分区时，用于保存和恢复数据，以保持好用户数据。
 
-- support for compressed images, using the zlib library.
-  tarball (tgz file) are supported.
+- 使用zlib库支持压缩镜像。支持tarball (tgz文件)。
 
-- support for partitioned USB-pen or unpartitioned (mainly
-  used by Windows).
+- 支持带分区的USB-pen或未分区盘(主要用于Windows)。
 
-- support for updating a single file inside a filesystem.
-  The filesystem where to put the file must be described.
+- 支持更新文件系统中的单个文件。
+  必须明确描述该文件所在的文件系统位置。
 
-- checksum for the single components of an image
+- 支持图像中单个组件的校验和
 
-- use a structured language to describe the image. This is done
-  using the libconfig_ library as default parser, that uses a
-  JSON-like description.
+- 使用结构化语言来描述镜像。
+  这是使用 libconfig_ 库作为缺省解析器完成的，它使用一种类似json的描述。
 
-- use custom's choice for the description of the image. It is
-  possible to write an own parser using the Lua language.
-  An example using a XML description in Lua is provided
-  in the examples directory.
+- 使用自定义的方式来描述镜像。可以使用Lua语言编写自己的解析器。
+  examples目录中提供了一个使用Lua中的XML描述的示例。
 
-- Support for setting / erasing U-Boot variables
+- 支持设置/删除U-Boot变量
 
-- Support for setting / erasing `GRUB`_ environment block variables
+- 支持设置/擦除 `GRUB`_ 环境块变量
 
-- Support for setting / erasing `EFI Boot Guard`_ variables
+- 支持设置/删除 `EFI Boot Guard`_ 变量
 
-- Support for preinstall scripts. They run before updating the images
+- 使用嵌入式web服务器的网络安装程序
+  (在Lua许可下的版本中选择了Mongoose服务器)。
+  可以使用不同的web服务器。
 
-- Support for postinstall scripts. They run after updating the images.
+- 多种获取软件的接口
+       - 本地存储: USB, SD, UART,..
 
-- Network installer using an embedded Web-server (Mongoose Server
-  was chosen, in the version under Lua license). A different
-  Web-server can be used.
+- OTA / 远程
+       - 集成的网络服务器
+       - 从远程服务器拉取(HTTP, HTTPS， ..)
+       - 使用后端。SWUpdate是开放的，可以与后端服务器进行通信，
+         以推出软件更新。当前版本支持Hawkbit服务器，
+         但可以添加其他后端。
 
-- Multiple interfaces for getting software
-       - local Storage: USB, SD, UART,..
-- OTA / Remote
-       - integrated Web-Server
-       - pulling from remote Server (HTTP, HTTPS, ..)
-       - using a Backend. SWUpdate is open to talk with back end
-         servers for rolling out software updates.
-         Current version supports the Hawkbit server, but other
-         backend can be added.
+- 可以配置为检查软件和硬件之间的兼容性。
+  软件映像必须包含条目，声明这个软件可在什么版本硬件上运行。
+  如果没有通过兼容性验证，SWUpdate将拒绝安装。
 
-- Can be configured to check for compatibility between software and hardware
-  revisions. The software image must contain an entry declaring on which
-  HW revision the software is allowed to run.
-  SWUpdate refuses to install if the compatibility is not verified.
+- 支持镜像提取。制造商用一个映像包含用于多个设备的软件。
+  这简化了制造商的管理，并降低了单一软件产品的管理成本。
+  SWUpdate以流的形式接收软件，不进行临时存储，并只提取需要安装的设备组件。
 
-- support for image extraction. A manufacturer can require to have
-  a single image that contains the software for more as one device.
-  This simplifies the manufacturer's management and reduces
-  their administrative costs having a single software product.
-  SWUpdate receives the software as stream without temporary storing,
-  and extracts only the required components for the device
-  to be installed.
+- 允许自定义处理器，通过自定义协议安装FPGA固件，微控制器固件。
 
-- allow custom handlers for installing FPGA firmware,
-  micro-controller firmware via custom protocols.
+- 使用“make menuconfig”启用/禁用特性。(Kbuild继承自busybox项目)
 
-- Features are enabled / disabled using "make menuconfig".
-  (Kbuild is inherited from busybox project)
+- 镜像在安装之前经过身份认证和校验
 
-- Images are authenticated and verified before installing
-
-- Power-Off safe
+- 掉电安全
 
 .. _libconfig: http://www.hyperrealm.com/libconfig/
 .. _GRUB: https://www.gnu.org/software/grub/manual/html_node/Environment-block.html
