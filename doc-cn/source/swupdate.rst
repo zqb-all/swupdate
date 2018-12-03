@@ -99,110 +99,93 @@ SWUpdate: 嵌入式系统的软件升级
 .. _GRUB: https://www.gnu.org/software/grub/manual/html_node/Environment-block.html
 .. _EFI Boot Guard: https://github.com/siemens/efibootguard
 
-Single image delivery
+交付单一镜像
 ---------------------
 
-The main concept is that the manufacturer delivers a single
-big image. All single images are packed together (cpio was chosen
-for its simplicity and because can be streamed) together with
-an additional file (sw-description), that contains meta
-information about each single image.
+主要概念是制造商提供单个大图像。
+所有单个的镜像都被打包在一起(选择cpio是因为它
+的简单性和可流式处理)，同时打包的还有另一个文
+件(sw-description)，该文件包含每个独立镜像的元信息。
 
-The format of sw-description can be customized: SWUpdate can be
-configured to use its internal parser (based on libconfig), or calling
-an external parser in Lua.
+sw-description的格式是可定制的:可以将SWUpdate配置为
+使用其内部解析器(基于libconfig)，或者在调用外部的lua解析器。
+
 
 .. image:: images/image_format.png
 
+可以使用外部解析器，改变对镜像的接受规则，以扩展支持新的镜像类型，
+指明它们需要如何安装。实际上，解析器就是检索必须安装哪些单个的镜像
+以及如何安装。
 
-Changing the rules to accept images with an external parser,
-let to extend to new image types and how they are installed.
-In fact, the scope of the parser is to retrieve which single
-images must be installed and how.
-SWUpdate implements "handlers" to install a single image:
-there are handlers to install images into UBI volumes,
-or to a SD card, a CFI Flash, and so on. It is then easy to
-add an own handler if a very special installer is required.
+SWUpdate使用“处理程序”来安装单个镜像:
+有用于将镜像安装到UBI卷或SD卡、CFI闪存等的处理程序。
+如果需要特殊的安装程序，那么也可以很容易地添加自己的处理程序。
 
-For example we can think at a project with a main processor and
-one or several micro-controllers. Let's say for simplicity that
-the main processor communicates with the micro-controllers via
-UARTS using a proprietary protocol. The software on the micro-controllers
-can be updated using the proprietary protocol.
+例如，我们可以考虑一个带有主处理器和一个或几个微控制器的项目。
+为了简单起见，我们假设主处理器使用专用协议通过UARTS与微控制器通信。
+微控制器上的软件可以使用专用协议进行更新。
 
-It is possible to extend SWUpdate writing a handler, that implements
-the part of the proprietary protocol to perform the upgrade
-on the micro-controller. The parser must recognize which image must be
-installed with the new handler, and SWUpdate will call the handler
-during the installation process.
+可以扩展swuodate，编写一个处理程序，实现专用协议的一部分
+来对微控制器进行升级。解析器必须识别哪个镜像必须用新的处理
+程序来安装，随后SWUpdate将在安装过程中调用该处理程序。
 
-Streaming feature
+流式更新功能
 -----------------
 
-SWUpdate is thought to be able to stream the received image directly into
-the target, without any temporary copy. In fact, the single installer
-(handler) receive as input the file descriptor set at the beginning of
-the image that must be installed.
+SWUpdate被认为能够将接收到的镜像直接流式更新到目标中，
+而不需要任何临时副本。实际上，单个安装程序(处理程序)会接收
+一个文件描述符作为输入，该文件描述符设置在必须安装的图像的开始处。
 
-The feature can be set on image basis, that means that a user can
-decide which partial images should be streamed. If not streamed (see
-installed-directly flag), files are temporary extracted into the directory
-pointed to by the environment variable ``TMPDIR`` with ``/tmp`` as
-fall-back if ``TMPDIR`` is not set.
-Of course, by streaming it is not possible to make checks on the whole delivered
-software before installing.
-The temporary copy is done only when updated from network. When the image
-is stored on an external storage, there is no need of that copy.
+该特性可以基于镜像进行设置，这意味着用户可以决定镜像的哪些部分
+应该流式处理。如果没有流式处理(请参见installed-direct标志)，
+文件将临时提取到环境变量 ``TMPDIR`` 指向的目录中，如果没有
+设置 ``TMPDIR`` ，则默认使用 ``/tmp`` 。
+当然，使用流式处理，则不可能在安装之前检查整个交付的软件。
+临时副本仅在从网络更新时使用。
+当映像存储在外部存储上时，不需要该副本。
 
 Images fully streamed
 ---------------------
 
-In case of remote update, SWUpdate extracts relevant images from the stream
-and copies them into the directory pointed to by the environment variable 
-``TMPDIR`` (if unset, to ``/tmp``) before calling the handlers.
-This guarantee that an update is initiated only if all parts are present and
-correct. However, on some systems with less resources, the amount of RAM
-to copy the images could be not enough, for example if the filesystem on
-an attached SD Card must be updated. In this case, it will help if the images
-are installed directly as stream by the corresponding handler, without temporary
-copies. Not all handlers support to stream directly into the target.
-Streaming with zero-copy is enabled by setting the flag "installed-directly"
-in the description of the single image.
+在远程更新的情况下，SWUpdate从流中提取相关图像，并将它们复制
+到环境变量 ``TMPDIR`` (如果未设置，则复制到 ``/tmp`` )指向的目录中，
+然后调用处理程序。这确保只有在所有部件都存在且正确时才会启动更新。
+但是，在一些资源较少的系统上，用于复制镜像的RAM空间可能不足，
+例如，如果必须更新附加SD卡上的文件系统的话。在这种情况下，如果
+图像能由相应的处理程序直接作为流安装，而不需要临时副本的话，
+则会很有帮助。并非所有处理程序都支持直接流式更新目标。
+零拷贝流是通过在单个镜像像的描述中设置“installed-directly”标志来启用的。
 
-Configuration and build
+配置和构建
 =======================
 
-Requirements
+需求
 ------------
 
-There are only a few libraries that are required to compile SWUpdate.
+编译SWUpdate只需要依赖几个库。
 
-- mtd-utils: internally, mtd-utils generates libmtd and libubi.
-  They are commonly not exported and not installed, but they are
-  linked by SWUpdate to reuse the same functions for upgrading
-  MTD and UBI volumes.
-- openssl: required with the Webserver
-- Lua: liblua and the development headers.
-- libz, libcrypto are always linked.
-- libconfig: it is used by the default parser.
-- libarchive (optional) for archive handler
-- libjson (optional) for JSON parser and Hawkbit
-- libubootenv (optional) if support for U-Boot is enabled
-- libebgenv (optional) if support for EFI Boot Guard is enabled
-- libcurl used to communicate with network
+- mtd-utils: mtd-utils在内部生成libmtd和libubi。它们通常不导出也不安装，
+  但是SWUpdate将链接它们，以便重用相同的功能来升级MTD和UBI卷。
+- openssl: web服务器需要。
+- Lua: liblua和开发头文件。
+- libz和libcrypto总是需要被链接。
+- libconfig: 被默认解析器使用。
+- libarchive (可选的)用于存档处理程序。
+- libjson (可选的)用于JSON解析器和Hawkbit。
+- libubootenv (可选的) 如果启用了对U-Boot的支持则需要。
+- libebgenv (可选的) 如果启用了对EFI Boot Guard的支持则需要。
+- libcurl 用于网络通讯。
 
-New handlers can add some other libraries to the requirement list -
-check if you need all handlers in case you get build errors,
-and drop what you do not need.
+新的处理程序可以向需求列表中添加一些其他的库 -
+当出现构建错误时，检查是否需要所有的处理程序，然后删除其中不需要的部分。
 
-Building with Yocto
+在Yocto中进行构建
 -------------------
 
-A meta-swupdate_ layer is provided. It contains the required changes
-for mtd-utils and for generating Lua. Using meta-SWUpdate is a
-straightforward process.
+提供了一个 meta-swupdate_ 层.它包含了mtd-utils和生成Lua所需的更改。
+使用meta-SWUpdate只需一些简单的步骤。
 
-Firstly, clone meta-SWUpdate.
+首先，克隆 meta-SWUpdate.
 
 ::
 
@@ -210,92 +193,89 @@ Firstly, clone meta-SWUpdate.
 
 .. _meta-SWUpdate:  https://github.com/sbabic/meta-swupdate.git
 
-Add meta-SWUpdate as usual to your bblayers.conf. You have also
-to add meta-oe to the list.
+像往常一样向 bblayer.conf 添加 meta-SWUpdate。
+你还需要将 meta-oe 添加到list中。
 
-In meta-SWUpdate there is a recipe to generate an initrd with a
-rescue system with SWUpdate. Use:
+在meta-SWUpdate中，有一个配方，用于生成带有swupdate的initrd救援系统。
+使用：
 
 ::
 
 	MACHINE=<your machine> bitbake swupdate-image
 
-You will find the result in your tmp/deploy/<your machine> directory.
-How to install and start an initrd is very target specific - please
-check in the documentation of your bootloader.
+你将在 tmp/deploy/<your machine> 目录中找到生成的结果。
+如何安装和启动initrd是跟具体目标强相关的 - 请查阅你的
+引导加载程序的文档。
 
-What about libubootenv ?
+libubootenv呢 ?
 ------------------------
 
-This is a common issue when SWUpdate is built. SWUpdate depends on this library,
-that is generated from the U-Boot's sources. This library allows to safe modify
-the U-Boot environment. It is not required if U-Boot is not used as bootloader.
-If SWUpdate cannot be linked, you are using an old version of U-Boot (you need
-at least 2016.05). If this is the case, you can add your own recipe for
-the package u-boot-fw-utils, adding the code for the library.
+这是构建SWUpdate时常见的问题。SWUpdate依赖于这个库，
+它是从U-Boot源码生成的。这个库允许安全地修改U-Boot环境变量。
+如果不使用U-Boot作为引导加载程序，则不需要它。
+如果无法SWUpdate正常链接，则你使用的是旧版本的U-Boot
+(你至少需要2016.05以上的版本)。如果是这样，你可以为
+包u-boot-fw-utils添加自己的配方，以添加这个库的代码。
 
-It is important that the package u-boot-fw-utils is built with the same
-sources of the bootloader and for the same machine. In fact, the target
-can have a default environment linked together with U-Boot's code,
-and it is not (yet) stored into a storage. SWUpdate should be aware of
-it, because it cannot read it: the default environment must be linked
-as well to SWUpdate's code. This is done inside the libubootenv.
+重要的是，包u-boot-fw-utils是用相同的引导加载程序源码和相同的机器构建的。
+事实上，设备可以使用一份直接链接到uboot中的默认环境变量，而不需要保存在
+存储器上。SWUpdate应该知道这一点，因为它不能读取这份环境变量:默认的这份
+环境变量也必须被链接到SWUpdate中。这是在libubootenv内部完成的。
 
-If you build for a different machine, SWUpdate will destroy the
-environment when it tries to change it the first time. In fact,
-a wrong default environment is taken, and your board won't boot again.
+如果构建的时候选择了不同的机器，SWUpdate将在第一次尝试更改环境变量时
+破坏环境变量。实际上，使用了错误的默认环境后，你的板子将不能再次被
+引导启动。
 
-Configuring SWUpdate
+配置SWUpdate
 --------------------
 
-SWUpdate is configurable via "make menuconfig". The small footprint
-is reached using the internal parser and disabling the web server.
-Any option has a small help describing its usage. In the default
-configuration, many options are already activated.
+SWUpdate可以通过“make menuconfig”配置。
+使用内部解析器和禁用web服务器可以达到较小的内存占用。
+每个选项都有描述其用法的小帮助说明。
+在默认配置中，许多选项已经被激活。
 
-To configure the options:
+要配置选项请执行:
 
 ::
 
 	make menuconfig
 
-Building
+构建
 --------
 
-- to cross-compile, set the CC and CXX variables before running make.
-  It is also possible to set the cross-compiler prefix as option with
-  make menuconfig.
-- generate the code
+- 要进行交叉编译，请在运行make之前设置CC和CXX变量。
+  也可以使用make menuconfig将交叉编译器前缀设置为选项。
+- 生成代码
 
 ::
 
 	make
 
-The result is the binary "swupdate". A second binary "progress" is built,
-but it is not strictly required. It is an example how to build your
-own interface to SWUpdate to show a progress bar or whatever you want on your
-HMI. The example simply prints on the console the current status of the update.
+结果时一个二进制文件“swupdate”。第二个构建的二进制文件
+是"process"，但这并非严格要求的。这是一个示例，演示如何
+构建自己的SWUpdate接口来在HMI上显示进度条或任何你想要的东西。
+具体到这个示例，则是简单地在控制台打印更新的当前状态。
 
-In the Yocto buildsystem,:
+
+在Yocto构建系统中，:
 
 ::
 
         bitbake swupdate
 
-This will build the package
+这将进行包的构建
 
 ::
 
         bitbake swupdate-image
 
-This builds a rescue image. The result is a Ramdisk that
-can be loaded directly by the bootloader.
-To use SWUpdate in the double-copy mode, put the package
-swupdate into your rootfs. Check your image recipe, and
-simply add it to the list of the installed packages.
+这将构建一个救援镜像。
+结果是一个可以由引导加载程序直接加载的Ramdisk。
+要在双拷贝模式下使用SWUpdate的话，则将包swupdate放到你的rootfs中。
+检查你的镜像配方文件，并简单地将其添加到安装包的列表中。
 
-For example, if we want to add it to the standard "core-image-full-cmdline"
-image, we can add a *recipes-extended/images/core-image-full-cmdline.bbappend*
+例如，如果我们想将它添加到标准的“core-image-full-cmdline”镜像中，
+我们可以添加一个 *recipes-extended/images/core-image-full-cmdline.bbappend*
 
 ::
 
@@ -303,21 +283,21 @@ image, we can add a *recipes-extended/images/core-image-full-cmdline.bbappend*
                                 swupdate \
                                 swupdate-www \
                          "
+swupdate-www是一个带有网站的软件包，你可以用自己的logo、模板
+和风格进行定制。
 
-swupdate-www is the package with the website, that you can customize with
-your own logo, template ans style.
-
-Building a debian package
+编译一个debian包
 -------------------------
 
-SWUpdate is thought for Embedded Systems and building in an embedded
-distribution is the first use case. But apart the most used buildsystems
-for embedded as Yocto or Buildroot, in some cases a standard Linux distro
-is used. Not only, a distro package allows to run SWUpdate on Linux PC
-for test purposes without having to fight with dependencies. Using the
-debhelper tools, it is possible to generate a debian package.
+SWUpdate被认为是用于嵌入式系统的，在嵌入式发行版中构建
+是首要的情况。但是除了最常用的嵌入式构建系统Yocto或
+Buildroot之外，在某些情况下还会使用标准的Linux发行版。
+不仅如此，发行版包还允许为了测试目的在Linux PC上
+运行SWUpdate，而不必与依赖项做斗争。
+使用debhelper工具，可以生成debian包。
 
-Steps for building a debian package
+
+编译一个debian包的步骤
 ...................................
 
 ::
@@ -326,12 +306,12 @@ Steps for building a debian package
         ./debian/rules build
         fakeroot debian/rules binary
 
-The result is a "deb" package stored in the parent directory.
+结果是一个存储在父目录中的“deb”包。
 
-Alternative way signing source package
+对源包签名的替代方法
 ......................................
 
-You can use dpkg-buildpackage:
+你可以使用dpkg-buildpackage:
 
 ::
 
@@ -339,79 +319,71 @@ You can use dpkg-buildpackage:
         debsign -k <keyId>
 
 
-Running SWUpdate
+运行SWUpdate
 ================
 
-What is expected from a SWUpdate run
+运行一次swupdate可以期望得到什么
 ------------------------------------
 
-A run of SWUpdate consists mainly of the following steps:
+SWUpdate的运行主要包括以下步骤:
 
-- check for media (USB-pen)
-- check for an image file. The extension must be .swu
-- extracts sw-description from the image and verifies it
-  It parses sw-description creating a raw description in RAM
-  about the activities that must be performed.
-- Reads the cpio archive and proofs the checksum of each single file
-  SWUpdate stops if the archive is not complete verified
-- check for hardware-software compatibility, if any,
-  reading hardware revision from hardware and matching
-  with the table in sw-description.
-- check that all components described in sw-description are
-  really in the cpio archive.
-- modify partitions, if required. This consists in a resize
-  of UBI volumes, not a resize of MTD partition.
-  A volume with the name "data" is saved and restored after
-  resizing.
-- runs pre-install scripts
-- iterates through all images and call the corresponding
-  handler for installing on target.
-- runs post-install scripts
-- update bootloader environment, if changes are specified
-  in sw-description.
-- reports the status to the operator (stdout)
+- 检查介质(usb pen)
+- 检查镜像文件。扩展名必须是.swu
+- 从镜像中提取sw-description并验证它，
+  它解析sw-description，在RAM中创建关于必须执行的活动的原始描述。
+- 读取cpio归档文件并验证每个文件的校验和，如果归档文件未完全
+  通过验证，SWUpdate将停止执行。
+- 检查硬件-软件兼容性，如果有的话，从硬件中读取硬件修改，
+  并与sw-description中的表做匹配。
+- 检查在sw-description中描述的所有组件是否真的在cpio归档中。
+- 如果需要，修改分区。这包含UBI卷的大小调整，而不是MTD分区的大小调整。
+  一个名为“data”的卷被用于在调整大小时保存和恢复数据。
+- 执行预运行脚本
+- 遍历所有镜像并调用相应的处理程序以便在目标上安装。
+- 执行安装后脚本
+- 如果在sw-description中指定了更改，则更新引导加载程序环境变量。
+- 向操作人员报告状态(stdout)
 
-The first step that fails, stops the entire procedure and
-an error is reported.
+有一个步骤失败，则会停止整个过程并报告错误。
 
-To start SWUpdate expecting the image from a file:
+运行SWUpdate从文件中获取镜像:
 
 ::
 
 	        swupdate -i <filename>
 
-To start with the embedded web server:
+带着嵌入式服务器启动:
 
 ::
 
 	         swupdate -w "<web server options>"
 
-The main important parameters for the web server are "document-root" and "port".
+web服务器主要的重要参数是"document-root"和"port"。
 
 ::
 
 	         swupdate -w "--document-root ./www --port 8080"
 
-The embedded web server is taken from the Mongoose project.
+嵌入式web服务器取自Mongoose项目。
 
-The whole list of options will be retrieved with:
+
+检索所有选项列表:
 
 ::
 
         swupdate -h
 
-This uses as website the pages delivered with the code. Of course,
-they can be customized and replaced. The website uses AJAX to communicate
-with SWUpdate, and to show the progress of the update to the operator.
 
-The default port of the Web-server is 8080. You can then connect to the target
-with:
+这个完整使用随着代码交付的也没。当然，它们可以定制和替换。
+网站使用AJAX与SWUpdate进行通信，并向操作人员显示更新的进度。
+
+web服务器的默认端口是8080。你可以从如下网址连接到目标设备:
 
 ::
 
 	http://<target_ip>:8080
 
-If it works, the start page should be displayed as in next figure.
+如果它正常工作，则开始页面应该显示如下图所示。
 
 .. image:: images/website.png
 
