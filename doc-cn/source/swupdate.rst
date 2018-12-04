@@ -387,111 +387,102 @@ web服务器的默认端口是8080。你可以从如下网址连接到目标设�
 
 .. image:: images/website.png
 
-If a correct image is downloaded, SWUpdate starts to process the received image.
-All notifications are sent back to the browser. SWUpdate provides a mechanism
-to send to a receiver the progress of the installation. In fact, SWUpdate
-takes a list of objects that registers itself with the application
-and they will be informed any time the application calls the notify() function.
-This allows also for self-written handlers to inform the upper layers about
-error conditions or simply return the status. It is then simply to add
-own receivers to implement customized way to display the results: displaying
-on a LCD (if the target has one), or sending back to another device via
-network.
-An example of the notifications sent back to the browser is in the next figure:
+如果下载了正确的镜像，SWUpdate将开始处理接收到的镜像。
+所有通知都被发送回浏览器。SWUpdate提供了一种机制，
+可以将安装进度发送给接收方。实际上，SWUpdate接受
+一个对象列表，这些对象在应用程序中注册了自身，
+在调用notify()函数时就会通知它们。
+这也允许自行编写处理程序通知上层错误条件或简单地返回状态。
+这使得可以简单地添加一个自己的接收器，以实现以自定义的方式
+显示结果：在LCD上显示(如果设备上有的话)，或者通过网络发送
+回另一个设备。
+
+
+发送回浏览器的通知示例如下图所示:
 
 .. image:: images/webprogress.png
 
-Software collections can be specified by passing `--select` command
-line option. Assuming `sw-description` file contains a collection
-named `stable`, with `alt` installation location, `SWUpdate` can be
-called like this::
+软件集合可以通过传递 `--select` 命令行选项来指定。
+假设 `sw-description` 文件包含一个名为 `stable` 的集合，
+加上 `alt` 的安装位置，则可以这样调用 `SWUpdate`
+
+::
 
    swupdate --select stable,alt
 
-Command line parameters
+命令行参数
 -----------------------
 
 +-------------+----------+--------------------------------------------+
-|  Parameter  | Type     | Description                                |
+|  Parameter  | Type     | 描述                                |
 +=============+==========+============================================+
-| -f <file>   | string   | SWUpdate config file to use                |
+| -f <file>   | string   | 要使用的SWUpdate配置文件                   |
 +-------------+----------+--------------------------------------------+
-| -b <string> | string   | Active only if CONFIG_UBIATTACH is set     |
-|             |          | It allows to blacklist MTDs when SWUpdate  |
-|             |          | searches for UBI volumes.                  |
-|             |          | Example: U-Boot and environment in MTD0-1: |
+| -b <string> | string   | 只有当选上CONFIG_UBIATTACH时才有效，       |
+|             |          | 它在SWUpdate搜索UBI卷时将MTDs列入黑名单。  |
+|             |          | 示例:MTD0-1中的U-BOOT和环境变量            |
 |             |          | **swupdate -b "0 1"**                      |
 +-------------+----------+--------------------------------------------+
-| -e <sel>    | string   | sel is in the format <software>,<mode>     |
-|             |          | It allows to find a subset of rules in     |
-|             |          | the sw-description file. With it,          |
-|             |          | multiple rules are allowed.                |
-|             |          | One common usage is in case of the dual    |
-|             |          | copy approach. Example:                    |
+| -e <sel>    | string   | sel 的格式为 <software>,<mode>             |
+|             |          | 它允许在sw-description文件中找到一个规则   |
+|             |          | 的子集。有了这个选项就可以使用多重规则了   |
+|             |          | 一种常见用法是在双拷贝模式下。例如:        |
 |             |          | -e "stable, copy1"  ==> install on copy1   |
 |             |          | -e "stable, copy2"  ==> install on copy2   |
 +-------------+----------+--------------------------------------------+
-| -h          |    -     | run usage with help                        |
+| -h          |    -     | 使用帮助                                   |
 +-------------+----------+--------------------------------------------+
-| -k          | string   | Active if CONFIG_SIGNED is set             |
-|             |          | Filename with the public key               |
+| -k          | string   | 选中 CONFIG_SIGNED 时可用                  |
+|             |          | 指定公钥文件                               |
 +-------------+----------+--------------------------------------------+
-| -l <level>  |    int   | Set loglevel                               |
+| -l <level>  |    int   | 设置log级别                                |
 +-------------+----------+--------------------------------------------+
-| -L          |    -     | Send LOG output to syslog(local)           |
+| -L          |    -     | 将log输出到 syslog(local)                  |
 +-------------+----------+--------------------------------------------+
-| -i <file>   | string   | run SWUpdate with a local .swu file        |
+| -i <file>   | string   | 使用本地.swu文件运行SWUpdate               |
 +-------------+----------+--------------------------------------------+
-| -n          |    -     | run SWUpdate in dry-run mode.              |
+| -n          |    -     | 在模拟(dry-run)模式下运行SWUpdate          |
 +-------------+----------+--------------------------------------------+
-| -N          | string   | passed the current installed version of    |
-|             |          | software. This will be checked with the    |
-|             |          | version of new software and forbids        |
-|             |          | downgrading.                               |
-|             |          | Version mconsists of 4 number:             |
+| -N          | string   | 传入当前安装的软件版本。这将用于检查       |
+|             |          | 新软件版本一起检查，禁止升级到旧版本。     |
+|             |          | 版本号由4个数字组成:                       |
 |             |          | major.minor.rev.build                      |
-|             |          | each field is in the range 0..65535        |
+|             |          | 每个字段都要在0..65535的范围内             |
 +-------------+----------+--------------------------------------------+
-| -o <file>   | string   | saves the stream (SWU) on a file           |
+| -o <file>   | string   | 将流(SWU)保存到一个文件中                  |
 +-------------+----------+--------------------------------------------+
-| -v          |    -     | activate verbose output                    |
+| -v          |    -     | 激活详细的输出信息                         |
 +-------------+----------+--------------------------------------------+
-| -w <parms>  | string   | start internal webserver and pass to it    |
-|             |          | a command line string.                     |
+| -w <parms>  | string   | 启动内部webserver并将命令行字符串传递给它  |
 +-------------+----------+--------------------------------------------+
-| -u <parms>  | string   | start internal suricatta client daemon and |
-|             |          | pass to it a command line string.          |
-|             |          | see suricatta's documentation for details. |
+| -u <parms>  | string   | 启动内部suricatta客户端守护进程，          |
+|             |          | 并将命令行字符串传递给它                   |
+|             |          | 详见suricatta的文档                        |
 +-------------+----------+--------------------------------------------+
-| -H          | string   | set board name and Hardware revision       |
+| -H          | string   | 设置板名和硬件版本                         |
 | <board:rev> |          |                                            |
 +-------------+----------+--------------------------------------------+
-| -c          |    -     | This will check ``*.swu`` file against     |
-|             |          | internal tests. It ensures that files      |
-|             |          | referenced in sw-description are present.  |
-|             |          | Usage: swupdate -c -i <file>               |
+| -c          |    -     | 这个选项将检查 ``*.swu`` 文件的内部。      |
+|             |          | 它确保sw-description中引用的文件是存在的。 |
+|             |          | 使用方法: swupdate -c -i <file>            |
 +-------------+----------+--------------------------------------------+
-| -p          | string   | Execute post-update command.               |
+| -p          | string   | 执行安装后命令                             |
 +-------------+----------+--------------------------------------------+
 +-------------+----------+--------------------------------------------+
-| -d <parms>  | string   | Active only if CONFIG_DOWNLOAD is set      |
-|             |          | start internal downloader client and pass  |
-|             |          | to it a command line string.               |
-|             |          | See below the internal command line        |
-|             |          | arguments for the downloader               |
+| -d <parms>  | string   | 选中 CONFIG_DOWNLOAD 时可用                |
+|             |          | 启动内部下载程序客户端，                   |
+|             |          | 并将命令行字符串传递给它。                 |
+|             |          | 请参阅下载程序的内部命令行参数             |
 +-------------+----------+--------------------------------------------+
-| -u <url>    | string   | This is the URL where new software is      |
-|             |          | pulled. URL is a link to a valid .swu image|
+| -u <url>    | string   | 这是提取新软件的URL。                      |
+|             |          | URL是指向有效.swu镜像的链接                |
 +-------------+----------+--------------------------------------------+
-| -r <retries>| integer  | Number of retries before a download is     |
-|             |          | considered broken. With "-r 0", SWUpdate   |
-|             |          | will not stop until a valid software is    |
-|             |          | loaded.                                    |
+| -r <retries>| integer  | 下载失败前重试的次数。使用“-r 0”，则       |
+|             |          | SWUpdate在加载到有效软件之前不会停止       |
 +-------------+----------+--------------------------------------------+
-| -t <timeout>| integer  | Timeout for connection lost when           |
-|             |          | downloading                                |
+| -t <timeout>| integer  | 判断下载连接丢失的超时时间                 |
 +-------------+----------+--------------------------------------------+
-| -a <usr:pwd>| string   | Send user and password for Basic Auth      |
+| -a <usr:pwd>| string   | 发送用于基本身份验证的用户名和密码         |
 +-------------+----------+--------------------------------------------+
 
 
@@ -547,7 +538,7 @@ files are also handed over on a "regular" start of SWUpdate via
 ``systemctl start swupdate.service``.
 
 Note that the socket paths in the two ``ListenStream=`` directives
-have to match the socket paths ``CONFIG_SOCKET_CTRL_PATH`` and 
+have to match the socket paths ``CONFIG_SOCKET_CTRL_PATH`` and
 ``CONFIG_SOCKET_PROGRESS_PATH`` in SWUpdate's configuration.
 Here, the default socket path configuration is depicted.
 
