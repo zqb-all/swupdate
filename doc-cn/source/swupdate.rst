@@ -185,7 +185,7 @@ Images fully streamed
 提供了一个 meta-swupdate_ 层.它包含了mtd-utils和生成Lua所需的更改。
 使用meta-SWUpdate只需一些简单的步骤。
 
-首先，克隆 meta-SWUpdate.
+首先，克隆 meta-swupdate.
 
 ::
 
@@ -193,10 +193,10 @@ Images fully streamed
 
 .. _meta-SWUpdate:  https://github.com/sbabic/meta-swupdate.git
 
-像往常一样向 bblayer.conf 添加 meta-SWUpdate。
+像往常一样向 bblayer.conf 添加 meta-swupdate。
 你还需要将 meta-oe 添加到list中。
 
-在meta-SWUpdate中，有一个配方，用于生成带有swupdate的initrd救援系统。
+在meta-swupdate中，有一个配方，用于生成带有swupdate的initrd救援系统。
 使用：
 
 ::
@@ -486,16 +486,15 @@ web服务器的默认端口是8080。你可以从如下网址连接到目标设�
 +-------------+----------+--------------------------------------------+
 
 
-systemd Integration
+systemd集成
 -------------------
 
-SWUpdate has optional systemd_ support via the compile-time
-configuration switch ``CONFIG_SYSTEMD``. If enabled, SWUpdate
-signals systemd about start-up completion and can make optional
-use of systemd's socket-based activation feature.
+SWUpdate 具有可选的 systemd_ 支持，是由编译配置开关 ``CONFIG_SYSTEMD``
+控制的。如果启用，SWUpdate将向systemd发送关于启动完成的信号，
+并可以可选地使用systemd的socket-based activation功能。
 
-A sample systemd service unit file ``/etc/systemd/system/swupdate.service``
-may look like the following starting SWUpdate in suricatta daemon mode:
+一个systemd服务单元文件的示例 ``/etc/systemd/system/swupdate.service``
+以suricatta守护进程模式启动SWUpdate，可能看起来像以下的样子：
 
 ::
 
@@ -511,10 +510,9 @@ may look like the following starting SWUpdate in suricatta daemon mode:
 	[Install]
 	WantedBy=multi-user.target
 
-Started via ``systemctl start swupdate.service``, SWUpdate
-(re)creates its sockets on startup. For using socket-based
-activation, an accompanying systemd socket unit file
-``/etc/systemd/system/swupdate.socket`` is required:
+通过 ``systemctl start swupdate.service`` 进行启动, SWUpdate在
+启动时(重新)创建套接字。为了使用socket-based activation，还必须附带一个
+systemd套接字单元文件 ``/etc/systemd/system/swupdate.socket`` ：
 
 ::
 
@@ -530,63 +528,56 @@ activation, an accompanying systemd socket unit file
 	[Install]
 	WantedBy=sockets.target
 
-On ``swupdate.socket`` being started, systemd creates the socket
-files and hands them over to SWUpdate when it starts. So, for
-example, when talking to ``/tmp/swupdateprog``, systemd starts
-``swupdate.service`` and hands-over the socket files. The socket
-files are also handed over on a "regular" start of SWUpdate via
-``systemctl start swupdate.service``.
 
-Note that the socket paths in the two ``ListenStream=`` directives
-have to match the socket paths ``CONFIG_SOCKET_CTRL_PATH`` and
-``CONFIG_SOCKET_PROGRESS_PATH`` in SWUpdate's configuration.
-Here, the default socket path configuration is depicted.
+在 ``swupdate.socket`` 被启动后, systemd创建套接字文件，
+并在SWupdate启动时将它们交给SWUpdate.
+例如，当与 ``/tmp/swupdateprog`` 对话时，systemd启动
+``swupdate.service`` 并移交套接字文件。
+在以 ``systemctl start swupdate.service`` "常规"启动SWupdate时
+也会传递Socket文件。
+
+
+注意，两个 ``ListenStream=`` 指令中的套接字路径
+必须与SWUpdate配置中的 ``CONFIG_SOCKET_CTRL_PATH``
+和 ``CONFIG_SOCKET_PROGRESS_PATH`` 中的套接字路径匹配。
+这里描述了缺省套接字路径配置。
 
 .. _systemd: https://www.freedesktop.org/wiki/Software/systemd/
 
 
-Changes in boot-loader code
+引导启动程序的修改
 ===========================
 
-The SWUpdate consists of kernel and a root filesystem
-(image) that must be started by the boot-loader.
-In case using U-Boot, the following mechanism can be implemented:
+SWUpdate 包含了内核和一个根文件系统(镜像),这必须由一个引导加载程序
+来启动。如果使用U-Boot, 可以实现以下机制:
 
-- U-Boot checks if a sw update is required (check gpio, serial console, etc.).
-- the script "altbootcmd" sets the rules to start SWUpdate
-- in case SWUpdate is required, U-boot run the script "altbootcmd"
+- U-Boot检查是否需要进行软件更新(检查gpio、串行控制台等)。
+- 脚本“altbootcmd”设置启动SWUpdate的规则
+- 当需要SWUpdate时, U-boot运行脚本"altbootcmd"
 
-Is it safe to change U-Boot environment ? Well, it is, but U-Boot must
-be configured correctly. U-Boot supports two copies of the environment
-to be power-off safe during an environment update. The board's
-configuration file must have defined CONFIG_ENV_OFFSET_REDUND or
-CONFIG_ENV_ADDR_REDUND. Check in U-Boot documentation for these
-constants and how to use them.
+更改U-Boot环境变量是安全的吗？是的，但是必须正确配置U-Boot。
+Uboot支持双备份环境变量，这可以使得更新器件掉电是安全的。
+板子的配置文件必须定义CONFIG_ENV_OFFSET_REDUND或CONFIG_ENV_ADDR_REDUND。
+查阅U-Boot文档了解这些常量的作用以及如何使用它们。
 
-There are a further enhancement that can be optionally integrated
-into U-boot to make the system safer. The most important I will
-suggest is to add support for boot counter in U-boot (documentation
-is in U-Boot docs). This allows U-Boot to track for attempts to
-successfully run the application, and if the boot counter is
-greater as a limit, can start automatically SWUpdate to replace
-a corrupt software.
+还有一些可选的增强可以集成到U-boot中，以使系统更安全。
+其中我会建议的最重要的一个，是添加启动技术支持到uboot中
+(文档在uboot的docs路径下)。这讲允许U-Boot追踪对成功启动应用的尝试。
+如果启动计数超过了限制，则可以自动启动SWupdate，以替代损坏了的软件。
 
-GRUB by default does not support double copies of environment as in case of
-U-Boot. This means that there is possibility that environment block get's
-corrupted when power-off occurs during environment update. To minimize the
-risk, we are not modifying original environment block. Variables are written
-into temporary file and after successful operation rename instruction is
-called.
+GRUB默认情况下不像U-Boot那样支持环境变量的双副本。
+这意味着，在环境块更新期间断电时，环境块有可能损坏。
+为了最小化风险，我们没有直接修改原始环境块。
+而是将变量写入临时文件，并在操作成功后调用rename指令。
 
-Building a single image
+构建一个单个的镜像
 =======================
 
-cpio is used as container for its simplicity. The resulting image is very
-simple to be built.
-The file describing the images ("sw-description", but the name can be
-configured) must be the first file in the cpio archive.
+cpio由于其简单性而被用作容器。由此可以很简单地生成镜像。
+描述镜像的文件(默认是"sw-description"，但是名称是可以配置的)
+必须是cpio归档中的第一个文件。
+要生成镜像，可以使用以下脚本:
 
-To produce an image, a script like this can be used:
 
 ::
 
@@ -598,18 +589,17 @@ To produce an image, a script like this can be used:
 		echo $i;done | cpio -ov -H crc >  ${PRODUCT_NAME}_${CONTAINER_VER}.swu
 
 
-The single images can be put in any order inside the cpio container, with the
-exception of sw-description, that must be the first one.
-To check your generated image you can run the following command:
+单个的子图像可以在cpio容器中按任意顺序放置，除了sw-description，它必须是第一个子镜像。
+要检查生成的镜像，可以运行以下命令:
 
 ::
 
     swupdate -c -i my-software_1.0.swu
 
 
-Support of compound image
+对复合镜像的支持
 -------------------------
 
-The single image can be built automatically inside Yocto.
-meta-swupdate extends the classes with the swupdate class. A recipe
-should inherit it, and add your own sw-description file to generate the image.
+在Yocto中可以自动生成单个镜像。
+meta-swupdate使用swupdate类扩展了类。
+配方应该继承它，并添加自己的sw-description文件来生成镜像。
