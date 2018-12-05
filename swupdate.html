@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>SWUpdate: software update for embedded system &mdash; Embedded Software Update Documentation 2018.11 文档</title>
+  <title>SWUpdate: 嵌入式系统的软件升级 &mdash; Embedded Software Update Documentation 2018.11 文档</title>
   
 
   
@@ -31,7 +31,7 @@
     <link rel="index" title="索引" href="genindex.html" />
     <link rel="search" title="搜索" href="search.html" />
     <link rel="next" title="SWUpdate: syntax and tags with the default parser" href="sw-description.html" />
-    <link rel="prev" title="License" href="licensing.html" /> 
+    <link rel="prev" title="许可证" href="licensing.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -86,40 +86,40 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">嵌入式系统的软件管理</a></li>
-<li class="toctree-l1"><a class="reference internal" href="licensing.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="licensing.html">许可证</a></li>
 </ul>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">SWUpdate: software update for embedded system</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#features">Features</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#general-overview">General Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#single-image-delivery">Single image delivery</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#streaming-feature">Streaming feature</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">SWUpdate: 嵌入式系统的软件升级</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">功能</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">总体概览</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">交付单一镜像</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">流式更新功能</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#images-fully-streamed">Images fully streamed</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#configuration-and-build">Configuration and build</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#requirements">Requirements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#building-with-yocto">Building with Yocto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#what-about-libubootenv">What about libubootenv ?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#configuring-swupdate">Configuring SWUpdate</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#building">Building</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#building-a-debian-package">Building a debian package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#steps-for-building-a-debian-package">Steps for building a debian package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#alternative-way-signing-source-package">Alternative way signing source package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id6">配置和构建</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id7">需求</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#yocto">在Yocto中进行构建</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#libubootenv">libubootenv呢 ?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">配置SWUpdate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">构建</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#debian">编译一个debian包</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id10">编译一个debian包的步骤</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id11">对源包签名的替代方法</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#running-swupdate">Running SWUpdate</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#what-is-expected-from-a-swupdate-run">What is expected from a SWUpdate run</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#command-line-parameters">Command line parameters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#systemd-integration">systemd Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id12">运行SWUpdate</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id13">运行一次swupdate可以期望得到什么</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id14">命令行参数</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#systemd">systemd集成</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#changes-in-boot-loader-code">Changes in boot-loader code</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#building-a-single-image">Building a single image</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#support-of-compound-image">Support of compound image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id16">引导启动程序的修改</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id17">构建一个单个的镜像</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id18">对复合镜像的支持</a></li>
 </ul>
 </li>
 </ul>
@@ -185,7 +185,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>SWUpdate: software update for embedded system</li>
+      <li>SWUpdate: 嵌入式系统的软件升级</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -204,307 +204,258 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="swupdate-software-update-for-embedded-system">
-<h1>SWUpdate: software update for embedded system<a class="headerlink" href="#swupdate-software-update-for-embedded-system" title="永久链接至标题">¶</a></h1>
-<div class="section" id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="永久链接至标题">¶</a></h2>
-<p>This project is thought to help to update an embedded
-system from a storage media or from network. However,
-it should be mainly considered as a framework, where
-further protocols or installers (in SWUpdate they are called handlers)
-can be easily added to the application.</p>
-<p>One use case is to update from an external local media, as
-USB-Pen or SD-Card. In this case, the update is done
-without any intervention by an operator: it is thought
-as “one-key-update”, and the software is started at reset
-simply pressing a key (or in any way that can be recognized
-by the target), making all checks automatically. At the end,
-the updating process reports only the status to the operator
-(successful or failed).</p>
-<p>The output can be displayed on a LCD using the frame-buffer
-device or directed to a serial line (Linux console).</p>
-<p>It is generally used in the single copy approach, running in an initrd
-(recipes are provided to generate with Yocto).  However, it is
-possible to use it in a double-copy approach by use of <a class="reference internal" href="sw-description.html#collections"><span class="std std-ref">Software collections</span></a>.</p>
-<p>If started for a remote update, SWUpdate starts an embedded
-Web-server and waits for requests. The operator must upload
-a suitable image, that SWUpdate checks and then install.
-All output is notified to the operator’s browser via AJAX
-notifications.</p>
+  <div class="section" id="swupdate">
+<h1>SWUpdate: 嵌入式系统的软件升级<a class="headerlink" href="#swupdate" title="永久链接至标题">¶</a></h1>
+<div class="section" id="id1">
+<h2>概述<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>本项目被认为有助于从存储媒体或网络更新嵌入式系统。
+但是，它应该主要作为一个框架来考虑，在这个框架中可以方便地
+向应用程序添加更多的协议或安装程序(在SWUpdate中称为处理程序)。</p>
+<p>一个用例是从外部本地媒体(如USB-Pen或sd卡)进行更新。
+在这种情况下，更新是在没有操作员干预的情况下完成的:
+它被认为是“一键更新”，软件在复位时启动，只需按下一个键
+(或者以任何目标可以识别的方式)，自动进行所有检查。
+最后，更新过程只向操作员报告状态(成功或失败)。</p>
+<p>输出可以使用帧缓冲设备显示在LCD上，
+也可以定向到串行通讯端口上(Linux控制台)。</p>
+<p>它通常用于单拷贝方案中，在initrd中运行(用Yocto提供的配方生成)。
+但是，通过使用软件集合( <a class="reference internal" href="sw-description.html#collections"><span class="std std-ref">Software collections</span></a> )，可以在双拷贝方案中使用它。</p>
+<p>如果启动了远程更新，SWUpdate将启动嵌入式web服务器并等待请求。
+操作者必须上传一个合适的映像，然后SWUpdate会进行检查并安装。
+所有输出都通过AJAX通知的方式通知操作人员的浏览器。</p>
 </div>
-<div class="section" id="features">
-<h2>Features<a class="headerlink" href="#features" title="永久链接至标题">¶</a></h2>
-<div class="section" id="general-overview">
-<h3>General Overview<a class="headerlink" href="#general-overview" title="永久链接至标题">¶</a></h3>
+<div class="section" id="id2">
+<h2>功能<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id3">
+<h3>总体概览<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h3>
 <ul class="simple">
-<li>Install on embedded Media (eMMC, SD, Raw NAND,
-NOR and SPI-NOR flashes)</li>
-<li>check if an image is available. The image is built
-in a specified format (cpio) and it must contain
-a file describing the software that must be updated.</li>
-<li>SWUpdate is thought to update UBI volumes (mainly for NAND, but not only)
-and images on devices. Passing a whole image can still be updated
-as a partition on the SD card, or a MTD partition.</li>
-<li>new partition schema. This is bound with UBI volume.
-SWUpdate can recreate UBI volumes, resizing them and
-copying the new software. A special UBI volume with the name “data”
-is saved and restored after repartitioning with all data
-it contains,  to maintain user’s data.</li>
-<li>support for compressed images, using the zlib library.
-tarball (tgz file) are supported.</li>
-<li>support for partitioned USB-pen or unpartitioned (mainly
-used by Windows).</li>
-<li>support for updating a single file inside a filesystem.
-The filesystem where to put the file must be described.</li>
-<li>checksum for the single components of an image</li>
-<li>use a structured language to describe the image. This is done
-using the <a class="reference external" href="http://www.hyperrealm.com/libconfig/">libconfig</a> library as default parser, that uses a
-JSON-like description.</li>
-<li>use custom’s choice for the description of the image. It is
-possible to write an own parser using the Lua language.
-An example using a XML description in Lua is provided
-in the examples directory.</li>
-<li>Support for setting / erasing U-Boot variables</li>
-<li>Support for setting / erasing <a class="reference external" href="https://www.gnu.org/software/grub/manual/html_node/Environment-block.html">GRUB</a> environment block variables</li>
-<li>Support for setting / erasing <a class="reference external" href="https://github.com/siemens/efibootguard">EFI Boot Guard</a> variables</li>
-<li>Support for preinstall scripts. They run before updating the images</li>
-<li>Support for postinstall scripts. They run after updating the images.</li>
-<li>Network installer using an embedded Web-server (Mongoose Server
-was chosen, in the version under Lua license). A different
-Web-server can be used.</li>
+<li>安装在嵌入式介质上(eMMC、SD、Raw NAND、NOR、SPI-NOR flash)</li>
+<li>检查镜像是否可用。镜像以指定的格式(cpio)构建，它必须包含一个描述文件，
+以描述必须更新的软件。</li>
+<li>SWUpdate被认为可以更新设备上的UBI卷(主要用于NAND，
+但不限于NAND)和镜像。传递整个镜像仍然用于对SD卡上
+的分区或MTD分区进行更新。</li>
+<li>新分区模式。这与UBI容量有关。SWUpdate可以重新创建UBI卷，
+调整它们的大小并复制新软件。一个名为“data”的特殊UBI卷
+在重新分区时，用于保存和恢复数据，以保持好用户数据。</li>
+<li>使用zlib库支持压缩镜像。支持tarball (tgz文件)。</li>
+<li>支持带分区的USB-pen或未分区盘(主要用于Windows)。</li>
+<li>支持更新文件系统中的单个文件。
+必须明确描述该文件所在的文件系统位置。</li>
+<li>支持图像中单个组件的校验和</li>
+<li>使用结构化语言来描述镜像。
+这是使用 <a class="reference external" href="http://www.hyperrealm.com/libconfig/">libconfig</a> 库作为缺省解析器完成的，它使用一种类似json的描述。</li>
+<li>使用自定义的方式来描述镜像。可以使用Lua语言编写自己的解析器。
+examples目录中提供了一个使用Lua中的XML描述的示例。</li>
+<li>支持设置/删除U-Boot变量</li>
+<li>支持设置/擦除 <a class="reference external" href="https://www.gnu.org/software/grub/manual/html_node/Environment-block.html">GRUB</a> 环境块变量</li>
+<li>支持设置/删除 <a class="reference external" href="https://github.com/siemens/efibootguard">EFI Boot Guard</a> 变量</li>
+<li>使用嵌入式web服务器的网络安装程序
+(在Lua许可下的版本中选择了Mongoose服务器)。
+可以使用不同的web服务器。</li>
 <li><dl class="first docutils">
-<dt>Multiple interfaces for getting software</dt>
+<dt>多种获取软件的接口</dt>
 <dd><ul class="first last">
-<li>local Storage: USB, SD, UART,..</li>
+<li>本地存储: USB, SD, UART,..</li>
 </ul>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt>OTA / Remote</dt>
+<dt>OTA / 远程</dt>
 <dd><ul class="first last">
-<li>integrated Web-Server</li>
-<li>pulling from remote Server (HTTP, HTTPS, ..)</li>
-<li>using a Backend. SWUpdate is open to talk with back end
-servers for rolling out software updates.
-Current version supports the Hawkbit server, but other
-backend can be added.</li>
+<li>集成的网络服务器</li>
+<li>从远程服务器拉取(HTTP, HTTPS， ..)</li>
+<li>使用后端。SWUpdate是开放的，可以与后端服务器进行通信，
+以推出软件更新。当前版本支持Hawkbit服务器，
+但可以添加其他后端。</li>
 </ul>
 </dd>
 </dl>
 </li>
-<li>Can be configured to check for compatibility between software and hardware
-revisions. The software image must contain an entry declaring on which
-HW revision the software is allowed to run.
-SWUpdate refuses to install if the compatibility is not verified.</li>
-<li>support for image extraction. A manufacturer can require to have
-a single image that contains the software for more as one device.
-This simplifies the manufacturer’s management and reduces
-their administrative costs having a single software product.
-SWUpdate receives the software as stream without temporary storing,
-and extracts only the required components for the device
-to be installed.</li>
-<li>allow custom handlers for installing FPGA firmware,
-micro-controller firmware via custom protocols.</li>
-<li>Features are enabled / disabled using “make menuconfig”.
-(Kbuild is inherited from busybox project)</li>
-<li>Images are authenticated and verified before installing</li>
-<li>Power-Off safe</li>
+<li>可以配置为检查软件和硬件之间的兼容性。
+软件映像必须包含条目，声明这个软件可在什么版本硬件上运行。
+如果没有通过兼容性验证，SWUpdate将拒绝安装。</li>
+<li>支持镜像提取。制造商用一个映像包含用于多个设备的软件。
+这简化了制造商的管理，并降低了单一软件产品的管理成本。
+SWUpdate以流的形式接收软件，不进行临时存储，并只提取需要安装的设备组件。</li>
+<li>允许自定义处理器，通过自定义协议安装FPGA固件，微控制器固件。</li>
+<li>使用“make menuconfig”启用/禁用特性。(Kbuild继承自busybox项目)</li>
+<li>镜像在安装之前经过身份认证和校验</li>
+<li>掉电安全</li>
 </ul>
 </div>
-<div class="section" id="single-image-delivery">
-<h3>Single image delivery<a class="headerlink" href="#single-image-delivery" title="永久链接至标题">¶</a></h3>
-<p>The main concept is that the manufacturer delivers a single
-big image. All single images are packed together (cpio was chosen
-for its simplicity and because can be streamed) together with
-an additional file (sw-description), that contains meta
-information about each single image.</p>
-<p>The format of sw-description can be customized: SWUpdate can be
-configured to use its internal parser (based on libconfig), or calling
-an external parser in Lua.</p>
+<div class="section" id="id4">
+<h3>交付单一镜像<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h3>
+<p>主要概念是制造商提供单个大图像。
+所有单个的镜像都被打包在一起(选择cpio是因为它
+的简单性和可流式处理)，同时打包的还有另一个文
+件(sw-description)，该文件包含每个独立镜像的元信息。</p>
+<p>sw-description的格式是可定制的:可以将SWUpdate配置为
+使用其内部解析器(基于libconfig)，或者在调用外部的lua解析器。</p>
 <img alt="_images/image_format.png" src="_images/image_format.png" />
-<p>Changing the rules to accept images with an external parser,
-let to extend to new image types and how they are installed.
-In fact, the scope of the parser is to retrieve which single
-images must be installed and how.
-SWUpdate implements “handlers” to install a single image:
-there are handlers to install images into UBI volumes,
-or to a SD card, a CFI Flash, and so on. It is then easy to
-add an own handler if a very special installer is required.</p>
-<p>For example we can think at a project with a main processor and
-one or several micro-controllers. Let’s say for simplicity that
-the main processor communicates with the micro-controllers via
-UARTS using a proprietary protocol. The software on the micro-controllers
-can be updated using the proprietary protocol.</p>
-<p>It is possible to extend SWUpdate writing a handler, that implements
-the part of the proprietary protocol to perform the upgrade
-on the micro-controller. The parser must recognize which image must be
-installed with the new handler, and SWUpdate will call the handler
-during the installation process.</p>
+<p>可以使用外部解析器，改变对镜像的接受规则，以扩展支持新的镜像类型，
+指明它们需要如何安装。实际上，解析器就是检索必须安装哪些单个的镜像
+以及如何安装。</p>
+<p>SWUpdate使用“处理程序”来安装单个镜像:
+有用于将镜像安装到UBI卷或SD卡、CFI闪存等的处理程序。
+如果需要特殊的安装程序，那么也可以很容易地添加自己的处理程序。</p>
+<p>例如，我们可以考虑一个带有主处理器和一个或几个微控制器的项目。
+为了简单起见，我们假设主处理器使用专用协议通过UARTS与微控制器通信。
+微控制器上的软件可以使用专用协议进行更新。</p>
+<p>可以扩展swuodate，编写一个处理程序，实现专用协议的一部分
+来对微控制器进行升级。解析器必须识别哪个镜像必须用新的处理
+程序来安装，随后SWUpdate将在安装过程中调用该处理程序。</p>
 </div>
-<div class="section" id="streaming-feature">
-<h3>Streaming feature<a class="headerlink" href="#streaming-feature" title="永久链接至标题">¶</a></h3>
-<p>SWUpdate is thought to be able to stream the received image directly into
-the target, without any temporary copy. In fact, the single installer
-(handler) receive as input the file descriptor set at the beginning of
-the image that must be installed.</p>
-<p>The feature can be set on image basis, that means that a user can
-decide which partial images should be streamed. If not streamed (see
-installed-directly flag), files are temporary extracted into the directory
-pointed to by the environment variable <code class="docutils literal notranslate"><span class="pre">TMPDIR</span></code> with <code class="docutils literal notranslate"><span class="pre">/tmp</span></code> as
-fall-back if <code class="docutils literal notranslate"><span class="pre">TMPDIR</span></code> is not set.
-Of course, by streaming it is not possible to make checks on the whole delivered
-software before installing.
-The temporary copy is done only when updated from network. When the image
-is stored on an external storage, there is no need of that copy.</p>
+<div class="section" id="id5">
+<h3>流式更新功能<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h3>
+<p>SWUpdate被认为能够将接收到的镜像直接流式更新到目标中，
+而不需要任何临时副本。实际上，单个安装程序(处理程序)会接收
+一个文件描述符作为输入，该文件描述符设置在必须安装的图像的开始处。</p>
+<p>该特性可以基于镜像进行设置，这意味着用户可以决定镜像的哪些部分
+应该流式处理。如果没有流式处理(请参见installed-direct标志)，
+文件将临时提取到环境变量 <code class="docutils literal notranslate"><span class="pre">TMPDIR</span></code> 指向的目录中，如果没有
+设置 <code class="docutils literal notranslate"><span class="pre">TMPDIR</span></code> ，则默认使用 <code class="docutils literal notranslate"><span class="pre">/tmp</span></code> 。
+当然，使用流式处理，则不可能在安装之前检查整个交付的软件。
+临时副本仅在从网络更新时使用。
+当映像存储在外部存储上时，不需要该副本。</p>
 </div>
 <div class="section" id="images-fully-streamed">
 <h3>Images fully streamed<a class="headerlink" href="#images-fully-streamed" title="永久链接至标题">¶</a></h3>
-<p>In case of remote update, SWUpdate extracts relevant images from the stream
-and copies them into the directory pointed to by the environment variable
-<code class="docutils literal notranslate"><span class="pre">TMPDIR</span></code> (if unset, to <code class="docutils literal notranslate"><span class="pre">/tmp</span></code>) before calling the handlers.
-This guarantee that an update is initiated only if all parts are present and
-correct. However, on some systems with less resources, the amount of RAM
-to copy the images could be not enough, for example if the filesystem on
-an attached SD Card must be updated. In this case, it will help if the images
-are installed directly as stream by the corresponding handler, without temporary
-copies. Not all handlers support to stream directly into the target.
-Streaming with zero-copy is enabled by setting the flag “installed-directly”
-in the description of the single image.</p>
+<p>在远程更新的情况下，SWUpdate从流中提取相关图像，并将它们复制
+到环境变量 <code class="docutils literal notranslate"><span class="pre">TMPDIR</span></code> (如果未设置，则复制到 <code class="docutils literal notranslate"><span class="pre">/tmp</span></code> )指向的目录中，
+然后调用处理程序。这确保只有在所有部件都存在且正确时才会启动更新。
+但是，在一些资源较少的系统上，用于复制镜像的RAM空间可能不足，
+例如，如果必须更新附加SD卡上的文件系统的话。在这种情况下，如果
+图像能由相应的处理程序直接作为流安装，而不需要临时副本的话，
+则会很有帮助。并非所有处理程序都支持直接流式更新目标。
+零拷贝流是通过在单个镜像像的描述中设置“installed-directly”标志来启用的。</p>
 </div>
 </div>
-<div class="section" id="configuration-and-build">
-<h2>Configuration and build<a class="headerlink" href="#configuration-and-build" title="永久链接至标题">¶</a></h2>
-<div class="section" id="requirements">
-<h3>Requirements<a class="headerlink" href="#requirements" title="永久链接至标题">¶</a></h3>
-<p>There are only a few libraries that are required to compile SWUpdate.</p>
+<div class="section" id="id6">
+<h2>配置和构建<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id7">
+<h3>需求<a class="headerlink" href="#id7" title="永久链接至标题">¶</a></h3>
+<p>编译SWUpdate只需要依赖几个库。</p>
 <ul class="simple">
-<li>mtd-utils: internally, mtd-utils generates libmtd and libubi.
-They are commonly not exported and not installed, but they are
-linked by SWUpdate to reuse the same functions for upgrading
-MTD and UBI volumes.</li>
-<li>openssl: required with the Webserver</li>
-<li>Lua: liblua and the development headers.</li>
-<li>libz, libcrypto are always linked.</li>
-<li>libconfig: it is used by the default parser.</li>
-<li>libarchive (optional) for archive handler</li>
-<li>libjson (optional) for JSON parser and Hawkbit</li>
-<li>libubootenv (optional) if support for U-Boot is enabled</li>
-<li>libebgenv (optional) if support for EFI Boot Guard is enabled</li>
-<li>libcurl used to communicate with network</li>
+<li>mtd-utils: mtd-utils在内部生成libmtd和libubi。它们通常不导出也不安装，
+但是SWUpdate将链接它们，以便重用相同的功能来升级MTD和UBI卷。</li>
+<li>openssl: web服务器需要。</li>
+<li>Lua: liblua和开发头文件。</li>
+<li>libz和libcrypto总是需要被链接。</li>
+<li>libconfig: 被默认解析器使用。</li>
+<li>libarchive (可选的)用于存档处理程序。</li>
+<li>libjson (可选的)用于JSON解析器和Hawkbit。</li>
+<li>libubootenv (可选的) 如果启用了对U-Boot的支持则需要。</li>
+<li>libebgenv (可选的) 如果启用了对EFI Boot Guard的支持则需要。</li>
+<li>libcurl 用于网络通讯。</li>
 </ul>
-<p>New handlers can add some other libraries to the requirement list -
-check if you need all handlers in case you get build errors,
-and drop what you do not need.</p>
+<p>新的处理程序可以向需求列表中添加一些其他的库 -
+当出现构建错误时，检查是否需要所有的处理程序，然后删除其中不需要的部分。</p>
 </div>
-<div class="section" id="building-with-yocto">
-<h3>Building with Yocto<a class="headerlink" href="#building-with-yocto" title="永久链接至标题">¶</a></h3>
-<p>A <a class="reference external" href="https://github.com/sbabic/meta-swupdate.git">meta-swupdate</a> layer is provided. It contains the required changes
-for mtd-utils and for generating Lua. Using meta-SWUpdate is a
-straightforward process.</p>
-<p>Firstly, clone meta-SWUpdate.</p>
+<div class="section" id="yocto">
+<h3>在Yocto中进行构建<a class="headerlink" href="#yocto" title="永久链接至标题">¶</a></h3>
+<p>提供了一个 <a class="reference external" href="https://github.com/sbabic/meta-swupdate.git">meta-swupdate</a> 层.它包含了mtd-utils和生成Lua所需的更改。
+使用meta-SWUpdate只需一些简单的步骤。</p>
+<p>首先，克隆 meta-swupdate.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">sbabic</span><span class="o">/</span><span class="n">meta</span><span class="o">-</span><span class="n">swupdate</span><span class="o">.</span><span class="n">git</span>
 </pre></div>
 </div>
-<p>Add meta-SWUpdate as usual to your bblayers.conf. You have also
-to add meta-oe to the list.</p>
-<p>In meta-SWUpdate there is a recipe to generate an initrd with a
-rescue system with SWUpdate. Use:</p>
+<p>像往常一样向 bblayer.conf 添加 meta-swupdate。
+你还需要将 meta-oe 添加到list中。</p>
+<p>在meta-swupdate中，有一个配方，用于生成带有swupdate的initrd救援系统。
+使用：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MACHINE</span><span class="o">=&lt;</span><span class="n">your</span> <span class="n">machine</span><span class="o">&gt;</span> <span class="n">bitbake</span> <span class="n">swupdate</span><span class="o">-</span><span class="n">image</span>
 </pre></div>
 </div>
-<p>You will find the result in your tmp/deploy/&lt;your machine&gt; directory.
-How to install and start an initrd is very target specific - please
-check in the documentation of your bootloader.</p>
+<p>你将在 tmp/deploy/&lt;your machine&gt; 目录中找到生成的结果。
+如何安装和启动initrd是跟具体目标强相关的 - 请查阅你的
+引导加载程序的文档。</p>
 </div>
-<div class="section" id="what-about-libubootenv">
-<h3>What about libubootenv ?<a class="headerlink" href="#what-about-libubootenv" title="永久链接至标题">¶</a></h3>
-<p>This is a common issue when SWUpdate is built. SWUpdate depends on this library,
-that is generated from the U-Boot’s sources. This library allows to safe modify
-the U-Boot environment. It is not required if U-Boot is not used as bootloader.
-If SWUpdate cannot be linked, you are using an old version of U-Boot (you need
-at least 2016.05). If this is the case, you can add your own recipe for
-the package u-boot-fw-utils, adding the code for the library.</p>
-<p>It is important that the package u-boot-fw-utils is built with the same
-sources of the bootloader and for the same machine. In fact, the target
-can have a default environment linked together with U-Boot’s code,
-and it is not (yet) stored into a storage. SWUpdate should be aware of
-it, because it cannot read it: the default environment must be linked
-as well to SWUpdate’s code. This is done inside the libubootenv.</p>
-<p>If you build for a different machine, SWUpdate will destroy the
-environment when it tries to change it the first time. In fact,
-a wrong default environment is taken, and your board won’t boot again.</p>
+<div class="section" id="libubootenv">
+<h3>libubootenv呢 ?<a class="headerlink" href="#libubootenv" title="永久链接至标题">¶</a></h3>
+<p>这是构建SWUpdate时常见的问题。SWUpdate依赖于这个库，
+它是从U-Boot源码生成的。这个库允许安全地修改U-Boot环境变量。
+如果不使用U-Boot作为引导加载程序，则不需要它。
+如果无法SWUpdate正常链接，则你使用的是旧版本的U-Boot
+(你至少需要2016.05以上的版本)。如果是这样，你可以为
+包u-boot-fw-utils添加自己的配方，以添加这个库的代码。</p>
+<p>重要的是，包u-boot-fw-utils是用相同的引导加载程序源码和相同的机器构建的。
+事实上，设备可以使用一份直接链接到uboot中的默认环境变量，而不需要保存在
+存储器上。SWUpdate应该知道这一点，因为它不能读取这份环境变量:默认的这份
+环境变量也必须被链接到SWUpdate中。这是在libubootenv内部完成的。</p>
+<p>如果构建的时候选择了不同的机器，SWUpdate将在第一次尝试更改环境变量时
+破坏环境变量。实际上，使用了错误的默认环境后，你的板子将不能再次被
+引导启动。</p>
 </div>
-<div class="section" id="configuring-swupdate">
-<h3>Configuring SWUpdate<a class="headerlink" href="#configuring-swupdate" title="永久链接至标题">¶</a></h3>
-<p>SWUpdate is configurable via “make menuconfig”. The small footprint
-is reached using the internal parser and disabling the web server.
-Any option has a small help describing its usage. In the default
-configuration, many options are already activated.</p>
-<p>To configure the options:</p>
+<div class="section" id="id8">
+<h3>配置SWUpdate<a class="headerlink" href="#id8" title="永久链接至标题">¶</a></h3>
+<p>SWUpdate可以通过“make menuconfig”配置。
+使用内部解析器和禁用web服务器可以达到较小的内存占用。
+每个选项都有描述其用法的小帮助说明。
+在默认配置中，许多选项已经被激活。</p>
+<p>要配置选项请执行:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">menuconfig</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="building">
-<h3>Building<a class="headerlink" href="#building" title="永久链接至标题">¶</a></h3>
+<div class="section" id="id9">
+<h3>构建<a class="headerlink" href="#id9" title="永久链接至标题">¶</a></h3>
 <ul class="simple">
-<li>to cross-compile, set the CC and CXX variables before running make.
-It is also possible to set the cross-compiler prefix as option with
-make menuconfig.</li>
-<li>generate the code</li>
+<li>要进行交叉编译，请在运行make之前设置CC和CXX变量。
+也可以使用make menuconfig将交叉编译器前缀设置为选项。</li>
+<li>生成代码</li>
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make</span>
 </pre></div>
 </div>
-<p>The result is the binary “swupdate”. A second binary “progress” is built,
-but it is not strictly required. It is an example how to build your
-own interface to SWUpdate to show a progress bar or whatever you want on your
-HMI. The example simply prints on the console the current status of the update.</p>
-<p>In the Yocto buildsystem,:</p>
+<p>结果时一个二进制文件“swupdate”。第二个构建的二进制文件
+是”process”，但这并非严格要求的。这是一个示例，演示如何
+构建自己的SWUpdate接口来在HMI上显示进度条或任何你想要的东西。
+具体到这个示例，则是简单地在控制台打印更新的当前状态。</p>
+<p>在Yocto构建系统中，:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bitbake</span> <span class="n">swupdate</span>
 </pre></div>
 </div>
-<p>This will build the package</p>
+<p>这将进行包的构建</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bitbake</span> <span class="n">swupdate</span><span class="o">-</span><span class="n">image</span>
 </pre></div>
 </div>
-<p>This builds a rescue image. The result is a Ramdisk that
-can be loaded directly by the bootloader.
-To use SWUpdate in the double-copy mode, put the package
-swupdate into your rootfs. Check your image recipe, and
-simply add it to the list of the installed packages.</p>
-<p>For example, if we want to add it to the standard “core-image-full-cmdline”
-image, we can add a <em>recipes-extended/images/core-image-full-cmdline.bbappend</em></p>
+<p>这将构建一个救援镜像。
+结果是一个可以由引导加载程序直接加载的Ramdisk。
+要在双拷贝模式下使用SWUpdate的话，则将包swupdate放到你的rootfs中。
+检查你的镜像配方文件，并简单地将其添加到安装包的列表中。</p>
+<p>例如，如果我们想将它添加到标准的“core-image-full-cmdline”镜像中，
+我们可以添加一个 <em>recipes-extended/images/core-image-full-cmdline.bbappend</em></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">IMAGE_INSTALL</span> <span class="o">+=</span> <span class="s2">&quot; </span><span class="se">\</span>
 <span class="s2">                        swupdate </span><span class="se">\</span>
 <span class="s2">                        swupdate-www </span><span class="se">\</span>
 <span class="s2">                 &quot;</span>
 </pre></div>
 </div>
-<p>swupdate-www is the package with the website, that you can customize with
-your own logo, template ans style.</p>
+<p>swupdate-www是一个带有网站的软件包，你可以用自己的logo、模板
+和风格进行定制。</p>
 </div>
-<div class="section" id="building-a-debian-package">
-<h3>Building a debian package<a class="headerlink" href="#building-a-debian-package" title="永久链接至标题">¶</a></h3>
-<p>SWUpdate is thought for Embedded Systems and building in an embedded
-distribution is the first use case. But apart the most used buildsystems
-for embedded as Yocto or Buildroot, in some cases a standard Linux distro
-is used. Not only, a distro package allows to run SWUpdate on Linux PC
-for test purposes without having to fight with dependencies. Using the
-debhelper tools, it is possible to generate a debian package.</p>
-<div class="section" id="steps-for-building-a-debian-package">
-<h4>Steps for building a debian package<a class="headerlink" href="#steps-for-building-a-debian-package" title="永久链接至标题">¶</a></h4>
+<div class="section" id="debian">
+<h3>编译一个debian包<a class="headerlink" href="#debian" title="永久链接至标题">¶</a></h3>
+<p>SWUpdate被认为是用于嵌入式系统的，在嵌入式发行版中构建
+是首要的情况。但是除了最常用的嵌入式构建系统Yocto或
+Buildroot之外，在某些情况下还会使用标准的Linux发行版。
+不仅如此，发行版包还允许为了测试目的在Linux PC上
+运行SWUpdate，而不必与依赖项做斗争。
+使用debhelper工具，可以生成debian包。</p>
+<div class="section" id="id10">
+<h4>编译一个debian包的步骤<a class="headerlink" href="#id10" title="永久链接至标题">¶</a></h4>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">debian</span><span class="o">/</span><span class="n">rules</span> <span class="n">clean</span>
 <span class="o">./</span><span class="n">debian</span><span class="o">/</span><span class="n">rules</span> <span class="n">build</span>
 <span class="n">fakeroot</span> <span class="n">debian</span><span class="o">/</span><span class="n">rules</span> <span class="n">binary</span>
 </pre></div>
 </div>
-<p>The result is a “deb” package stored in the parent directory.</p>
+<p>结果是一个存储在父目录中的“deb”包。</p>
 </div>
-<div class="section" id="alternative-way-signing-source-package">
-<h4>Alternative way signing source package<a class="headerlink" href="#alternative-way-signing-source-package" title="永久链接至标题">¶</a></h4>
-<p>You can use dpkg-buildpackage:</p>
+<div class="section" id="id11">
+<h4>对源包签名的替代方法<a class="headerlink" href="#id11" title="永久链接至标题">¶</a></h4>
+<p>你可以使用dpkg-buildpackage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dpkg</span><span class="o">-</span><span class="n">buildpackage</span> <span class="o">-</span><span class="n">us</span> <span class="o">-</span><span class="n">uc</span>
 <span class="n">debsign</span> <span class="o">-</span><span class="n">k</span> <span class="o">&lt;</span><span class="n">keyId</span><span class="o">&gt;</span>
 </pre></div>
@@ -512,252 +463,83 @@ debhelper tools, it is possible to generate a debian package.</p>
 </div>
 </div>
 </div>
-<div class="section" id="running-swupdate">
-<h2>Running SWUpdate<a class="headerlink" href="#running-swupdate" title="永久链接至标题">¶</a></h2>
-<div class="section" id="what-is-expected-from-a-swupdate-run">
-<h3>What is expected from a SWUpdate run<a class="headerlink" href="#what-is-expected-from-a-swupdate-run" title="永久链接至标题">¶</a></h3>
-<p>A run of SWUpdate consists mainly of the following steps:</p>
+<div class="section" id="id12">
+<h2>运行SWUpdate<a class="headerlink" href="#id12" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id13">
+<h3>运行一次swupdate可以期望得到什么<a class="headerlink" href="#id13" title="永久链接至标题">¶</a></h3>
+<p>SWUpdate的运行主要包括以下步骤:</p>
 <ul class="simple">
-<li>check for media (USB-pen)</li>
-<li>check for an image file. The extension must be .swu</li>
-<li>extracts sw-description from the image and verifies it
-It parses sw-description creating a raw description in RAM
-about the activities that must be performed.</li>
-<li>Reads the cpio archive and proofs the checksum of each single file
-SWUpdate stops if the archive is not complete verified</li>
-<li>check for hardware-software compatibility, if any,
-reading hardware revision from hardware and matching
-with the table in sw-description.</li>
-<li>check that all components described in sw-description are
-really in the cpio archive.</li>
-<li>modify partitions, if required. This consists in a resize
-of UBI volumes, not a resize of MTD partition.
-A volume with the name “data” is saved and restored after
-resizing.</li>
-<li>runs pre-install scripts</li>
-<li>iterates through all images and call the corresponding
-handler for installing on target.</li>
-<li>runs post-install scripts</li>
-<li>update bootloader environment, if changes are specified
-in sw-description.</li>
-<li>reports the status to the operator (stdout)</li>
+<li>检查介质(usb pen)</li>
+<li>检查镜像文件。扩展名必须是.swu</li>
+<li>从镜像中提取sw-description并验证它，
+它解析sw-description，在RAM中创建关于必须执行的活动的原始描述。</li>
+<li>读取cpio归档文件并验证每个文件的校验和，如果归档文件未完全
+通过验证，SWUpdate将停止执行。</li>
+<li>检查硬件-软件兼容性，如果有的话，从硬件中读取硬件修改，
+并与sw-description中的表做匹配。</li>
+<li>检查在sw-description中描述的所有组件是否真的在cpio归档中。</li>
+<li>如果需要，修改分区。这包含UBI卷的大小调整，而不是MTD分区的大小调整。
+一个名为“data”的卷被用于在调整大小时保存和恢复数据。</li>
+<li>执行预运行脚本</li>
+<li>遍历所有镜像并调用相应的处理程序以便在目标上安装。</li>
+<li>执行安装后脚本</li>
+<li>如果在sw-description中指定了更改，则更新引导加载程序环境变量。</li>
+<li>向操作人员报告状态(stdout)</li>
 </ul>
-<p>The first step that fails, stops the entire procedure and
-an error is reported.</p>
-<p>To start SWUpdate expecting the image from a file:</p>
+<p>有一个步骤失败，则会停止整个过程并报告错误。</p>
+<p>运行SWUpdate从文件中获取镜像:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">swupdate</span> <span class="o">-</span><span class="n">i</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;</span>
 </pre></div>
 </div>
-<p>To start with the embedded web server:</p>
+<p>带着嵌入式服务器启动:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">swupdate</span> <span class="o">-</span><span class="n">w</span> <span class="s2">&quot;&lt;web server options&gt;&quot;</span>
 </pre></div>
 </div>
-<p>The main important parameters for the web server are “document-root” and “port”.</p>
+<p>web服务器主要的重要参数是”document-root”和”port”。</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">swupdate</span> <span class="o">-</span><span class="n">w</span> <span class="s2">&quot;--document-root ./www --port 8080&quot;</span>
 </pre></div>
 </div>
-<p>The embedded web server is taken from the Mongoose project.</p>
-<p>The whole list of options will be retrieved with:</p>
+<p>嵌入式web服务器取自Mongoose项目。</p>
+<p>检索所有选项列表:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">swupdate</span> <span class="o">-</span><span class="n">h</span>
 </pre></div>
 </div>
-<p>This uses as website the pages delivered with the code. Of course,
-they can be customized and replaced. The website uses AJAX to communicate
-with SWUpdate, and to show the progress of the update to the operator.</p>
-<p>The default port of the Web-server is 8080. You can then connect to the target
-with:</p>
+<p>这个完整使用随着代码交付的也没。当然，它们可以定制和替换。
+网站使用AJAX与SWUpdate进行通信，并向操作人员显示更新的进度。</p>
+<p>web服务器的默认端口是8080。你可以从如下网址连接到目标设备:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">http</span><span class="p">:</span><span class="o">//&lt;</span><span class="n">target_ip</span><span class="o">&gt;</span><span class="p">:</span><span class="mi">8080</span>
 </pre></div>
 </div>
-<p>If it works, the start page should be displayed as in next figure.</p>
+<p>如果它正常工作，则开始页面应该显示如下图所示。</p>
 <img alt="_images/website.png" src="_images/website.png" />
-<p>If a correct image is downloaded, SWUpdate starts to process the received image.
-All notifications are sent back to the browser. SWUpdate provides a mechanism
-to send to a receiver the progress of the installation. In fact, SWUpdate
-takes a list of objects that registers itself with the application
-and they will be informed any time the application calls the notify() function.
-This allows also for self-written handlers to inform the upper layers about
-error conditions or simply return the status. It is then simply to add
-own receivers to implement customized way to display the results: displaying
-on a LCD (if the target has one), or sending back to another device via
-network.
-An example of the notifications sent back to the browser is in the next figure:</p>
+<p>如果下载了正确的镜像，SWUpdate将开始处理接收到的镜像。
+所有通知都被发送回浏览器。SWUpdate提供了一种机制，
+可以将安装进度发送给接收方。实际上，SWUpdate接受
+一个对象列表，这些对象在应用程序中注册了自身，
+在调用notify()函数时就会通知它们。
+这也允许自行编写处理程序通知上层错误条件或简单地返回状态。
+这使得可以简单地添加一个自己的接收器，以实现以自定义的方式
+显示结果：在LCD上显示(如果设备上有的话)，或者通过网络发送
+回另一个设备。</p>
+<p>发送回浏览器的通知示例如下图所示:</p>
 <img alt="_images/webprogress.png" src="_images/webprogress.png" />
-<p>Software collections can be specified by passing <cite>–select</cite> command
-line option. Assuming <cite>sw-description</cite> file contains a collection
-named <cite>stable</cite>, with <cite>alt</cite> installation location, <cite>SWUpdate</cite> can be
-called like this:</p>
+<p>软件集合可以通过传递 <cite>–select</cite> 命令行选项来指定。
+假设 <cite>sw-description</cite> 文件包含一个名为 <cite>stable</cite> 的集合，
+加上 <cite>alt</cite> 的安装位置，则可以这样调用 <cite>SWUpdate</cite></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">swupdate</span> <span class="o">--</span><span class="n">select</span> <span class="n">stable</span><span class="p">,</span><span class="n">alt</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="command-line-parameters">
-<h3>Command line parameters<a class="headerlink" href="#command-line-parameters" title="永久链接至标题">¶</a></h3>
-<table border="1" class="docutils">
-<colgroup>
-<col width="19%" />
-<col width="15%" />
-<col width="66%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Parameter</th>
-<th class="head">Type</th>
-<th class="head">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>-f &lt;file&gt;</td>
-<td>string</td>
-<td>SWUpdate config file to use</td>
-</tr>
-<tr class="row-odd"><td>-b &lt;string&gt;</td>
-<td>string</td>
-<td>Active only if CONFIG_UBIATTACH is set
-It allows to blacklist MTDs when SWUpdate
-searches for UBI volumes.
-Example: U-Boot and environment in MTD0-1:
-<strong>swupdate -b “0 1”</strong></td>
-</tr>
-<tr class="row-even"><td>-e &lt;sel&gt;</td>
-<td>string</td>
-<td>sel is in the format &lt;software&gt;,&lt;mode&gt;
-It allows to find a subset of rules in
-the sw-description file. With it,
-multiple rules are allowed.
-One common usage is in case of the dual
-copy approach. Example:
--e “stable, copy1”  ==&gt; install on copy1
--e “stable, copy2”  ==&gt; install on copy2</td>
-</tr>
-<tr class="row-odd"><td>-h</td>
-<td><ul class="first last simple">
-<li></li>
-</ul>
-</td>
-<td>run usage with help</td>
-</tr>
-<tr class="row-even"><td>-k</td>
-<td>string</td>
-<td>Active if CONFIG_SIGNED is set
-Filename with the public key</td>
-</tr>
-<tr class="row-odd"><td>-l &lt;level&gt;</td>
-<td>int</td>
-<td>Set loglevel</td>
-</tr>
-<tr class="row-even"><td>-L</td>
-<td><ul class="first last simple">
-<li></li>
-</ul>
-</td>
-<td>Send LOG output to syslog(local)</td>
-</tr>
-<tr class="row-odd"><td>-i &lt;file&gt;</td>
-<td>string</td>
-<td>run SWUpdate with a local .swu file</td>
-</tr>
-<tr class="row-even"><td>-n</td>
-<td><ul class="first last simple">
-<li></li>
-</ul>
-</td>
-<td>run SWUpdate in dry-run mode.</td>
-</tr>
-<tr class="row-odd"><td>-N</td>
-<td>string</td>
-<td>passed the current installed version of
-software. This will be checked with the
-version of new software and forbids
-downgrading.
-Version mconsists of 4 number:
-major.minor.rev.build
-each field is in the range 0..65535</td>
-</tr>
-<tr class="row-even"><td>-o &lt;file&gt;</td>
-<td>string</td>
-<td>saves the stream (SWU) on a file</td>
-</tr>
-<tr class="row-odd"><td>-v</td>
-<td><ul class="first last simple">
-<li></li>
-</ul>
-</td>
-<td>activate verbose output</td>
-</tr>
-<tr class="row-even"><td>-w &lt;parms&gt;</td>
-<td>string</td>
-<td>start internal webserver and pass to it
-a command line string.</td>
-</tr>
-<tr class="row-odd"><td>-u &lt;parms&gt;</td>
-<td>string</td>
-<td>start internal suricatta client daemon and
-pass to it a command line string.
-see suricatta’s documentation for details.</td>
-</tr>
-<tr class="row-even"><td>-H
-&lt;board:rev&gt;</td>
-<td>string</td>
-<td>set board name and Hardware revision</td>
-</tr>
-<tr class="row-odd"><td>-c</td>
-<td><ul class="first last simple">
-<li></li>
-</ul>
-</td>
-<td>This will check <code class="docutils literal notranslate"><span class="pre">*.swu</span></code> file against
-internal tests. It ensures that files
-referenced in sw-description are present.
-Usage: swupdate -c -i &lt;file&gt;</td>
-</tr>
-<tr class="row-even"><td>-p</td>
-<td>string</td>
-<td>Execute post-update command.</td>
-</tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>-d &lt;parms&gt;</td>
-<td>string</td>
-<td>Active only if CONFIG_DOWNLOAD is set
-start internal downloader client and pass
-to it a command line string.
-See below the internal command line
-arguments for the downloader</td>
-</tr>
-<tr class="row-odd"><td>-u &lt;url&gt;</td>
-<td>string</td>
-<td>This is the URL where new software is
-pulled. URL is a link to a valid .swu image</td>
-</tr>
-<tr class="row-even"><td>-r &lt;retries&gt;</td>
-<td>integer</td>
-<td>Number of retries before a download is
-considered broken. With “-r 0”, SWUpdate
-will not stop until a valid software is
-loaded.</td>
-</tr>
-<tr class="row-odd"><td>-t &lt;timeout&gt;</td>
-<td>integer</td>
-<td>Timeout for connection lost when
-downloading</td>
-</tr>
-<tr class="row-even"><td>-a &lt;usr:pwd&gt;</td>
-<td>string</td>
-<td>Send user and password for Basic Auth</td>
-</tr>
-</tbody>
-</table>
+<div class="section" id="id14">
+<h3>命令行参数<a class="headerlink" href="#id14" title="永久链接至标题">¶</a></h3>
 </div>
-<div class="section" id="systemd-integration">
-<h3>systemd Integration<a class="headerlink" href="#systemd-integration" title="永久链接至标题">¶</a></h3>
-<p>SWUpdate has optional <a class="reference external" href="https://www.freedesktop.org/wiki/Software/systemd/">systemd</a> support via the compile-time
-configuration switch <code class="docutils literal notranslate"><span class="pre">CONFIG_SYSTEMD</span></code>. If enabled, SWUpdate
-signals systemd about start-up completion and can make optional
-use of systemd’s socket-based activation feature.</p>
-<p>A sample systemd service unit file <code class="docutils literal notranslate"><span class="pre">/etc/systemd/system/swupdate.service</span></code>
-may look like the following starting SWUpdate in suricatta daemon mode:</p>
+<div class="section" id="systemd">
+<h3>systemd集成<a class="headerlink" href="#systemd" title="永久链接至标题">¶</a></h3>
+<p>SWUpdate 具有可选的 <a class="reference external" href="https://www.freedesktop.org/wiki/Software/systemd/">systemd</a> 支持，是由编译配置开关 <code class="docutils literal notranslate"><span class="pre">CONFIG_SYSTEMD</span></code>
+控制的。如果启用，SWUpdate将向systemd发送关于启动完成的信号，
+并可以可选地使用systemd的socket-based activation功能。</p>
+<p>一个systemd服务单元文件的示例 <code class="docutils literal notranslate"><span class="pre">/etc/systemd/system/swupdate.service</span></code>
+以suricatta守护进程模式启动SWUpdate，可能看起来像以下的样子：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Unit</span><span class="p">]</span>
 <span class="n">Description</span><span class="o">=</span><span class="n">SWUpdate</span> <span class="n">daemon</span>
 <span class="n">Documentation</span><span class="o">=</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">sbabic</span><span class="o">/</span><span class="n">swupdate</span>
@@ -771,10 +553,9 @@ may look like the following starting SWUpdate in suricatta daemon mode:</p>
 <span class="n">WantedBy</span><span class="o">=</span><span class="n">multi</span><span class="o">-</span><span class="n">user</span><span class="o">.</span><span class="n">target</span>
 </pre></div>
 </div>
-<p>Started via <code class="docutils literal notranslate"><span class="pre">systemctl</span> <span class="pre">start</span> <span class="pre">swupdate.service</span></code>, SWUpdate
-(re)creates its sockets on startup. For using socket-based
-activation, an accompanying systemd socket unit file
-<code class="docutils literal notranslate"><span class="pre">/etc/systemd/system/swupdate.socket</span></code> is required:</p>
+<p>通过 <code class="docutils literal notranslate"><span class="pre">systemctl</span> <span class="pre">start</span> <span class="pre">swupdate.service</span></code> 进行启动, SWUpdate在
+启动时(重新)创建套接字。为了使用socket-based activation，还必须附带一个
+systemd套接字单元文件 <code class="docutils literal notranslate"><span class="pre">/etc/systemd/system/swupdate.socket</span></code> ：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Unit</span><span class="p">]</span>
 <span class="n">Description</span><span class="o">=</span><span class="n">SWUpdate</span> <span class="n">socket</span> <span class="n">listener</span>
 <span class="n">Documentation</span><span class="o">=</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">sbabic</span><span class="o">/</span><span class="n">swupdate</span>
@@ -788,55 +569,46 @@ activation, an accompanying systemd socket unit file
 <span class="n">WantedBy</span><span class="o">=</span><span class="n">sockets</span><span class="o">.</span><span class="n">target</span>
 </pre></div>
 </div>
-<p>On <code class="docutils literal notranslate"><span class="pre">swupdate.socket</span></code> being started, systemd creates the socket
-files and hands them over to SWUpdate when it starts. So, for
-example, when talking to <code class="docutils literal notranslate"><span class="pre">/tmp/swupdateprog</span></code>, systemd starts
-<code class="docutils literal notranslate"><span class="pre">swupdate.service</span></code> and hands-over the socket files. The socket
-files are also handed over on a “regular” start of SWUpdate via
-<code class="docutils literal notranslate"><span class="pre">systemctl</span> <span class="pre">start</span> <span class="pre">swupdate.service</span></code>.</p>
-<p>Note that the socket paths in the two <code class="docutils literal notranslate"><span class="pre">ListenStream=</span></code> directives
-have to match the socket paths <code class="docutils literal notranslate"><span class="pre">CONFIG_SOCKET_CTRL_PATH</span></code> and
-<code class="docutils literal notranslate"><span class="pre">CONFIG_SOCKET_PROGRESS_PATH</span></code> in SWUpdate’s configuration.
-Here, the default socket path configuration is depicted.</p>
+<p>在 <code class="docutils literal notranslate"><span class="pre">swupdate.socket</span></code> 被启动后, systemd创建套接字文件，
+并在SWupdate启动时将它们交给SWUpdate.
+例如，当与 <code class="docutils literal notranslate"><span class="pre">/tmp/swupdateprog</span></code> 对话时，systemd启动
+<code class="docutils literal notranslate"><span class="pre">swupdate.service</span></code> 并移交套接字文件。
+在以 <code class="docutils literal notranslate"><span class="pre">systemctl</span> <span class="pre">start</span> <span class="pre">swupdate.service</span></code> “常规”启动SWupdate时
+也会传递Socket文件。</p>
+<p>注意，两个 <code class="docutils literal notranslate"><span class="pre">ListenStream=</span></code> 指令中的套接字路径
+必须与SWUpdate配置中的 <code class="docutils literal notranslate"><span class="pre">CONFIG_SOCKET_CTRL_PATH</span></code>
+和 <code class="docutils literal notranslate"><span class="pre">CONFIG_SOCKET_PROGRESS_PATH</span></code> 中的套接字路径匹配。
+这里描述了缺省套接字路径配置。</p>
 </div>
 </div>
-<div class="section" id="changes-in-boot-loader-code">
-<h2>Changes in boot-loader code<a class="headerlink" href="#changes-in-boot-loader-code" title="永久链接至标题">¶</a></h2>
-<p>The SWUpdate consists of kernel and a root filesystem
-(image) that must be started by the boot-loader.
-In case using U-Boot, the following mechanism can be implemented:</p>
+<div class="section" id="id16">
+<h2>引导启动程序的修改<a class="headerlink" href="#id16" title="永久链接至标题">¶</a></h2>
+<p>SWUpdate 包含了内核和一个根文件系统(镜像),这必须由一个引导加载程序
+来启动。如果使用U-Boot, 可以实现以下机制:</p>
 <ul class="simple">
-<li>U-Boot checks if a sw update is required (check gpio, serial console, etc.).</li>
-<li>the script “altbootcmd” sets the rules to start SWUpdate</li>
-<li>in case SWUpdate is required, U-boot run the script “altbootcmd”</li>
+<li>U-Boot检查是否需要进行软件更新(检查gpio、串行控制台等)。</li>
+<li>脚本“altbootcmd”设置启动SWUpdate的规则</li>
+<li>当需要SWUpdate时, U-boot运行脚本”altbootcmd”</li>
 </ul>
-<p>Is it safe to change U-Boot environment ? Well, it is, but U-Boot must
-be configured correctly. U-Boot supports two copies of the environment
-to be power-off safe during an environment update. The board’s
-configuration file must have defined CONFIG_ENV_OFFSET_REDUND or
-CONFIG_ENV_ADDR_REDUND. Check in U-Boot documentation for these
-constants and how to use them.</p>
-<p>There are a further enhancement that can be optionally integrated
-into U-boot to make the system safer. The most important I will
-suggest is to add support for boot counter in U-boot (documentation
-is in U-Boot docs). This allows U-Boot to track for attempts to
-successfully run the application, and if the boot counter is
-greater as a limit, can start automatically SWUpdate to replace
-a corrupt software.</p>
-<p>GRUB by default does not support double copies of environment as in case of
-U-Boot. This means that there is possibility that environment block get’s
-corrupted when power-off occurs during environment update. To minimize the
-risk, we are not modifying original environment block. Variables are written
-into temporary file and after successful operation rename instruction is
-called.</p>
+<p>更改U-Boot环境变量是安全的吗？是的，但是必须正确配置U-Boot。
+Uboot支持双备份环境变量，这可以使得更新器件掉电是安全的。
+板子的配置文件必须定义CONFIG_ENV_OFFSET_REDUND或CONFIG_ENV_ADDR_REDUND。
+查阅U-Boot文档了解这些常量的作用以及如何使用它们。</p>
+<p>还有一些可选的增强可以集成到U-boot中，以使系统更安全。
+其中我会建议的最重要的一个，是添加启动技术支持到uboot中
+(文档在uboot的docs路径下)。这讲允许U-Boot追踪对成功启动应用的尝试。
+如果启动计数超过了限制，则可以自动启动SWupdate，以替代损坏了的软件。</p>
+<p>GRUB默认情况下不像U-Boot那样支持环境变量的双副本。
+这意味着，在环境块更新期间断电时，环境块有可能损坏。
+为了最小化风险，我们没有直接修改原始环境块。
+而是将变量写入临时文件，并在操作成功后调用rename指令。</p>
 </div>
-<div class="section" id="building-a-single-image">
-<h2>Building a single image<a class="headerlink" href="#building-a-single-image" title="永久链接至标题">¶</a></h2>
-<p>cpio is used as container for its simplicity. The resulting image is very
-simple to be built.
-The file describing the images (“sw-description”, but the name can be
-configured) must be the first file in the cpio archive.</p>
-<p>To produce an image, a script like this can be used:</p>
+<div class="section" id="id17">
+<h2>构建一个单个的镜像<a class="headerlink" href="#id17" title="永久链接至标题">¶</a></h2>
+<p>cpio由于其简单性而被用作容器。由此可以很简单地生成镜像。
+描述镜像的文件(默认是”sw-description”，但是名称是可以配置的)
+必须是cpio归档中的第一个文件。
+要生成镜像，可以使用以下脚本:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CONTAINER_VER=&quot;1.0&quot;
 PRODUCT_NAME=&quot;my-software&quot;
 FILES=&quot;sw-description image1.ubifs  \
@@ -845,17 +617,16 @@ for i in $FILES;do
         echo $i;done | cpio -ov -H crc &gt;  ${PRODUCT_NAME}_${CONTAINER_VER}.swu
 </pre></div>
 </div>
-<p>The single images can be put in any order inside the cpio container, with the
-exception of sw-description, that must be the first one.
-To check your generated image you can run the following command:</p>
+<p>单个的子图像可以在cpio容器中按任意顺序放置，除了sw-description，它必须是第一个子镜像。
+要检查生成的镜像，可以运行以下命令:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">swupdate</span> <span class="o">-</span><span class="n">c</span> <span class="o">-</span><span class="n">i</span> <span class="n">my</span><span class="o">-</span><span class="n">software_1</span><span class="o">.</span><span class="mf">0.</span><span class="n">swu</span>
 </pre></div>
 </div>
-<div class="section" id="support-of-compound-image">
-<h3>Support of compound image<a class="headerlink" href="#support-of-compound-image" title="永久链接至标题">¶</a></h3>
-<p>The single image can be built automatically inside Yocto.
-meta-swupdate extends the classes with the swupdate class. A recipe
-should inherit it, and add your own sw-description file to generate the image.</p>
+<div class="section" id="id18">
+<h3>对复合镜像的支持<a class="headerlink" href="#id18" title="永久链接至标题">¶</a></h3>
+<p>在Yocto中可以自动生成单个镜像。
+meta-swupdate使用swupdate类扩展了类。
+配方应该继承它，并添加自己的sw-description文件来生成镜像。</p>
 </div>
 </div>
 </div>
@@ -871,7 +642,7 @@ should inherit it, and add your own sw-description file to generate the image.</
         <a href="sw-description.html" class="btn btn-neutral float-right" title="SWUpdate: syntax and tags with the default parser" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="licensing.html" class="btn btn-neutral" title="License" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="licensing.html" class="btn btn-neutral" title="许可证" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
