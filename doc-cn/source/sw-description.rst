@@ -1,26 +1,23 @@
 =================================================
-SWUpdate: syntax and tags with the default parser
+SWUpdate:使用默认解析器的语法和标记
 =================================================
 
-Introduction
+介绍
 ------------
 
-SWUpdate uses the library "libconfig"
-as default parser for the image description.
-However, it is possible to extend SWUpdate and add an own
-parser, based on a different syntax and language as the one
-supported by libconfig. In the examples directory
-there is the code for a parser written in Lua, with the
-description in XML.
+SWUpdate使用库“libconfig”作为镜像描述的默认解析器。
+但是，可以扩展SWUpdate并添加一个自己的解析器，
+以支持不同于libconfig的语法和语言。
+在examples目录中，有一个用Lua编写的，支持解析XML形式
+描述文件的解析器。
 
-Using the default parser, sw-description follows the
-syntax rules described in the libconfig manual.
-Please take a look at http://www.hyperrealm.com/libconfig/libconfig_manual.html
-for an explanation of basic types.
-The whole description must be contained in the sw-description file itself:
-using of the #include directive is not allowed by SWUpdate.
+使用默认解析器，则sw-description遵循libconfig手册中描述的语法规则。
+请参阅http://www.hyperrealm.com/libconfig/libconfig_manual.html
+以了解基本类型。
+整个描述必须包含在sw-description文件中:
+SWUpdate不允许使用#include指令。
+下面的例子更好地解释了当前实现的标记:
 
-The following example explains better the implemented tags:
 
 ::
 
@@ -110,26 +107,21 @@ The following example explains better the implemented tags:
 		);
 	}
 
-The first tag is "software". The whole description is contained in
-this tag. It is possible to group settings per device by using `Board
-specific settings`_.
+第一个标签是“软件”。整个描述包含在这个标签中。
+可以使用 `Board specific settings`_ _对每个设备的设置进行分组。
 
-Handling configuration differences
+处理配置的差异
 ----------------------------------
 
-The concept can be extended to deliver a single image
-containing the release for multiple devices. Each device has its own
-kernel, dtb and root filesystem, or they can share some parts.
+这个概念可以扩展到交付单个映像，在其中包含用于多个不同设备的发布。
+每个设备都有自己的内核、dtb和根文件系统，或者它们可以共享某些部分。
 
-Currently this is managed (and already used in a real project) by
-writing an own parser, that checks which images must be installed
-after recognizing which is the device where software is running.
-
-Because the external parser can be written in Lua and it is
-completely customizable, everybody can set his own rules.
-For this specific example, the sw-description is written in XML format,
-with tags identifying the images for each device. To run it, the liblxp
-library is needed.
+目前，这是通过编写自己的解析器来管理的(并且已经在实际项目中使用)，
+解析器在识别出软件当前运行在什么设备上之后，检查必须安装哪些镜像。
+因为外部解析器可以用Lua编写，而且它是完全可定制的，
+所以每个人都可以设置自己的规则。
+对于这个特定的例子，sw-description是用XML格式编写的，
+带有标识来标记每个设备对应的镜像。要运行它需要liblxp库。
 
 ::
 
@@ -157,16 +149,14 @@ library is needed.
 	  </images>
 	</software>
 
+支持本例子的解析器位于/examples目录中。
+通过识别哪个是正在运行的设备，解析器返回一个表，
+其中包含必须安装的镜像及其关联的处理程序。
 
-The parser for this is in the /examples directory.
-By identifying which is the running device, the parser return
-a table containing the images that must be installed and their associated
-handlers.
-By reading the delivered image, SWUpdate will ignore all images that
-are not in the list processed by the parser. In this way, it is possible
-to have a single delivered image for the update of multiple devices.
+读取交付的镜像时，SWUpdate将忽略解析器处理列表之外的所有镜像。
+通过这种方式，可以使用单个交付镜像来更新多个设备。
 
-Multiple devices are supported by the default parser, too.
+默认解析器也支持多个设备。
 
 ::
 
@@ -191,31 +181,27 @@ Multiple devices are supported by the default parser, too.
         };
     }
 
-In this way, it is possible to have a single image providing software
-for each device you have.
+通过这种方式，可以使用单个镜像为你的所有设备提供软件。
 
-By default the hardware information is extracted from
-`/etc/hwrevision` file. The file should contain a single line in the
-following format::
+默认情况下，硬件信息是从 `/etc/hwrevision` 文件中提取的。
+文件应包含单行信息，格式如下::
 
   <boardname> <revision>
 
 Where:
 
-- `<revision>` will be used for matching with hardware compatibility
-  list
+- `<revision>` 将用于与硬件兼容列表匹配
 
-- `<boardname>` can be used for grouping board specific settings
+- `<boardname>` 可用于对板子的具体设置进行分组
 
 .. _collections:
 
-Software collections
+软件集合
 --------------------
 
-Software collections and operation modes can be used to implement a
-dual copy strategy. The simplest case is to define two installation
-locations for the firmware image and call `SWUpdate` selecting the
-appropriate image.
+软件集合和操作模式可用于实现双拷贝策略。
+最简单的情况是为固件映像定义两个安装位置，
+并在调用 `SWUpdate` 时选择适当的镜像。
 
 ::
 
@@ -243,25 +229,24 @@ appropriate image.
             };
     }
 
-In this way it is possible to specify that `copy-1` gets installed to
-`/dev/mtd4`, while `copy-2` to `/dev/mtd5`. By properly selecting the
-installation locations, `SWUpdate` will update the firmware in the
-other slot.
+通过这种方式，可以指定 `copy-1` 安装到 `/dev/mtd4` ，
+而 `copy-2` 安装到 `/dev/mtd5` 。
+通过正确选择安装位置， `SWUpdate` 将更新另一个插槽中的固件。
 
-The method of image selection is out of the scope of SWUpdate and user
-is responsible for calling `SWUpdate` passing proper settings.
+具体镜像的选择方法超出了SWUpdate的范围内，
+用户要负责调用 `SWUpdate` 并传入适当的设置。
 
-Priority finding the elements in the file
+查找文件元素的优先级
 -----------------------------------------
 
-SWUpdate search for entries in the sdw-description file according to the following priority:
+SWUpdate根据以下优先级搜索sdw-description文件中的条目:
 
-1. Try <boardname>.<selection>.<mode>.<entry>
-2. Try <selection>.<mode>.<entry>
-3. Try <boardname>.<entry>
-4. Try <entry>
+1. 尝试 <boardname>.<selection>.<mode>.<entry>
+2. 尝试 <selection>.<mode>.<entry>
+3. 尝试 <boardname>.<entry>
+4. 尝试 <entry>
 
-Take an example. The following sw-description describes the release for a set of boards.
+举一个例子。下面的sw-description描述了一组板子的发布。
 
 ::
 
@@ -310,13 +295,13 @@ Take an example. The following sw-description describes the release for a set of
             }
     }
 
-On *myboard*, SWUpdate searches and find myboard.stable.copy1(2). When running on different
-boards, SWUpdate does not find an enty corresponding to the boardname and it fallbacks to the
-version without boardname. This lets relalize the same release for different boards having
-a complete different hardware. `myboard` could have a eMMC and an ext4 filesystem,
-while another device can have raw flash and install an UBI filesystem. Nevertheless, they are
-both just a different format of the same release and they could be described together in sw-description.
-It is important to understand the priorities how SWUpdate scans for entries during the parsing.
+在 *myboard* 上运行时，SWUpdate会搜索并找到myboard.stable.copy1(2)。
+当在其他板子上运行时，SWUpdate则无法找到一个与板子名字对应的条目，
+那它就会退回到没有指定板子名字的版本。
+这样就可以使用一个发布版本，适配拥有完全不同硬件的不同板子。
+例如, `myboard` 可以是eMMC和ext4文件系统，而另一个设备可以是raw flash并安装
+UBI文件系统。然而，它们都是同一版本的不同格式，可以在sw-description中一起描述。
+重要的是，要理解SWUpdate在解析期间如何按优先级扫描条目。
 
 Using links
 -----------
