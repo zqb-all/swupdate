@@ -306,10 +306,10 @@ UBI文件系统。然而，它们都是同一版本的不同格式，可以在sw
 Using links
 -----------
 
-sw-description can become very complex. Let's think to have just one board, but in multiple
-hw revision and they differ in Hardware. Some of them can be grouped together, some of them
-require a dedicated section. A way (but not the only one !) could be to add *mode* and selects
-the section with `-e stable,<rev number>`.
+sw-description可能变得非常复杂。
+让我们假设只有一个板子，但是存在多个硬件版本，它们在硬件上是不同的。
+这些版本中有些可以统一处理，有些则需要特殊的部分。
+一种方法(但不是唯一的方法!)是添加 *mode* 并使用 `-e stable,<rev number>` 做选择。
 
 ::
 
@@ -381,12 +381,14 @@ the section with `-e stable,<rev number>`.
 	        }
 	}
 
-If each of them requires an own section, it is the way to do. Anyway, it is more probable
-than revisions can be grouped together, for example board with the same major revision
-number could have the same installation instructions. This leads in the example to 3 groups
-for rev1.X, rev2.X and rev3.X. Links allow to group section together. When a "ref" is found
-when SWUpdate searches for a group (images, files, script, bootenv), it replaces the current path
-in the tree with the value of the string. In this way, the example above can be written in this way:
+
+如果它们每个都需要一个单独的部分，那么这是一种方法。
+尽管如此，更可能的情况时，不同的修订版本可以被当成一类，
+例如，具有相同主要修订号的板子可能具有相同的安装说明。
+在这个例子中，则可导出三个分组，rev1.X, rev2.X 和 rev3.X。
+链接允许将部分分组在一起。当SWUpdate搜索组
+(images、files、scripts、bootenv)时，如果发现“ref”，
+它将用字符串的值替换树中的当前路径。这样，上面的例子可以这样写:
 
 ::
 
@@ -445,22 +447,22 @@ in the tree with the value of the string. In this way, the example above can be 
 	        }
        }
 
-The link can be absolute or relative. The keyword *"ref"* is used to indicate a link. If this is found, SWUpdate
-will traverse the tree and replaces the current path with the values find in the string pointed by "ref". There are
-simple rules for a link:
 
-       - it must start with the character '#' 
-       - "." points to the current level in the tree, that means the parent of "ref"
-       - ".." points to the parent level in the tree
-       - "/" is used as filed separator in the link
+这种链接可以是绝对的，也可以是相对的。关键字 *ref*  用于指示一个链接。
+如果找到链接，SWUpdate将遍历树，并将当前路径替换为 "ref" 指向的字符串中的值。
+用于链接的规则很简单：
 
 
-A relative path has a number of
-leading "../" to move the current cursor to the parent leaf of the tree.
-In the following example, rev40 sets a link to a "common" section, where `images`
-is found. This is sets via a link, too, to a section in the parent node.
-The path `software.myboard.stable.common.images`  is then replaced by
-`software.myboard.stable.trythis` 
+       - 必须以字符 '#' 开头
+       - "." 指向树中的当前层级，即 "ref" 的父级
+       - ".." 指向树中的父级
+       - "/" 在链接中用作字段分隔符
+
+一个相对路径有许多前导 "../" 以从当前位置移动到树的高层级节点
+在下面的例子中，rev40设置了一个链接到 "common", 在那可以找到 "images"。
+这也是通过链接到父节点中的一个部分来设置的。
+路径 `software.myboard.stable.common.images` 被替换为
+`software.myboard.stable.trythis`
 
 ::
 
@@ -478,7 +480,7 @@ The path `software.myboard.stable.common.images`  is then replaced by
 	  stable:{
 
 	    common:{
-		images = 
+		images =
 		{
 		  ref = "#./../trythis";
 		}
@@ -523,9 +525,7 @@ The path `software.myboard.stable.common.images`  is then replaced by
 	  };
 	}
 
-
-Each entry in sw-description can be redirect by a link as in the above example for the
-"version" attribute.
+可以通过链接重定向sw-description中的每个条目，就像上面示例中的 "version" 属性那样。
 
 hardware-compatibility
 ----------------------
