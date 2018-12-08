@@ -527,35 +527,32 @@ sw-description可能变得非常复杂。
 
 可以通过链接重定向sw-description中的每个条目，就像上面示例中的 "version" 属性那样。
 
-hardware-compatibility
+硬件兼容性
 ----------------------
 
-hardware-compatibility: [ "major.minor", "major.minor", ... ]
+硬件兼容性: [ "major.minor", "major.minor", ... ]
 
-It lists the hardware revisions that are compatible with this software image.
+它列出了与此软件镜像兼容的硬件修订版本。
 
-Example:
+例子:
 
 	hardware-compatibility: [ "1.0", "1.2", "1.3"];
 
-This means that the software is compatible with HW-Revisions
-1.0, 1.2 and 1.3, but not for 1.1 or other version not explicitly
-listed here.
-It is then duty of the single project to find which is the
-revision of the board where SWUpdate is running. There is no
-assumption how the revision can be obtained (GPIOs, EEPROM,..)
-and each project is free to select the way most appropriate.
-The result must be written in the file /etc/hwrevision (or in
-another file if specified as configuration option) before
-SWUpdate is started.
 
-partitions : UBI layout
+这意味着该软件可以兼容硬件修订版本1.0, 1.2 和 1.3,但不能兼容1.1
+和其他未在此明确列出的版本。
+如何找到正在运行SWUpdate的板子的修订版本，是另一件事情了。
+这里并没有假设如何获得修订版本（可以通过GPIOs,EEPROM等),
+每个项目都可以自由选择最合适的方式。
+在启动SWUpdate之前，结果必须写入文件/etc/hwrevision(如果配置中
+指定了另一个文件，则必须写入对应的文件)。
+
+partitions : UBI 布局
 -----------------------
 
-This tag allows to change the layout of UBI volumes.
-Please take care that MTDs are not touched and they are
-configured by the Device Tree or in another way directly
-in kernel.
+此标记允许更改UBI卷的布局。
+请注意，此处不涉及MTDs，它们是由设备树配置的，
+或者直接在内核中以另一种方式配置的。
 
 
 ::
@@ -568,19 +565,17 @@ in kernel.
 		},
 	);
 
-All fields are mandatory. SWUpdate searches for a volume of the
-selected name and adjusts the size, or creates a new volume if
-no volume with the given name exists. In the latter case, it is
-created on the UBI device attached to the MTD device given by
-"device". "device" can be given by number (e.g. "mtd4") or by name
-(the name of the MTD device, e.g. "ubi_partition"). The UBI device
-is attached automatically.
+所有字段都是强制的。SWUpdate搜索所选名称的卷并调整大小，
+如果不存在具有给定名称的卷，则创建新卷。
+在后一种情况下，它是在连接到"device"所指定MTD设备的UBI设备上创建的。
+"device"可以以数字(如 "mtd4")或名字(及MTD设备的名字，如 "ubi_partition")
+的方式给出。UBI设备的连接是自动进行的。
 
 images
 ------
 
-The tag "images" collects the image that are installed to the system.
-The syntax is:
+标签 "images" 收集安装到系统中的映像。
+语法是:
 
 ::
 
@@ -600,11 +595,10 @@ The syntax is:
 		.....
 	);
 
-*volume* is only used to install the image in a UBI volume. *volume* and
-*device* cannot be used at the same time. If device is set,
-the raw handler is automatically selected.
+*volume* 仅用于将镜像安装到UBI卷中。 *volume* 和 *device* 不能同时使用。
+如果设置了device,则会自动选中裸数据处理程序(raw handler)。
 
-The following example is to update a UBI volume:
+以下时一个更新UBI卷的例子:
 
 
 ::
@@ -614,8 +608,7 @@ The following example is to update a UBI volume:
 			volume = "rootfs";
 		}
 
-
-To update an image in raw mode, the syntax is:
+要以裸数据形式更新体格镜像，语法如下：
 
 
 ::
@@ -625,7 +618,7 @@ To update an image in raw mode, the syntax is:
 			device = "/dev/mmcblk0p1";
 		}
 
-To flash an image at a specific offset, the syntax is:
+要将镜像写入到一个指定偏移处，语法如下：
 
 
 ::
@@ -636,14 +629,13 @@ To flash an image at a specific offset, the syntax is:
 			offset = "16K";
 		}
 
-The offset handles the following multiplicative suffixes: K=1024 and M=1024*1024.
+偏移量可处理以下乘法后缀:K=1024和M=1024*1024。
 
-However, writing to flash in raw mode must be managed in a special
-way. Flashes must be erased before copying, and writing into NAND
-must take care of bad blocks and ECC errors. For this reasons, the
-handler "flash" must be selected:
+但是，在裸数据模式下写flash必须以一种特殊的方式进行管理。
+Flash在写入之前必须先擦除，并且写入NAND时必须处理坏块和ECC错误。
+因此，必须选择处理程序"flash":
 
-For example, to copy the kernel into the MTD7 of a NAND flash:
+例如，要将内核复制到NAND闪存的MTD7中:
 
 ::
 
@@ -653,11 +645,11 @@ For example, to copy the kernel into the MTD7 of a NAND flash:
 			type = "flash";
 		}
 
-The *filename* is mandatory. It is the Name of the file extracted by the stream.
-*volume* is only mandatory in case of UBI volumes. It should be not used
-in other cases.
 
-Alternatively, for the handler “flash”, the *mtdname* can be specified, instead of the device name:
+*filename* 是必须的。它是由流提取的文件的名称。
+*volume* 仅在UBI卷中是强制性的。它不应该在其他情况下使用。
+
+另外，对于处理程序 "flash"，可以指定 *mtdname* 来代替设备名称:
 
 ::
 
@@ -671,9 +663,8 @@ Alternatively, for the handler “flash”, the *mtdname* can be specified, inst
 Files
 -----
 
-It is possible to copy single files instead of images.
-This is not the preferred way, but it can be used for
-debugging or special purposes.
+可以复制单个文件而不是完整镜像。
+这不是首选的方法，但是可以用于调试或特殊目的。
 
 ::
 
@@ -687,27 +678,29 @@ debugging or special purposes.
 		}
 	);
 
-Entries in "files" section are managed as single files. The attributes
-"filename" and "path" are mandatory. Attributes "device" and "filesystem" are
-optional; they tell SWUpdate to mount device (of the given filesystem type,
-e.g. "ext4") before copying "filename" to "path". Without "device" and
-"filesystem", the "filename" will be copied to "path" in the current rootfs.
+"files" 部分中的条目会作为单个文件进行管理。
+"filename" 和 "path" 属性是必须的。
+属性 "device" 和 "filesystem" 是可选的;
+它们用于告诉SWUpdate，在将"filename"拷贝到"path"之前
+先挂载设备(以给定的文件系统类型进行挂载，如 "ext4")。
+如果没有指定"device"和"filesystem"，
+则"filename"会被拷贝到当前根文件系统的"path"。
 
-As a general rule, swupdate doesn't copy out a file if the destination path
-doesn't exists. This behavior could be changed using the special property
-"create-destination".
+一般来说，如果目标路径不存在，swupdate不会复制文件。
+可以使用特殊属性"create-destination"更改此行为。
+
 
 Scripts
 -------
 
-Scripts runs in the order they are put into the sw-description file.
-The result of a script is valuated by SWUpdate, that stops the update
-with an error if the result is <> 0.
+脚本按照它们被放入sw-description文件的顺序运行。
+脚本的结果由SWUpdate进行评估，如果结果是<> 0，则停止更新并报错。
 
-They are copied into a temporary directory before execution and their name must
-be unique inside the same cpio archive.
+它们在执行之前会被复制到一个临时目录中，
+并且它们的名字在同一个cpio归档中必须是惟一的。
 
-If no type is given, SWUpdate default to "lua".
+如果没有给出类型，SWUpdate默认为 "lua"。
+
 
 Lua
 ...
@@ -721,25 +714,21 @@ Lua
 	 	},
 	);
 
+Lua脚本使用内部解释器运行。
 
-Lua scripts are run using the internal interpreter.
-
-They must have at least one of the following functions:
+它们必须具有下列函数中的至少一个:
 
 ::
 
 	function preinst()
 
-SWUpdate scans for all scripts and check for a preinst function. It is
-called before installing the images.
-
+SWUpdate扫描所有脚本并检查preinst函数。在安装镜像之前调用它。
 
 ::
 
 	function postinst()
 
-SWUpdate scans for all scripts and check for a postinst function. It is
-called after installing the images.
+SWUpdate扫描所有脚本并检查postinst函数。它是在安装镜像之后调用的。
 
 shellscript
 ...........
@@ -753,12 +742,11 @@ shellscript
 		},
 	);
 
-Shell scripts are called via system command.
-SWUpdate scans for all scripts and calls them before and after installing
-the images. SWUpdate passes 'preinst' or 'postinst' as first argument to
-the script.
-If the data attribute is defined, its value is passed as the last argument(s)
-to the script.
+
+Shell脚本通过system命令调用。
+SWUpdate扫描所有脚本，并在安装镜像之前和之后调用它们。
+SWUpdate将'preinst'或'postinst'作为脚本的第一个参数传递。
+如果定义了data属性，它的值将作为最后一个参数传递给脚本。
 
 preinstall
 ..........
@@ -772,10 +760,9 @@ preinstall
 		},
 	);
 
-preinstall are shell scripts and called via system command.
-SWUpdate scans for all scripts and calls them before installing the images.
-If the data attribute is defined, its value is passed as the last argument(s)
-to the script.
+preinstall 是通过system命令调用的shell脚本。
+SWUpdate扫描所有脚本并在安装映像之前调用它们。
+如果定义了data属性，它的值将作为最后一个参数传递给脚本。
 
 postinstall
 ...........
@@ -789,21 +776,21 @@ postinstall
 		},
 	);
 
-postinstall are shell scripts and called via system command.
-SWUpdate scans for all scripts and calls them after installing the images.
-If the data attribute is defined, its value is passed as the last argument(s)
-to the script.
+postinstall 是通过system命令调用的shell脚本。
+SWUpdate扫描所有脚本，并在安装镜像后调用它们。
+如果定义了data属性，它的值将作为最后一个参数传递给脚本。
 
 bootloader
 ----------
 
-There are two ways to update the bootloader (currently U-Boot, GRUB, and
-EFI Boot Guard) environment. First way is to add a file with the list of
-variables to be changed and setting "bootloader" as type of the image. This
-informs SWUpdate to call the bootloader handler to manage the file
-(requires enabling bootloader handler in configuration). There is one
-bootloader handler for all supported bootloaders. The appropriate bootloader
-must be chosen from the bootloader selection menu in `menuconfig`.
+有两种方法可以更新引导加载程序(当前支持U-Boot、GRUB和EFI Boot Guard)
+的环境变量。
+第一种方法是添加一个包含要更改的变量列表的文件，
+并将“bootloader”设置为镜像的类型。
+这将通知SWUpdate调用引导加载程序处理程序来处理文件
+(需要在配置中启用引导加载程序处理程序)。
+对于所有受支持的引导加载程序，都有一个引导加载程序处理程序。
+必须从 `menuconfig` 的引导加载程序选择菜单中选择适当的引导加载程序。
 
 ::
 
@@ -814,20 +801,16 @@ must be chosen from the bootloader selection menu in `menuconfig`.
 		},
 	)
 
-The format of the file is described in U-boot documentation. Each line
-is in the format
+文件的格式在U-boot文档中有描述。每一行都是如下格式
 
 ::
 
 	<name of variable>	<value>
 
-if value is missing, the variable is unset.
+如果值缺失，则变量将被去掉。
+在当前实现中，GRUB和EFI Boot Guard 的环境变量修改也继承了上述文件格式。
 
-In the current implementation, the above file format was inherited for
-GRUB and EFI Boot Guard environment modification as well.
-
-The second way is to define in a group setting the variables
-that must be changed:
+第二种方法是在组设置中定义需要更改的变量:
 
 ::
 
@@ -838,27 +821,24 @@ that must be changed:
 		},
 	)
 
-SWUpdate will internally generate a script that will be passed to the
-bootloader handler for adjusting the environment.
+SWUpdate将在内部生成一个脚本，该脚本将传递给
+引导加载程序处理程序，用于调整环境变量。
 
-For backward compatibility with previously built `.swu` images, the
-"uboot" group name is still supported as an alias. However, its usage
-is deprecated.
+为了向后兼容以前构建的 `.swu`  镜像，"uboot" 组名仍然作为别名支持。
+但是，它实际上已经被弃用了，不建议继续使用它。
 
 
-Board specific settings
+特定的板级设置
 -----------------------
 
-Each setting can be placed under a custom tag matching the board
-name. This mechanism can be used to override particular setting in
-board specific fashion.
+每个设置都可以放在与板名匹配的自定义标记下。
+此机制可用于以板卡特有的方式覆盖特定设置。
 
-Assuming that the hardware information file `/etc/hwrevision` contains
-the following entry::
+假设硬件信息文件 `/etc/hwrevision` 包含以下条目::
 
   my-board 0.1.0
 
-and the following description::
+以及以下描述::
 
 	software =
 	{
@@ -881,26 +861,24 @@ and the following description::
 	        );
 	}
 
-SWUpdate will set `bootpart` to `0:2` in bootloader's environment for this
-board. For all other boards, `bootpart` will be set to `0:1`. Board
-specific settings take precedence over default scoped settings.
+SWUpdate将在这个板子的引导加载程序环境中将 `bootpart` 设置为 `0:2` 。
+对于所有其他板子， `bootpart` 将被设置为 `0:1` 。
+特定于板子的设置优先于默认作用域的设置。
 
-
-Software collections and operation modes
+软件集合和操作模式
 ----------------------------------------
 
-Software collections and operations modes extend the description file
-syntax to provide an overlay grouping all previous configuration
-tags. The mechanism is similar to `Board specific settings`_ and can
-be used for implementing a dual copy strategy or delivering both
-stable and unstable images within a single update file.
+软件集合和操作模式扩展了描述文件语法，
+以提供对之前介绍的所有配置标记的叠加分组。
+这种机制类似于 `Board specific settings`_ ,可用于实现双拷贝策略，
+或者用单个更新文件内同时交付稳定和不稳定版本的镜像。
 
-The mechanism uses a custom user-defined tags placed within `software`
-scope. The tag names must not be any of: `version`,
-`hardware-compatibility`, `uboot`, `bootenv`, `files`, `scripts`, `partitions`,
-`images`
 
-An example description file:
+该机制使用放置在 `software` 标签范围内的自定义用户定义标签。
+标签不能使用以下名字: `version`, `hardware-compatibility`,
+`uboot`, `bootenv`, `files`, `scripts`, `partitions`, `images`
+
+示例描述文件:
 
 ::
 
@@ -949,50 +927,48 @@ An example description file:
 	        };
 	}
 
-The configuration describes a single software collection named
-`stable`. Two distinct image locations are specified for this
-collection: `/dev/mmcblk0p1` and `/dev/mmcblk0p2` for `main` mode and
-`alt` mode respectively.
 
-This feature can be used to implement a dual copy strategy by
-specifying the collection and mode explicitly.
 
-Checking version of installed software
+这个配置描述了一个名为 `stable` 的软件集合。
+并为这个集合指定了两个不同的镜像安装位置: `/dev/mmcblk0p1` 和
+`/dev/mmcblk0p2` 分别用于 `main` 模式和 `alt` 模式。
+
+该特性可以通过显式指定集合和模式来实现双拷贝策略。
+
+检查已安装软件的版本
 --------------------------------------
 
-SWUpdate can optionally verify if a sub-image is already installed
-and, if the version to be installed is exactly the same, it can skip
-to install it. This is very useful in case some high risky image should
-be installed or to speed up the upgrade process.
-One case is if the bootloader needs to be updated. In most time, there
-is no need to upgrade the bootloader, but practice showed that there are
-some cases where an upgrade is strictly required - the project manager
-should take the risk. However, it is nicer to have always the bootloader image
-as part of the .swu file, allowing to get the whole distro for the
-device in a single file, but the device should install it just when needed.
+SWUpdate支持可选地验证子镜像是否已经被安装了，
+如果要安装的版本完全相同，则可以跳过它的安装。
+这在安装某些高风险镜像或需要加速升级过程的情况下是非常有用的。
 
-SWUpdate searches for a file (/etc/sw-versions is the default location)
-containing all versions of the installed images. This must be generated
-before running SWUpdate.
-The file must contains pairs with the name of image and his version, as:
+一种情况是需要更新引导加载程序。在大多数情况下，
+不需要升级引导加载程序，但是实践表明，在某些情况下，
+确实有必要升级 - 项目经理应该承担这个风险。
+经过如此，始终将引导加载程序镜像作为.swu文件的一部分是更好的，
+这样可以在单个文件中获得设备的整个发行版，但是设备应该仅在必要时安装它。
+
+SWUpdate搜索包含已安装映像的所有版本信息的文件(默认位置是/etc/sw-versions)。
+这个文件必须在运行SWUpdate之前生成。
+
+文件必须包含成对的信息，即镜像名称和版本:
 
 ::
 
 	<name of component>	<version>
 
-Version is a string and can have any value. For example:
+版本是一个字符串，可以有任何值。例如:
 
 ::
 
         bootloader              2015.01-rc3-00456-gd4978d
         kernel                  3.17.0-00215-g2e876af
 
-In sw-description, the optional attributes "name", "version" and
-"install-if-different" provide the connection. Name and version are then
-compared with the data in the versions file. install-if-different is a
-boolean that enables the check for this image. It is then possible to
-check the version just for a subset of the images to be installed.
-
+在sw-description中，可选属性 "name"、"version"
+和"install-if-different"提供了连接。
+name和version将用于与版本文件中的数据进行比较。
+install-if-different则是一个布尔值，用于对此镜像启用版本检查。
+这样就可以只对要安装的镜像们的一个子集进行版本检查。
 
 Embedded Script
 ---------------
@@ -1023,7 +999,7 @@ must be changed to:
 
         print (\"Test\")
 
-If not, the parser thinks to have the closure of the script and this generates an error. 
+If not, the parser thinks to have the closure of the script and this generates an error.
 See the examples directory for examples how to use it.
 Any entry in files or images can trigger one function in the script. The "hook" attribute
 tells the parser to load the script and to search for the function pointed to by the hook
