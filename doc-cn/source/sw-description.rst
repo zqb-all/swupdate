@@ -970,40 +970,39 @@ name和version将用于与版本文件中的数据进行比较。
 install-if-different则是一个布尔值，用于对此镜像启用版本检查。
 这样就可以只对要安装的镜像们的一个子集进行版本检查。
 
-Embedded Script
+嵌入脚本
 ---------------
 
-It is possible to embed a script inside sw-description. This is useful in a lot
-of conditions where some parameters are known just by the target at runtime. The
-script is global to all sections, but it can contain several functions that can be specific
-for each entry in the sw-description file.
+可以将脚本嵌入到sw-description中。这在许多情况下非常有用，
+因为一些参数只有在目标上实际运行时知道。
+脚本是全局的，面向所有部分，但是它可以包含几个函数，
+这些函数可以针对sw-description文件中的每个条目。
 
-These attributes are used for an embedded-script:
+这些属性用于嵌入脚本:
 
 ::
 
 		embedded-script = "<Lua code">
 
-It must be taken into account that the parser has already run and usage of double quotes can
-interfere with the parser. For this reason, each double quote in the script must be escaped.
+必须考虑到解析器已经在运行，双引号的使用可能会干扰解析器。
+因此，脚本中的每个双引号都必须转义。
 
-That means a simple Lua code as:
+这意味着像这样的一个简单的Lua代码:
 
 ::
 
         print ("Test")
 
-must be changed to:
+修改改成这样:
 
 ::
 
         print (\"Test\")
 
-If not, the parser thinks to have the closure of the script and this generates an error.
-See the examples directory for examples how to use it.
-Any entry in files or images can trigger one function in the script. The "hook" attribute
-tells the parser to load the script and to search for the function pointed to by the hook
-attribute. For example:
+不然解析器会认为脚本已经关闭，并产生一个错误。
+有关如何使用它的示例，请参见示例目录。
+文件或镜像中的任何条目都可以触发脚本中的一个函数。
+"hook" 属性告诉解析器加载脚本并搜索钩子属性指向的函数。例如:
 
 ::
 
@@ -1017,32 +1016,32 @@ attribute. For example:
 			}
 		);
 
-After the entry is parsed, the parser runs the Lua function pointed to by hook. If Lua is not
-activated, the parser raises an error because a sw-description with an embedded script must
-be parsed, but the interpreter is not available.
-
-Each Lua function receives as parameter a table with the setup for the current entry. A hook
-in Lua is in the format:
+在解析条目之后，解析器运行hook所指向的Lua函数。
+如果Lua未被激活，解析器将引发一个错误，
+因为必须解析带有嵌入脚本的sw-description，但解释器不可用。
+每个Lua函数接收一个带有当前条目设置的表作为参数。
+Lua钩子的格式是:
 
 ::
 
         function lua_hook(image)
 
-image is a table where the keys are the list of available attributes. If an attribute contains
-a "-", it is replaced with "_", because "-" cannot be used in Lua. This means, for example, that:
+参数image是一个表，其关键字是有效属性的列表。
+如果一个属性包含了"-"，则会被替换为"_"，因为Lua中不能使用 "-"。
+这意味着，如下例子：
 
 ::
 
         install-if-different ==> install_if_different
         install-directly     ==> install_directly
 
-Attributes can be changed in the Lua script and values are taken over on return.
-The Lua function must return 2 values:
+可以在Lua脚本中更改属性，并在返回时接管值。
+Lua函数必须返回2个值:
 
-        - a boolean, to indicate whether the parsing was correct
-        - the image table or nil to indicate that the image should be skipped
+        - 一个布尔值，指示解析是否正确
+        - 镜像表或nil以表示应该跳过该镜像
 
-Example:
+例子:
 
 ::
 
@@ -1056,26 +1055,21 @@ Example:
         	return true, image
         end
 
-
-The example sets a version for the installed image. Generally, this is detected at runtime
-reading from the target.
+该示例为已安装镜像设置了一个版本。
+通常，这是在运行时从目标读取数据检测到的。
 
 .. _sw-description-attribute-reference:
 
-Attribute reference
+属性参考
 -------------------
 
-There are 4 main sections inside sw-description:
+在sw-description中有4个主要部分:
 
-- images: entries are images and SWUpdate has no knowledge
-  about them.
-- files: entries are files, and SWUpdate needs a filesystem for them.
-  This is generally used to expand from a tar-ball or to update
-  single files.
-- scripts: all entries are treated as executables, and they will
-  be run twice (as pre- and post- install scripts).
-- bootenv: entries are pair with bootloader environment variable name and its
-  value.
+- images: 条目是镜像，SWUpdate对它们一无所知。
+- files: 条目是文件，SWUpdate需要一个用于它们的文件系统。
+  这通常用于从tar-ball展开或更新单个文件。
+- scripts: 所有条目都被视为可执行文件，它们将被运行两次(作为安装前和安装后脚本)。
+- bootenv:条目是引导加载程序环境变量名及其值的键值对。
 
 
 .. tabularcolumns:: |p{1.5cm}|p{1.5cm}|p{1.5cm}|L|
@@ -1083,30 +1077,28 @@ There are 4 main sections inside sw-description:
 
 
    +-------------+----------+------------+---------------------------------------+
-   |  Name       |  Type    | Applies to |  Description                          |
+   |  名字       |  类型    | 应用于     |  描述                                 |
    +=============+==========+============+=======================================+
-   | filename    | string   | images     |  filename as found in the cpio archive|
+   | filename    | string   | images     | 在cpio存档中找到的文件名。            |
    |             |          | files      |                                       |
    |             |          | scripts    |                                       |
    +-------------+----------+------------+---------------------------------------+
-   | volume      | string   | images     | Just if type = "ubivol". UBI volume   |
-   |             |          |            | where image must be installed.        |
+   | volume      | string   | images     | 仅在 type = "ubivol"时使用。          |
+   |             |          |            | 指明镜像将安装到哪个UBI卷。           |
    +-------------+----------+------------+---------------------------------------+
-   | ubipartition| string   | images     | Just if type = "ubivol". Volume to be |
-   |             |          |            | created or adjusted with a new size   |
+   | ubipartition| string   | images     | 仅在 type = "ubivol"时使用。          |
+   |             |          |            | 要创建或调整大小的UBI卷。             |
    +-------------+----------+------------+---------------------------------------+
-   | device      | string   | images     | devicenode as found in /dev or a      |
-   |             |          | files      | symlink to it. Can be specified as    |
-   |             |          |            | absolute path or a name in /dev folder|
-   |             |          |            | For example if /dev/mtd-dtb is a link |
-   |             |          |            | to /dev/mtd3 "mtd3", "mtd-dtb",       |
-   |             |          |            | "/dev/mtd3" and "/dev/mtd-dtb" are    |
-   |             |          |            | valid names.                          |
-   |             |          |            | Usage depends on handler.             |
-   |             |          |            | For files, it indicates on which      |
-   |             |          |            | device the "filesystem" must be       |
-   |             |          |            | mounted. If not specified, the current|
-   |             |          |            | rootfs will be used.                  |
+   | device      | string   | images     | 在/dev下可找到的设备节点，或者是到它的|
+   |             |          | files      | 符号链接。 可以指定为绝对路径，或/dev |
+   |             |          |            | 下的名字。例如，如果/dev/mtd-dev是一个|
+   |             |          |            | 指向/dev/mtd3的链接，则 "mtd3",       |
+   |             |          |            | "mtd-dtb","/dev/mtd3"和"/dev/mtd-dtb" |
+   |             |          |            | 均是有效的名字。                      |
+   |             |          |            | 用法取决于具体处理程序。              |
+   |             |          |            | 对于文件，用于指明哪个设备用于挂载    |
+   |             |          |            | "filesystem"，如果未指定，则使用当前的|
+   |             |          |            | 根文件系统。                          |
    +-------------+----------+------------+---------------------------------------+
    | filesystem  | string   | files      | indicates the filesystem type where   |
    |             |          |            | the file must be installed. Only      |
