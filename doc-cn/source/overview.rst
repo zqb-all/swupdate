@@ -207,7 +207,7 @@ SWUpdate将设置bootloader变量以通知新映像已成功安装。
 使用U-Boot作为引导加载程序，
 SWUpdate能够管理U-Boot的环境设置变量，
 以指示事务的开始和结束，以及包含有效的软件的存储区域。
-针对GRUB环境块修改和EFI引导保护的类似特性也已被引入。
+针对GRUB环境块修改和EFI Boot Guard的类似特性也已被引入。
 
 SWUpdate主要以如下配置的方式使用。
 Yocto生成包含SWUpdate应用程序的initrd映像，
@@ -221,7 +221,7 @@ Yocto生成包含SWUpdate应用程序的initrd映像，
 许多事情都可能出错，必须保证系统能够再次运行，
 并且可能能够重新加载新的软件来修复损坏的映像。
 SWUpdate与引导加载程序一起工作，以识别失败的可能原因。
-目前支持U-Boot、GRUB和EFI引导保护。
+目前支持U-Boot、GRUB和EFI Boot Guard。
 
 我们至少可以列出一些常见的原因:
 
@@ -249,19 +249,16 @@ recovery_status的值为“failed”。
 然后，引导加载程序可以再次启动SWUpdate，以再次
 加载软件(单副本情况)或运行应用程序的旧副本(双副本情况)。
 
-Power Failure
+意外掉电
 -------------
 
-如果发生断电，必须保证系统能够再次工作 —— 重新
+如果发生掉电，必须保证系统能够再次工作 —— 重新
 启动SWUpdate或恢复软件的旧副本。
 
 一般情况下，行为可以根据所选择的场景进行划分：
 
 - 单拷贝：SWUpdate被中断，更新事务没有以成功结束。
   引导加载程序能够再次启动SWUpdate，从而有可能再次更新软件。
-- single copy: SWUpdate is interrupted and the update transaction did not end
-  with a success. The boot loader is able to start SWUpdate again, having the
-  possibility to update the software again.
 
 - 双拷贝：SWUpdate没有在备份系统和当前系统之间做切换。
   当前版本的软件，并没有被更新触及到，会再次启动。
