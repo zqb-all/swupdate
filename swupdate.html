@@ -30,7 +30,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="索引" href="genindex.html" />
     <link rel="search" title="搜索" href="search.html" />
-    <link rel="next" title="SWUpdate: syntax and tags with the default parser" href="sw-description.html" />
+    <link rel="next" title="SWUpdate:使用默认解析器的语法和标记" href="sw-description.html" />
     <link rel="prev" title="许可证" href="licensing.html" /> 
 
   
@@ -95,36 +95,36 @@
 <li class="toctree-l3"><a class="reference internal" href="#id3">总体概览</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id4">交付单一镜像</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id5">流式更新功能</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#images-fully-streamed">Images fully streamed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">完全流式更新镜像</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id6">配置和构建</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id7">需求</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id7">配置和构建</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id8">需求</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#yocto">在Yocto中进行构建</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#libubootenv">libubootenv呢 ?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id8">配置SWUpdate</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id9">构建</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">配置SWUpdate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id10">构建</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#debian">编译一个debian包</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id10">编译一个debian包的步骤</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id11">对源包签名的替代方法</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id11">编译一个debian包的步骤</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id12">对源包签名的替代方法</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id12">运行SWUpdate</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id13">运行一次swupdate可以期望得到什么</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id14">命令行参数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id13">运行SWUpdate</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id14">运行一次swupdate可以期望得到什么</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id15">命令行参数</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#systemd">systemd集成</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id16">引导启动程序的修改</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id17">构建一个单个的镜像</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id18">对复合镜像的支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id17">引导启动程序的修改</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id18">构建一个单个的镜像</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id19">对复合镜像的支持</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="sw-description.html">SWUpdate: syntax and tags with the default parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw-description.html">SWUpdate:使用默认解析器的语法和标记</a></li>
 <li class="toctree-l1"><a class="reference internal" href="signed_images.html">Update images from verified source</a></li>
 <li class="toctree-l1"><a class="reference internal" href="encrypted_images.html">Symmetrically Encrypted Update Images</a></li>
 <li class="toctree-l1"><a class="reference internal" href="handlers.html">Handlers</a></li>
@@ -219,7 +219,7 @@
 <p>输出可以使用帧缓冲设备显示在LCD上，
 也可以定向到串行通讯端口上(Linux控制台)。</p>
 <p>它通常用于单拷贝方案中，在initrd中运行(用Yocto提供的配方生成)。
-但是，通过使用软件集合( <a class="reference internal" href="sw-description.html#collections"><span class="std std-ref">Software collections</span></a> )，可以在双拷贝方案中使用它。</p>
+但是，通过使用软件集合( <a class="reference internal" href="sw-description.html#collections"><span class="std std-ref">软件集合</span></a> )，可以在双拷贝方案中使用它。</p>
 <p>如果启动了远程更新，SWUpdate将启动嵌入式web服务器并等待请求。
 操作者必须上传一个合适的映像，然后SWUpdate会进行检查并安装。
 所有输出都通过AJAX通知的方式通知操作人员的浏览器。</p>
@@ -320,8 +320,8 @@ SWUpdate以流的形式接收软件，不进行临时存储，并只提取需要
 临时副本仅在从网络更新时使用。
 当映像存储在外部存储上时，不需要该副本。</p>
 </div>
-<div class="section" id="images-fully-streamed">
-<h3>Images fully streamed<a class="headerlink" href="#images-fully-streamed" title="永久链接至标题">¶</a></h3>
+<div class="section" id="id6">
+<h3>完全流式更新镜像<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h3>
 <p>在远程更新的情况下，SWUpdate从流中提取相关图像，并将它们复制
 到环境变量 <code class="docutils literal notranslate"><span class="pre">TMPDIR</span></code> (如果未设置，则复制到 <code class="docutils literal notranslate"><span class="pre">/tmp</span></code> )指向的目录中，
 然后调用处理程序。这确保只有在所有部件都存在且正确时才会启动更新。
@@ -332,10 +332,10 @@ SWUpdate以流的形式接收软件，不进行临时存储，并只提取需要
 零拷贝流是通过在单个镜像像的描述中设置“installed-directly”标志来启用的。</p>
 </div>
 </div>
-<div class="section" id="id6">
-<h2>配置和构建<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h2>
 <div class="section" id="id7">
-<h3>需求<a class="headerlink" href="#id7" title="永久链接至标题">¶</a></h3>
+<h2>配置和构建<a class="headerlink" href="#id7" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id8">
+<h3>需求<a class="headerlink" href="#id8" title="永久链接至标题">¶</a></h3>
 <p>编译SWUpdate只需要依赖几个库。</p>
 <ul class="simple">
 <li>mtd-utils: mtd-utils在内部生成libmtd和libubi。它们通常不导出也不安装，
@@ -388,8 +388,8 @@ SWUpdate以流的形式接收软件，不进行临时存储，并只提取需要
 破坏环境变量。实际上，使用了错误的默认环境后，你的板子将不能再次被
 引导启动。</p>
 </div>
-<div class="section" id="id8">
-<h3>配置SWUpdate<a class="headerlink" href="#id8" title="永久链接至标题">¶</a></h3>
+<div class="section" id="id9">
+<h3>配置SWUpdate<a class="headerlink" href="#id9" title="永久链接至标题">¶</a></h3>
 <p>SWUpdate可以通过“make menuconfig”配置。
 使用内部解析器和禁用web服务器可以达到较小的内存占用。
 每个选项都有描述其用法的小帮助说明。
@@ -399,8 +399,8 @@ SWUpdate以流的形式接收软件，不进行临时存储，并只提取需要
 </pre></div>
 </div>
 </div>
-<div class="section" id="id9">
-<h3>构建<a class="headerlink" href="#id9" title="永久链接至标题">¶</a></h3>
+<div class="section" id="id10">
+<h3>构建<a class="headerlink" href="#id10" title="永久链接至标题">¶</a></h3>
 <ul class="simple">
 <li>要进行交叉编译，请在运行make之前设置CC和CXX变量。
 也可以使用make menuconfig将交叉编译器前缀设置为选项。</li>
@@ -444,8 +444,8 @@ Buildroot之外，在某些情况下还会使用标准的Linux发行版。
 不仅如此，发行版包还允许为了测试目的在Linux PC上
 运行SWUpdate，而不必与依赖项做斗争。
 使用debhelper工具，可以生成debian包。</p>
-<div class="section" id="id10">
-<h4>编译一个debian包的步骤<a class="headerlink" href="#id10" title="永久链接至标题">¶</a></h4>
+<div class="section" id="id11">
+<h4>编译一个debian包的步骤<a class="headerlink" href="#id11" title="永久链接至标题">¶</a></h4>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">debian</span><span class="o">/</span><span class="n">rules</span> <span class="n">clean</span>
 <span class="o">./</span><span class="n">debian</span><span class="o">/</span><span class="n">rules</span> <span class="n">build</span>
 <span class="n">fakeroot</span> <span class="n">debian</span><span class="o">/</span><span class="n">rules</span> <span class="n">binary</span>
@@ -453,8 +453,8 @@ Buildroot之外，在某些情况下还会使用标准的Linux发行版。
 </div>
 <p>结果是一个存储在父目录中的“deb”包。</p>
 </div>
-<div class="section" id="id11">
-<h4>对源包签名的替代方法<a class="headerlink" href="#id11" title="永久链接至标题">¶</a></h4>
+<div class="section" id="id12">
+<h4>对源包签名的替代方法<a class="headerlink" href="#id12" title="永久链接至标题">¶</a></h4>
 <p>你可以使用dpkg-buildpackage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dpkg</span><span class="o">-</span><span class="n">buildpackage</span> <span class="o">-</span><span class="n">us</span> <span class="o">-</span><span class="n">uc</span>
 <span class="n">debsign</span> <span class="o">-</span><span class="n">k</span> <span class="o">&lt;</span><span class="n">keyId</span><span class="o">&gt;</span>
@@ -463,10 +463,10 @@ Buildroot之外，在某些情况下还会使用标准的Linux发行版。
 </div>
 </div>
 </div>
-<div class="section" id="id12">
-<h2>运行SWUpdate<a class="headerlink" href="#id12" title="永久链接至标题">¶</a></h2>
 <div class="section" id="id13">
-<h3>运行一次swupdate可以期望得到什么<a class="headerlink" href="#id13" title="永久链接至标题">¶</a></h3>
+<h2>运行SWUpdate<a class="headerlink" href="#id13" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id14">
+<h3>运行一次swupdate可以期望得到什么<a class="headerlink" href="#id14" title="永久链接至标题">¶</a></h3>
 <p>SWUpdate的运行主要包括以下步骤:</p>
 <ul class="simple">
 <li>检查介质(usb pen)</li>
@@ -530,8 +530,153 @@ Buildroot之外，在某些情况下还会使用标准的Linux发行版。
 </pre></div>
 </div>
 </div>
-<div class="section" id="id14">
-<h3>命令行参数<a class="headerlink" href="#id14" title="永久链接至标题">¶</a></h3>
+<div class="section" id="id15">
+<h3>命令行参数<a class="headerlink" href="#id15" title="永久链接至标题">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="15%" />
+<col width="66%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameter</th>
+<th class="head">Type</th>
+<th class="head">描述</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>-f &lt;file&gt;</td>
+<td>string</td>
+<td>要使用的SWUpdate配置文件</td>
+</tr>
+<tr class="row-odd"><td>-b &lt;string&gt;</td>
+<td>string</td>
+<td>只有当选上CONFIG_UBIATTACH时才有效，
+它在SWUpdate搜索UBI卷时将MTDs列入黑名单。
+示例:MTD0-1中的U-BOOT和环境变量
+<strong>swupdate -b “0 1”</strong></td>
+</tr>
+<tr class="row-even"><td>-e &lt;sel&gt;</td>
+<td>string</td>
+<td>sel 的格式为 &lt;software&gt;,&lt;mode&gt;
+它允许在sw-description文件中找到一个规则
+的子集。有了这个选项就可以使用多重规则了
+一种常见用法是在双拷贝模式下。例如:
+-e “stable, copy1”  ==&gt; install on copy1
+-e “stable, copy2”  ==&gt; install on copy2</td>
+</tr>
+<tr class="row-odd"><td>-h</td>
+<td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+<td>使用帮助</td>
+</tr>
+<tr class="row-even"><td>-k</td>
+<td>string</td>
+<td>选中 CONFIG_SIGNED 时可用
+指定公钥文件</td>
+</tr>
+<tr class="row-odd"><td>-l &lt;level&gt;</td>
+<td>int</td>
+<td>设置log级别</td>
+</tr>
+<tr class="row-even"><td>-L</td>
+<td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+<td>将log输出到 syslog(local)</td>
+</tr>
+<tr class="row-odd"><td>-i &lt;file&gt;</td>
+<td>string</td>
+<td>使用本地.swu文件运行SWUpdate</td>
+</tr>
+<tr class="row-even"><td>-n</td>
+<td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+<td>在模拟(dry-run)模式下运行SWUpdate</td>
+</tr>
+<tr class="row-odd"><td>-N</td>
+<td>string</td>
+<td>传入当前安装的软件版本。这将用于检查
+新软件版本一起检查，禁止升级到旧版本。
+版本号由4个数字组成:
+major.minor.rev.build
+每个字段都要在0..65535的范围内</td>
+</tr>
+<tr class="row-even"><td>-o &lt;file&gt;</td>
+<td>string</td>
+<td>将流(SWU)保存到一个文件中</td>
+</tr>
+<tr class="row-odd"><td>-v</td>
+<td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+<td>激活详细的输出信息</td>
+</tr>
+<tr class="row-even"><td>-w &lt;parms&gt;</td>
+<td>string</td>
+<td>启动内部webserver并将命令行字符串传递给它</td>
+</tr>
+<tr class="row-odd"><td>-u &lt;parms&gt;</td>
+<td>string</td>
+<td>启动内部suricatta客户端守护进程，
+并将命令行字符串传递给它
+详见suricatta的文档</td>
+</tr>
+<tr class="row-even"><td>-H
+&lt;board:rev&gt;</td>
+<td>string</td>
+<td>设置板名和硬件版本</td>
+</tr>
+<tr class="row-odd"><td>-c</td>
+<td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+<td>这个选项将检查 <code class="docutils literal notranslate"><span class="pre">*.swu</span></code> 文件的内部。
+它确保sw-description中引用的文件是存在的。
+使用方法: swupdate -c -i &lt;file&gt;</td>
+</tr>
+<tr class="row-even"><td>-p</td>
+<td>string</td>
+<td>执行安装后命令</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>-d &lt;parms&gt;</td>
+<td>string</td>
+<td>选中 CONFIG_DOWNLOAD 时可用
+启动内部下载程序客户端，
+并将命令行字符串传递给它。
+请参阅下载程序的内部命令行参数</td>
+</tr>
+<tr class="row-odd"><td>-u &lt;url&gt;</td>
+<td>string</td>
+<td>这是提取新软件的URL。
+URL是指向有效.swu镜像的链接</td>
+</tr>
+<tr class="row-even"><td>-r &lt;retries&gt;</td>
+<td>integer</td>
+<td>下载失败前重试的次数。使用“-r 0”，则
+SWUpdate在加载到有效软件之前不会停止</td>
+</tr>
+<tr class="row-odd"><td>-t &lt;timeout&gt;</td>
+<td>integer</td>
+<td>判断下载连接丢失的超时时间</td>
+</tr>
+<tr class="row-even"><td>-a &lt;usr:pwd&gt;</td>
+<td>string</td>
+<td>发送用于基本身份验证的用户名和密码</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="systemd">
 <h3>systemd集成<a class="headerlink" href="#systemd" title="永久链接至标题">¶</a></h3>
@@ -581,8 +726,8 @@ systemd套接字单元文件 <code class="docutils literal notranslate"><span cl
 这里描述了缺省套接字路径配置。</p>
 </div>
 </div>
-<div class="section" id="id16">
-<h2>引导启动程序的修改<a class="headerlink" href="#id16" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id17">
+<h2>引导启动程序的修改<a class="headerlink" href="#id17" title="永久链接至标题">¶</a></h2>
 <p>SWUpdate 包含了内核和一个根文件系统(镜像),这必须由一个引导加载程序
 来启动。如果使用U-Boot, 可以实现以下机制:</p>
 <ul class="simple">
@@ -603,8 +748,8 @@ Uboot支持双备份环境变量，这可以使得更新器件掉电是安全的
 为了最小化风险，我们没有直接修改原始环境块。
 而是将变量写入临时文件，并在操作成功后调用rename指令。</p>
 </div>
-<div class="section" id="id17">
-<h2>构建一个单个的镜像<a class="headerlink" href="#id17" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id18">
+<h2>构建一个单个的镜像<a class="headerlink" href="#id18" title="永久链接至标题">¶</a></h2>
 <p>cpio由于其简单性而被用作容器。由此可以很简单地生成镜像。
 描述镜像的文件(默认是”sw-description”，但是名称是可以配置的)
 必须是cpio归档中的第一个文件。
@@ -622,8 +767,8 @@ for i in $FILES;do
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">swupdate</span> <span class="o">-</span><span class="n">c</span> <span class="o">-</span><span class="n">i</span> <span class="n">my</span><span class="o">-</span><span class="n">software_1</span><span class="o">.</span><span class="mf">0.</span><span class="n">swu</span>
 </pre></div>
 </div>
-<div class="section" id="id18">
-<h3>对复合镜像的支持<a class="headerlink" href="#id18" title="永久链接至标题">¶</a></h3>
+<div class="section" id="id19">
+<h3>对复合镜像的支持<a class="headerlink" href="#id19" title="永久链接至标题">¶</a></h3>
 <p>在Yocto中可以自动生成单个镜像。
 meta-swupdate使用swupdate类扩展了类。
 配方应该继承它，并添加自己的sw-description文件来生成镜像。</p>
@@ -639,7 +784,7 @@ meta-swupdate使用swupdate类扩展了类。
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="sw-description.html" class="btn btn-neutral float-right" title="SWUpdate: syntax and tags with the default parser" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="sw-description.html" class="btn btn-neutral float-right" title="SWUpdate:使用默认解析器的语法和标记" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="licensing.html" class="btn btn-neutral" title="许可证" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

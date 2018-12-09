@@ -102,9 +102,9 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#id13">有些事情出错了 ?</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#power-failure">Power Failure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id14">意外掉电</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#swupdate">升级SWUpdate本身会如何?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id14">升级引导加载程序会如何?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id15">升级引导加载程序会如何?</a></li>
 </ul>
 </li>
 </ul>
@@ -113,7 +113,7 @@
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="swupdate.html">SWUpdate: 嵌入式系统的软件升级</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sw-description.html">SWUpdate: syntax and tags with the default parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw-description.html">SWUpdate:使用默认解析器的语法和标记</a></li>
 <li class="toctree-l1"><a class="reference internal" href="signed_images.html">Update images from verified source</a></li>
 <li class="toctree-l1"><a class="reference internal" href="encrypted_images.html">Symmetrically Encrypted Update Images</a></li>
 <li class="toctree-l1"><a class="reference internal" href="handlers.html">Handlers</a></li>
@@ -359,7 +359,7 @@ SWUpdate的职责是更新备用副本，
 <p>使用U-Boot作为引导加载程序，
 SWUpdate能够管理U-Boot的环境设置变量，
 以指示事务的开始和结束，以及包含有效的软件的存储区域。
-针对GRUB环境块修改和EFI引导保护的类似特性也已被引入。</p>
+针对GRUB环境块修改和EFI Boot Guard的类似特性也已被引入。</p>
 <p>SWUpdate主要以如下配置的方式使用。
 Yocto生成包含SWUpdate应用程序的initrd映像，
 该映像在挂载根文件系统之后自动启动。</p>
@@ -371,7 +371,7 @@ Yocto生成包含SWUpdate应用程序的initrd映像，
 <p>许多事情都可能出错，必须保证系统能够再次运行，
 并且可能能够重新加载新的软件来修复损坏的映像。
 SWUpdate与引导加载程序一起工作，以识别失败的可能原因。
-目前支持U-Boot、GRUB和EFI引导保护。</p>
+目前支持U-Boot、GRUB和EFI Boot Guard。</p>
 <p>我们至少可以列出一些常见的原因:</p>
 <dl class="docutils">
 <dt>-安装过程中镜像损坏。</dt>
@@ -394,17 +394,14 @@ recovery_status的值为“failed”。</p>
 因为recovery_status变量处于“progress”或“failed”状态。
 然后，引导加载程序可以再次启动SWUpdate，以再次
 加载软件(单副本情况)或运行应用程序的旧副本(双副本情况)。</p>
-<div class="section" id="power-failure">
-<h3>Power Failure<a class="headerlink" href="#power-failure" title="永久链接至标题">¶</a></h3>
-<p>如果发生断电，必须保证系统能够再次工作 —— 重新
+<div class="section" id="id14">
+<h3>意外掉电<a class="headerlink" href="#id14" title="永久链接至标题">¶</a></h3>
+<p>如果发生掉电，必须保证系统能够再次工作 —— 重新
 启动SWUpdate或恢复软件的旧副本。</p>
 <p>一般情况下，行为可以根据所选择的场景进行划分：</p>
 <ul class="simple">
 <li>单拷贝：SWUpdate被中断，更新事务没有以成功结束。
 引导加载程序能够再次启动SWUpdate，从而有可能再次更新软件。</li>
-<li>single copy: SWUpdate is interrupted and the update transaction did not end
-with a success. The boot loader is able to start SWUpdate again, having the
-possibility to update the software again.</li>
 <li>双拷贝：SWUpdate没有在备份系统和当前系统之间做切换。
 当前版本的软件，并没有被更新触及到，会再次启动。</li>
 </ul>
@@ -432,8 +429,8 @@ SWUpdate在开始更新系统时设置一个变量作为标志，
 <li>承担风险，但准备一个在引导加载程序中可使用的救援程序。</li>
 </ul>
 </div>
-<div class="section" id="id14">
-<h3>升级引导加载程序会如何?<a class="headerlink" href="#id14" title="永久链接至标题">¶</a></h3>
+<div class="section" id="id15">
+<h3>升级引导加载程序会如何?<a class="headerlink" href="#id15" title="永久链接至标题">¶</a></h3>
 <p>更新引导加载程序在大多数情况下无法做到的。
 在大多数SOC上，不存在多个引导加载程序的副本，
 当引导加载程序被破坏时，板子就无法引导启动了。</p>

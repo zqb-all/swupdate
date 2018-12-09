@@ -1,26 +1,23 @@
 =================================================
-SWUpdate: syntax and tags with the default parser
+SWUpdate:使用默认解析器的语法和标记
 =================================================
 
-Introduction
+介绍
 ------------
 
-SWUpdate uses the library "libconfig"
-as default parser for the image description.
-However, it is possible to extend SWUpdate and add an own
-parser, based on a different syntax and language as the one
-supported by libconfig. In the examples directory
-there is the code for a parser written in Lua, with the
-description in XML.
+SWUpdate使用库“libconfig”作为镜像描述的默认解析器。
+但是，可以扩展SWUpdate并添加一个自己的解析器，
+以支持不同于libconfig的语法和语言。
+在examples目录中，有一个用Lua编写的，支持解析XML形式
+描述文件的解析器。
 
-Using the default parser, sw-description follows the
-syntax rules described in the libconfig manual.
-Please take a look at http://www.hyperrealm.com/libconfig/libconfig_manual.html
-for an explanation of basic types.
-The whole description must be contained in the sw-description file itself:
-using of the #include directive is not allowed by SWUpdate.
+使用默认解析器，则sw-description遵循libconfig手册中描述的语法规则。
+请参阅http://www.hyperrealm.com/libconfig/libconfig_manual.html
+以了解基本类型。
+整个描述必须包含在sw-description文件中:
+SWUpdate不允许使用#include指令。
+下面的例子更好地解释了当前实现的标记:
 
-The following example explains better the implemented tags:
 
 ::
 
@@ -110,26 +107,21 @@ The following example explains better the implemented tags:
 		);
 	}
 
-The first tag is "software". The whole description is contained in
-this tag. It is possible to group settings per device by using `Board
-specific settings`_.
+第一个标签是“软件”。整个描述包含在这个标签中。
+可以使用 `特定的板级设置`_ _对每个设备的设置进行分组。
 
-Handling configuration differences
+处理配置的差异
 ----------------------------------
 
-The concept can be extended to deliver a single image
-containing the release for multiple devices. Each device has its own
-kernel, dtb and root filesystem, or they can share some parts.
+这个概念可以扩展到交付单个映像，在其中包含用于多个不同设备的发布。
+每个设备都有自己的内核、dtb和根文件系统，或者它们可以共享某些部分。
 
-Currently this is managed (and already used in a real project) by
-writing an own parser, that checks which images must be installed
-after recognizing which is the device where software is running.
-
-Because the external parser can be written in Lua and it is
-completely customizable, everybody can set his own rules.
-For this specific example, the sw-description is written in XML format,
-with tags identifying the images for each device. To run it, the liblxp
-library is needed.
+目前，这是通过编写自己的解析器来管理的(并且已经在实际项目中使用)，
+解析器在识别出软件当前运行在什么设备上之后，检查必须安装哪些镜像。
+因为外部解析器可以用Lua编写，而且它是完全可定制的，
+所以每个人都可以设置自己的规则。
+对于这个特定的例子，sw-description是用XML格式编写的，
+带有标识来标记每个设备对应的镜像。要运行它需要liblxp库。
 
 ::
 
@@ -157,16 +149,14 @@ library is needed.
 	  </images>
 	</software>
 
+支持本例子的解析器位于/examples目录中。
+通过识别哪个是正在运行的设备，解析器返回一个表，
+其中包含必须安装的镜像及其关联的处理程序。
 
-The parser for this is in the /examples directory.
-By identifying which is the running device, the parser return
-a table containing the images that must be installed and their associated
-handlers.
-By reading the delivered image, SWUpdate will ignore all images that
-are not in the list processed by the parser. In this way, it is possible
-to have a single delivered image for the update of multiple devices.
+读取交付的镜像时，SWUpdate将忽略解析器处理列表之外的所有镜像。
+通过这种方式，可以使用单个交付镜像来更新多个设备。
 
-Multiple devices are supported by the default parser, too.
+默认解析器也支持多个设备。
 
 ::
 
@@ -191,31 +181,27 @@ Multiple devices are supported by the default parser, too.
         };
     }
 
-In this way, it is possible to have a single image providing software
-for each device you have.
+通过这种方式，可以使用单个镜像为你的所有设备提供软件。
 
-By default the hardware information is extracted from
-`/etc/hwrevision` file. The file should contain a single line in the
-following format::
+默认情况下，硬件信息是从 `/etc/hwrevision` 文件中提取的。
+文件应包含单行信息，格式如下::
 
   <boardname> <revision>
 
 Where:
 
-- `<revision>` will be used for matching with hardware compatibility
-  list
+- `<revision>` 将用于与硬件兼容列表匹配
 
-- `<boardname>` can be used for grouping board specific settings
+- `<boardname>` 可用于对板子的具体设置进行分组
 
 .. _collections:
 
-Software collections
+软件集合
 --------------------
 
-Software collections and operation modes can be used to implement a
-dual copy strategy. The simplest case is to define two installation
-locations for the firmware image and call `SWUpdate` selecting the
-appropriate image.
+软件集合和操作模式可用于实现双拷贝策略。
+最简单的情况是为固件映像定义两个安装位置，
+并在调用 `SWUpdate` 时选择适当的镜像。
 
 ::
 
@@ -243,25 +229,24 @@ appropriate image.
             };
     }
 
-In this way it is possible to specify that `copy-1` gets installed to
-`/dev/mtd4`, while `copy-2` to `/dev/mtd5`. By properly selecting the
-installation locations, `SWUpdate` will update the firmware in the
-other slot.
+通过这种方式，可以指定 `copy-1` 安装到 `/dev/mtd4` ，
+而 `copy-2` 安装到 `/dev/mtd5` 。
+通过正确选择安装位置， `SWUpdate` 将更新另一个插槽中的固件。
 
-The method of image selection is out of the scope of SWUpdate and user
-is responsible for calling `SWUpdate` passing proper settings.
+具体镜像的选择方法超出了SWUpdate的范围内，
+用户要负责调用 `SWUpdate` 并传入适当的设置。
 
-Priority finding the elements in the file
+查找文件元素的优先级
 -----------------------------------------
 
-SWUpdate search for entries in the sdw-description file according to the following priority:
+SWUpdate根据以下优先级搜索sdw-description文件中的条目:
 
-1. Try <boardname>.<selection>.<mode>.<entry>
-2. Try <selection>.<mode>.<entry>
-3. Try <boardname>.<entry>
-4. Try <entry>
+1. 尝试 <boardname>.<selection>.<mode>.<entry>
+2. 尝试 <selection>.<mode>.<entry>
+3. 尝试 <boardname>.<entry>
+4. 尝试 <entry>
 
-Take an example. The following sw-description describes the release for a set of boards.
+举一个例子。下面的sw-description描述了一组板子的发布。
 
 ::
 
@@ -310,21 +295,21 @@ Take an example. The following sw-description describes the release for a set of
             }
     }
 
-On *myboard*, SWUpdate searches and find myboard.stable.copy1(2). When running on different
-boards, SWUpdate does not find an enty corresponding to the boardname and it fallbacks to the
-version without boardname. This lets relalize the same release for different boards having
-a complete different hardware. `myboard` could have a eMMC and an ext4 filesystem,
-while another device can have raw flash and install an UBI filesystem. Nevertheless, they are
-both just a different format of the same release and they could be described together in sw-description.
-It is important to understand the priorities how SWUpdate scans for entries during the parsing.
+在 *myboard* 上运行时，SWUpdate会搜索并找到myboard.stable.copy1(2)。
+当在其他板子上运行时，SWUpdate则无法找到一个与板子名字对应的条目，
+那它就会退回到没有指定板子名字的版本。
+这样就可以使用一个发布版本，适配拥有完全不同硬件的不同板子。
+例如, `myboard` 可以是eMMC和ext4文件系统，而另一个设备可以是raw flash并安装
+UBI文件系统。然而，它们都是同一版本的不同格式，可以在sw-description中一起描述。
+重要的是，要理解SWUpdate在解析期间如何按优先级扫描条目。
 
 Using links
 -----------
 
-sw-description can become very complex. Let's think to have just one board, but in multiple
-hw revision and they differ in Hardware. Some of them can be grouped together, some of them
-require a dedicated section. A way (but not the only one !) could be to add *mode* and selects
-the section with `-e stable,<rev number>`.
+sw-description可能变得非常复杂。
+让我们假设只有一个板子，但是存在多个硬件版本，它们在硬件上是不同的。
+这些版本中有些可以统一处理，有些则需要特殊的部分。
+一种方法(但不是唯一的方法!)是添加 *mode* 并使用 `-e stable,<rev number>` 做选择。
 
 ::
 
@@ -359,16 +344,16 @@ the section with `-e stable,<rev number>`.
 					...
 				);
 				scripts: (
-					...
+                                   ...
 				);
 			}
 			rev-1.3: {
 				hardware-compatibility: ["1.3"];
 				images: (
-					...
+                                    ...
 				);
 				scripts: (
-					...
+                                    ...
 				);
 			}
 
@@ -396,94 +381,95 @@ the section with `-e stable,<rev number>`.
 	        }
 	}
 
-If each of them requires an own section, it is the way to do. Anyway, it is more probable
-than revisions can be grouped together, for example board with the same major revision
-number could have the same installation instructions. This leads in the example to 3 groups
-for rev1.X, rev2.X and rev3.X. Links allow to group section together. When a string is found
-when SWUpdate searches for a group (images, files, script, bootenv), it replaces the current path
-in the tree with the value of the string. In this way, the example above can be written in this way:
+
+如果它们每个都需要一个单独的部分，那么这是一种方法。
+尽管如此，更可能的情况时，不同的修订版本可以被当成一类，
+例如，具有相同主要修订号的板子可能具有相同的安装说明。
+在这个例子中，则可导出三个分组，rev1.X, rev2.X 和 rev3.X。
+链接允许将部分分组在一起。当SWUpdate搜索组
+(images、files、scripts、bootenv)时，如果发现“ref”，
+它将用字符串的值替换树中的当前路径。这样，上面的例子可以这样写:
 
 ::
 
 	software =
 	{
-		version = "0.1.0";
+                version = "0.1.0";
 
-		myboard = {
+                myboard = {
 	            stable = {
 
-			hardware-compatibility: ["1.0", "1.2", "2.0", "1.3, "3.0", "3.1"];
-			rev-1x: {
-				images: (
-					...
-				);
-				scripts: (
-					...
-				);
-			}
+                        hardware-compatibility: ["1.0", "1.2", "2.0", "1.3, "3.0", "3.1"];
+                        rev-1x: {
+                                images: (
+                                   ...
+                                );
+                                scripts: (
+                                    ...
+                                );
+                        }
                         rev1.0 = {
-                                ref = "#../rev-1x";
+                                ref = "#./rev-1x";
                         }
                         rev1.2 = {
-                                ref = "#../rev-1x";
+                                ref = "#./rev-1x";
                         }
                         rev1.3 = {
-                                ref = "#../rev-1x";
+                                ref = "#./rev-1x";
                         }
-			rev-2x: {
-				images: (
-					...
-				);
-				scripts: (
-					...
-				);
-			}
+                        rev-2x: {
+                                images: (
+                                     ...
+                                );
+                                scripts: (
+                                     ...
+                                );
+                        }
                         rev2.0 = {
-                                ref = "#../rev-2x";
+                                ref = "#./rev-2x";
                         }
 
-			rev-3x:
-			{
-				images: (
-					...
-				);
-				scripts: (
-					...
-				);
+                        rev-3x: {
+                                images: (
+                                     ...
+                                );
+                                scripts: (
+                                      ...
+                                );
 	                }
                         rev3.0 = {
-                                ref = "#../rev-3x";
+                                ref = "#./rev-3x";
                         }
                         rev3.1 = {
-                                ref = "#../rev-3x";
+                                ref = "#./rev-3x";
                         }
 		     }
 	        }
-	}
-
-The link can be absolute or relative. The keyword *"ref"* is used to indicate a link. If this is found, SWUpdate
-will traverse the tree and replaces the current path with the values find in the string pointed by "ref". There are
-simple rules for a link:
-
-       - it must start with the character '#' 
-       - "." points to the current level in the tree
-       - ".." points to the parent level in the tree
-       - "/" is used as filed separator in the link
+       }
 
 
-A relative path has a number of
-leading "../" to move the current cursor to the parent leaf of the tree.
-In the following example, rev40 sets a link to a "common" section, where `images`
-is found. This is sets via a link, too, to a section in the parent node.
-The path `software.myboard.stable.common.images`  is then replaced by
-`software.myboard.stable.trythis` 
+这种链接可以是绝对的，也可以是相对的。关键字 *ref*  用于指示一个链接。
+如果找到链接，SWUpdate将遍历树，并将当前路径替换为 "ref" 指向的字符串中的值。
+用于链接的规则很简单：
+
+
+       - 必须以字符 '#' 开头
+       - "." 指向树中的当前层级，即 "ref" 的父级
+       - ".." 指向树中的父级
+       - "/" 在链接中用作字段分隔符
+
+一个相对路径有许多前导 "../" 以从当前位置移动到树的高层级节点
+在下面的例子中，rev40设置了一个链接到 "common", 在那可以找到 "images"。
+这也是通过链接到父节点中的一个部分来设置的。
+路径 `software.myboard.stable.common.images` 被替换为
+`software.myboard.stable.trythis`
 
 ::
 
 	software =
 	{
 	  version = {
-		  ref = "#../commonversion";
+		  ref = "#./commonversion";
 	  }
 
 	  hardware-compatibility = ["rev10", "rev11", "rev20"];
@@ -494,9 +480,9 @@ The path `software.myboard.stable.common.images`  is then replaced by
 	  stable:{
 
 	    common:{
-		images = 
+		images =
 		{
-		  ref = "#../../trythis";
+		  ref = "#./../trythis";
 		}
 	      };
 
@@ -525,53 +511,48 @@ The path `software.myboard.stable.common.images`  is then replaced by
 	      };
 	      pdm3rev11 =
 	      {
-		ref = "#../pdm3rev10";
+		ref = "#./pdm3rev10";
 	      }
 	      pdm3rev20 =
 	      {
-		ref = "#../pdm3rev10";
+		ref = "#./pdm3rev10";
 	      }
 	      pdm3rev40 =
 	      {
-		ref = "#../common";
+		ref = "#./common";
 	      }
 	    };
 	  };
 	}
 
+可以通过链接重定向sw-description中的每个条目，就像上面示例中的 "version" 属性那样。
 
-Each entry in sw-description can be redirect by a link as in the above example for the
-"version" attribute.
-
-hardware-compatibility
+硬件兼容性
 ----------------------
 
-hardware-compatibility: [ "major.minor", "major.minor", ... ]
+硬件兼容性: [ "major.minor", "major.minor", ... ]
 
-It lists the hardware revisions that are compatible with this software image.
+它列出了与此软件镜像兼容的硬件修订版本。
 
-Example:
+例子:
 
 	hardware-compatibility: [ "1.0", "1.2", "1.3"];
 
-This means that the software is compatible with HW-Revisions
-1.0, 1.2 and 1.3, but not for 1.1 or other version not explicitly
-listed here.
-It is then duty of the single project to find which is the
-revision of the board where SWUpdate is running. There is no
-assumption how the revision can be obtained (GPIOs, EEPROM,..)
-and each project is free to select the way most appropriate.
-The result must be written in the file /etc/hwrevision (or in
-another file if specified as configuration option) before
-SWUpdate is started.
 
-partitions : UBI layout
+这意味着该软件可以兼容硬件修订版本1.0, 1.2 和 1.3,但不能兼容1.1
+和其他未在此明确列出的版本。
+如何找到正在运行SWUpdate的板子的修订版本，是另一件事情了。
+这里并没有假设如何获得修订版本（可以通过GPIOs,EEPROM等),
+每个项目都可以自由选择最合适的方式。
+在启动SWUpdate之前，结果必须写入文件/etc/hwrevision(如果配置中
+指定了另一个文件，则必须写入对应的文件)。
+
+partitions : UBI 布局
 -----------------------
 
-This tag allows to change the layout of UBI volumes.
-Please take care that MTDs are not touched and they are
-configured by the Device Tree or in another way directly
-in kernel.
+此标记允许更改UBI卷的布局。
+请注意，此处不涉及MTDs，它们是由设备树配置的，
+或者直接在内核中以另一种方式配置的。
 
 
 ::
@@ -584,19 +565,17 @@ in kernel.
 		},
 	);
 
-All fields are mandatory. SWUpdate searches for a volume of the
-selected name and adjusts the size, or creates a new volume if
-no volume with the given name exists. In the latter case, it is
-created on the UBI device attached to the MTD device given by
-"device". "device" can be given by number (e.g. "mtd4") or by name
-(the name of the MTD device, e.g. "ubi_partition"). The UBI device
-is attached automatically.
+所有字段都是强制的。SWUpdate搜索所选名称的卷并调整大小，
+如果不存在具有给定名称的卷，则创建新卷。
+在后一种情况下，它是在连接到"device"所指定MTD设备的UBI设备上创建的。
+"device"可以以数字(如 "mtd4")或名字(及MTD设备的名字，如 "ubi_partition")
+的方式给出。UBI设备的连接是自动进行的。
 
 images
 ------
 
-The tag "images" collects the image that are installed to the system.
-The syntax is:
+标签 "images" 收集安装到系统中的映像。
+语法是:
 
 ::
 
@@ -616,11 +595,10 @@ The syntax is:
 		.....
 	);
 
-*volume* is only used to install the image in a UBI volume. *volume* and
-*device* cannot be used at the same time. If device is set,
-the raw handler is automatically selected.
+*volume* 仅用于将镜像安装到UBI卷中。 *volume* 和 *device* 不能同时使用。
+如果设置了device,则会自动选中裸数据处理程序(raw handler)。
 
-The following example is to update a UBI volume:
+以下时一个更新UBI卷的例子:
 
 
 ::
@@ -630,8 +608,7 @@ The following example is to update a UBI volume:
 			volume = "rootfs";
 		}
 
-
-To update an image in raw mode, the syntax is:
+要以裸数据形式更新体格镜像，语法如下：
 
 
 ::
@@ -641,7 +618,7 @@ To update an image in raw mode, the syntax is:
 			device = "/dev/mmcblk0p1";
 		}
 
-To flash an image at a specific offset, the syntax is:
+要将镜像写入到一个指定偏移处，语法如下：
 
 
 ::
@@ -652,14 +629,13 @@ To flash an image at a specific offset, the syntax is:
 			offset = "16K";
 		}
 
-The offset handles the following multiplicative suffixes: K=1024 and M=1024*1024.
+偏移量可处理以下乘法后缀:K=1024和M=1024*1024。
 
-However, writing to flash in raw mode must be managed in a special
-way. Flashes must be erased before copying, and writing into NAND
-must take care of bad blocks and ECC errors. For this reasons, the
-handler "flash" must be selected:
+但是，在裸数据模式下写flash必须以一种特殊的方式进行管理。
+Flash在写入之前必须先擦除，并且写入NAND时必须处理坏块和ECC错误。
+因此，必须选择处理程序"flash":
 
-For example, to copy the kernel into the MTD7 of a NAND flash:
+例如，要将内核复制到NAND闪存的MTD7中:
 
 ::
 
@@ -669,11 +645,11 @@ For example, to copy the kernel into the MTD7 of a NAND flash:
 			type = "flash";
 		}
 
-The *filename* is mandatory. It is the Name of the file extracted by the stream.
-*volume* is only mandatory in case of UBI volumes. It should be not used
-in other cases.
 
-Alternatively, for the handler “flash”, the *mtdname* can be specified, instead of the device name:
+*filename* 是必须的。它是由流提取的文件的名称。
+*volume* 仅在UBI卷中是强制性的。它不应该在其他情况下使用。
+
+另外，对于处理程序 "flash"，可以指定 *mtdname* 来代替设备名称:
 
 ::
 
@@ -687,9 +663,8 @@ Alternatively, for the handler “flash”, the *mtdname* can be specified, inst
 Files
 -----
 
-It is possible to copy single files instead of images.
-This is not the preferred way, but it can be used for
-debugging or special purposes.
+可以复制单个文件而不是完整镜像。
+这不是首选的方法，但是可以用于调试或特殊目的。
 
 ::
 
@@ -703,27 +678,29 @@ debugging or special purposes.
 		}
 	);
 
-Entries in "files" section are managed as single files. The attributes
-"filename" and "path" are mandatory. Attributes "device" and "filesystem" are
-optional; they tell SWUpdate to mount device (of the given filesystem type,
-e.g. "ext4") before copying "filename" to "path". Without "device" and
-"filesystem", the "filename" will be copied to "path" in the current rootfs.
+"files" 部分中的条目会作为单个文件进行管理。
+"filename" 和 "path" 属性是必须的。
+属性 "device" 和 "filesystem" 是可选的;
+它们用于告诉SWUpdate，在将"filename"拷贝到"path"之前
+先挂载设备(以给定的文件系统类型进行挂载，如 "ext4")。
+如果没有指定"device"和"filesystem"，
+则"filename"会被拷贝到当前根文件系统的"path"。
 
-As a general rule, swupdate doesn't copy out a file if the destination path
-doesn't exists. This behavior could be changed using the special property
-"create-destination".
+一般来说，如果目标路径不存在，swupdate不会复制文件。
+可以使用特殊属性"create-destination"更改此行为。
+
 
 Scripts
 -------
 
-Scripts runs in the order they are put into the sw-description file.
-The result of a script is valuated by SWUpdate, that stops the update
-with an error if the result is <> 0.
+脚本按照它们被放入sw-description文件的顺序运行。
+脚本的结果由SWUpdate进行评估，如果结果是<> 0，则停止更新并报错。
 
-They are copied into a temporary directory before execution and their name must
-be unique inside the same cpio archive.
+它们在执行之前会被复制到一个临时目录中，
+并且它们的名字在同一个cpio归档中必须是惟一的。
 
-If no type is given, SWUpdate default to "lua".
+如果没有给出类型，SWUpdate默认为 "lua"。
+
 
 Lua
 ...
@@ -737,25 +714,21 @@ Lua
 	 	},
 	);
 
+Lua脚本使用内部解释器运行。
 
-Lua scripts are run using the internal interpreter.
-
-They must have at least one of the following functions:
+它们必须具有下列函数中的至少一个:
 
 ::
 
 	function preinst()
 
-SWUpdate scans for all scripts and check for a preinst function. It is
-called before installing the images.
-
+SWUpdate扫描所有脚本并检查preinst函数。在安装镜像之前调用它。
 
 ::
 
 	function postinst()
 
-SWUpdate scans for all scripts and check for a postinst function. It is
-called after installing the images.
+SWUpdate扫描所有脚本并检查postinst函数。它是在安装镜像之后调用的。
 
 shellscript
 ...........
@@ -769,12 +742,11 @@ shellscript
 		},
 	);
 
-Shell scripts are called via system command.
-SWUpdate scans for all scripts and calls them before and after installing
-the images. SWUpdate passes 'preinst' or 'postinst' as first argument to
-the script.
-If the data attribute is defined, its value is passed as the last argument(s)
-to the script.
+
+Shell脚本通过system命令调用。
+SWUpdate扫描所有脚本，并在安装镜像之前和之后调用它们。
+SWUpdate将'preinst'或'postinst'作为脚本的第一个参数传递。
+如果定义了data属性，它的值将作为最后一个参数传递给脚本。
 
 preinstall
 ..........
@@ -788,10 +760,9 @@ preinstall
 		},
 	);
 
-preinstall are shell scripts and called via system command.
-SWUpdate scans for all scripts and calls them before installing the images.
-If the data attribute is defined, its value is passed as the last argument(s)
-to the script.
+preinstall 是通过system命令调用的shell脚本。
+SWUpdate扫描所有脚本并在安装映像之前调用它们。
+如果定义了data属性，它的值将作为最后一个参数传递给脚本。
 
 postinstall
 ...........
@@ -805,21 +776,21 @@ postinstall
 		},
 	);
 
-postinstall are shell scripts and called via system command.
-SWUpdate scans for all scripts and calls them after installing the images.
-If the data attribute is defined, its value is passed as the last argument(s)
-to the script.
+postinstall 是通过system命令调用的shell脚本。
+SWUpdate扫描所有脚本，并在安装镜像后调用它们。
+如果定义了data属性，它的值将作为最后一个参数传递给脚本。
 
 bootloader
 ----------
 
-There are two ways to update the bootloader (currently U-Boot, GRUB, and
-EFI Boot Guard) environment. First way is to add a file with the list of
-variables to be changed and setting "bootloader" as type of the image. This
-informs SWUpdate to call the bootloader handler to manage the file
-(requires enabling bootloader handler in configuration). There is one
-bootloader handler for all supported bootloaders. The appropriate bootloader
-must be chosen from the bootloader selection menu in `menuconfig`.
+有两种方法可以更新引导加载程序(当前支持U-Boot、GRUB和EFI Boot Guard)
+的环境变量。
+第一种方法是添加一个包含要更改的变量列表的文件，
+并将“bootloader”设置为镜像的类型。
+这将通知SWUpdate调用引导加载程序处理程序来处理文件
+(需要在配置中启用引导加载程序处理程序)。
+对于所有受支持的引导加载程序，都有一个引导加载程序处理程序。
+必须从 `menuconfig` 的引导加载程序选择菜单中选择适当的引导加载程序。
 
 ::
 
@@ -830,20 +801,16 @@ must be chosen from the bootloader selection menu in `menuconfig`.
 		},
 	)
 
-The format of the file is described in U-boot documentation. Each line
-is in the format
+文件的格式在U-boot文档中有描述。每一行都是如下格式
 
 ::
 
 	<name of variable>	<value>
 
-if value is missing, the variable is unset.
+如果值缺失，则变量将被去掉。
+在当前实现中，GRUB和EFI Boot Guard 的环境变量修改也继承了上述文件格式。
 
-In the current implementation, the above file format was inherited for
-GRUB and EFI Boot Guard environment modification as well.
-
-The second way is to define in a group setting the variables
-that must be changed:
+第二种方法是在组设置中定义需要更改的变量:
 
 ::
 
@@ -854,27 +821,24 @@ that must be changed:
 		},
 	)
 
-SWUpdate will internally generate a script that will be passed to the
-bootloader handler for adjusting the environment.
+SWUpdate将在内部生成一个脚本，该脚本将传递给
+引导加载程序处理程序，用于调整环境变量。
 
-For backward compatibility with previously built `.swu` images, the
-"uboot" group name is still supported as an alias. However, its usage
-is deprecated.
+为了向后兼容以前构建的 `.swu`  镜像，"uboot" 组名仍然作为别名支持。
+但是，它实际上已经被弃用了，不建议继续使用它。
 
 
-Board specific settings
+特定的板级设置
 -----------------------
 
-Each setting can be placed under a custom tag matching the board
-name. This mechanism can be used to override particular setting in
-board specific fashion.
+每个设置都可以放在与板名匹配的自定义标记下。
+此机制可用于以板卡特有的方式覆盖特定设置。
 
-Assuming that the hardware information file `/etc/hwrevision` contains
-the following entry::
+假设硬件信息文件 `/etc/hwrevision` 包含以下条目::
 
   my-board 0.1.0
 
-and the following description::
+以及以下描述::
 
 	software =
 	{
@@ -897,26 +861,24 @@ and the following description::
 	        );
 	}
 
-SWUpdate will set `bootpart` to `0:2` in bootloader's environment for this
-board. For all other boards, `bootpart` will be set to `0:1`. Board
-specific settings take precedence over default scoped settings.
+SWUpdate将在这个板子的引导加载程序环境中将 `bootpart` 设置为 `0:2` 。
+对于所有其他板子， `bootpart` 将被设置为 `0:1` 。
+特定于板子的设置优先于默认作用域的设置。
 
-
-Software collections and operation modes
+软件集合和操作模式
 ----------------------------------------
 
-Software collections and operations modes extend the description file
-syntax to provide an overlay grouping all previous configuration
-tags. The mechanism is similar to `Board specific settings`_ and can
-be used for implementing a dual copy strategy or delivering both
-stable and unstable images within a single update file.
+软件集合和操作模式扩展了描述文件语法，
+以提供对之前介绍的所有配置标记的叠加分组。
+这种机制类似于 `特定的板级设置`_ ,可用于实现双拷贝策略，
+或者用单个更新文件内同时交付稳定和不稳定版本的镜像。
 
-The mechanism uses a custom user-defined tags placed within `software`
-scope. The tag names must not be any of: `version`,
-`hardware-compatibility`, `uboot`, `bootenv`, `files`, `scripts`, `partitions`,
-`images`
 
-An example description file:
+该机制使用放置在 `software` 标签范围内的自定义用户定义标签。
+标签不能使用以下名字: `version`, `hardware-compatibility`,
+`uboot`, `bootenv`, `files`, `scripts`, `partitions`, `images`
+
+示例描述文件:
 
 ::
 
@@ -965,85 +927,82 @@ An example description file:
 	        };
 	}
 
-The configuration describes a single software collection named
-`stable`. Two distinct image locations are specified for this
-collection: `/dev/mmcblk0p1` and `/dev/mmcblk0p2` for `main` mode and
-`alt` mode respectively.
 
-This feature can be used to implement a dual copy strategy by
-specifying the collection and mode explicitly.
 
-Checking version of installed software
+这个配置描述了一个名为 `stable` 的软件集合。
+并为这个集合指定了两个不同的镜像安装位置: `/dev/mmcblk0p1` 和
+`/dev/mmcblk0p2` 分别用于 `main` 模式和 `alt` 模式。
+
+该特性可以通过显式指定集合和模式来实现双拷贝策略。
+
+检查已安装软件的版本
 --------------------------------------
 
-SWUpdate can optionally verify if a sub-image is already installed
-and, if the version to be installed is exactly the same, it can skip
-to install it. This is very useful in case some high risky image should
-be installed or to speed up the upgrade process.
-One case is if the bootloader needs to be updated. In most time, there
-is no need to upgrade the bootloader, but practice showed that there are
-some cases where an upgrade is strictly required - the project manager
-should take the risk. However, it is nicer to have always the bootloader image
-as part of the .swu file, allowing to get the whole distro for the
-device in a single file, but the device should install it just when needed.
+SWUpdate支持可选地验证子镜像是否已经被安装了，
+如果要安装的版本完全相同，则可以跳过它的安装。
+这在安装某些高风险镜像或需要加速升级过程的情况下是非常有用的。
 
-SWUpdate searches for a file (/etc/sw-versions is the default location)
-containing all versions of the installed images. This must be generated
-before running SWUpdate.
-The file must contains pairs with the name of image and his version, as:
+一种情况是需要更新引导加载程序。在大多数情况下，
+不需要升级引导加载程序，但是实践表明，在某些情况下，
+确实有必要升级 - 项目经理应该承担这个风险。
+经过如此，始终将引导加载程序镜像作为.swu文件的一部分是更好的，
+这样可以在单个文件中获得设备的整个发行版，但是设备应该仅在必要时安装它。
+
+SWUpdate搜索包含已安装映像的所有版本信息的文件(默认位置是/etc/sw-versions)。
+这个文件必须在运行SWUpdate之前生成。
+
+文件必须包含成对的信息，即镜像名称和版本:
 
 ::
 
 	<name of component>	<version>
 
-Version is a string and can have any value. For example:
+版本是一个字符串，可以有任何值。例如:
 
 ::
 
         bootloader              2015.01-rc3-00456-gd4978d
         kernel                  3.17.0-00215-g2e876af
 
-In sw-description, the optional attributes "name", "version" and
-"install-if-different" provide the connection. Name and version are then
-compared with the data in the versions file. install-if-different is a
-boolean that enables the check for this image. It is then possible to
-check the version just for a subset of the images to be installed.
+在sw-description中，可选属性 "name"、"version"
+和"install-if-different"提供了连接。
+name和version将用于与版本文件中的数据进行比较。
+install-if-different则是一个布尔值，用于对此镜像启用版本检查。
+这样就可以只对要安装的镜像们的一个子集进行版本检查。
 
-
-Embedded Script
+嵌入脚本
 ---------------
 
-It is possible to embed a script inside sw-description. This is useful in a lot
-of conditions where some parameters are known just by the target at runtime. The
-script is global to all sections, but it can contain several functions that can be specific
-for each entry in the sw-description file.
+可以将脚本嵌入到sw-description中。这在许多情况下非常有用，
+因为一些参数只有在目标上实际运行时知道。
+脚本是全局的，面向所有部分，但是它可以包含几个函数，
+这些函数可以针对sw-description文件中的每个条目。
 
-These attributes are used for an embedded-script:
+这些属性用于嵌入脚本:
 
 ::
 
 		embedded-script = "<Lua code">
 
-It must be taken into account that the parser has already run and usage of double quotes can
-interfere with the parser. For this reason, each double quote in the script must be escaped.
+必须考虑到解析器已经在运行，双引号的使用可能会干扰解析器。
+因此，脚本中的每个双引号都必须转义。
 
-That means a simple Lua code as:
+这意味着像这样的一个简单的Lua代码:
 
 ::
 
         print ("Test")
 
-must be changed to:
+修改改成这样:
 
 ::
 
         print (\"Test\")
 
-If not, the parser thinks to have the closure of the script and this generates an error. 
-See the examples directory for examples how to use it.
-Any entry in files or images can trigger one function in the script. The "hook" attribute
-tells the parser to load the script and to search for the function pointed to by the hook
-attribute. For example:
+不然解析器会认为脚本已经关闭，并产生一个错误。
+有关如何使用它的示例，请参见示例目录。
+文件或镜像中的任何条目都可以触发脚本中的一个函数。
+"hook" 属性告诉解析器加载脚本并搜索钩子属性指向的函数。例如:
 
 ::
 
@@ -1057,32 +1016,32 @@ attribute. For example:
 			}
 		);
 
-After the entry is parsed, the parser runs the Lua function pointed to by hook. If Lua is not
-activated, the parser raises an error because a sw-description with an embedded script must
-be parsed, but the interpreter is not available.
-
-Each Lua function receives as parameter a table with the setup for the current entry. A hook
-in Lua is in the format:
+在解析条目之后，解析器运行hook所指向的Lua函数。
+如果Lua未被激活，解析器将引发一个错误，
+因为必须解析带有嵌入脚本的sw-description，但解释器不可用。
+每个Lua函数接收一个带有当前条目设置的表作为参数。
+Lua钩子的格式是:
 
 ::
 
         function lua_hook(image)
 
-image is a table where the keys are the list of available attributes. If an attribute contains
-a "-", it is replaced with "_", because "-" cannot be used in Lua. This means, for example, that:
+参数image是一个表，其关键字是有效属性的列表。
+如果一个属性包含了"-"，则会被替换为"_"，因为Lua中不能使用 "-"。
+这意味着，如下例子：
 
 ::
 
         install-if-different ==> install_if_different
         install-directly     ==> install_directly
 
-Attributes can be changed in the Lua script and values are taken over on return.
-The Lua function must return 2 values:
+可以在Lua脚本中更改属性，并在返回时接管值。
+Lua函数必须返回2个值:
 
-        - a boolean, to indicate whether the parsing was correct
-        - the image table or nil to indicate that the image should be skipped
+        - 一个布尔值，指示解析是否正确
+        - 镜像表或nil以表示应该跳过该镜像
 
-Example:
+例子:
 
 ::
 
@@ -1096,26 +1055,21 @@ Example:
         	return true, image
         end
 
-
-The example sets a version for the installed image. Generally, this is detected at runtime
-reading from the target.
+该示例为已安装镜像设置了一个版本。
+通常，这是在运行时从目标读取数据检测到的。
 
 .. _sw-description-attribute-reference:
 
-Attribute reference
+属性参考
 -------------------
 
-There are 4 main sections inside sw-description:
+在sw-description中有4个主要部分:
 
-- images: entries are images and SWUpdate has no knowledge
-  about them.
-- files: entries are files, and SWUpdate needs a filesystem for them.
-  This is generally used to expand from a tar-ball or to update
-  single files.
-- scripts: all entries are treated as executables, and they will
-  be run twice (as pre- and post- install scripts).
-- bootenv: entries are pair with bootloader environment variable name and its
-  value.
+- images: 条目是镜像，SWUpdate对它们一无所知。
+- files: 条目是文件，SWUpdate需要一个用于它们的文件系统。
+  这通常用于从tar-ball展开或更新单个文件。
+- scripts: 所有条目都被视为可执行文件，它们将被运行两次(作为安装前和安装后脚本)。
+- bootenv:条目是引导加载程序环境变量名及其值的键值对。
 
 
 .. tabularcolumns:: |p{1.5cm}|p{1.5cm}|p{1.5cm}|L|
@@ -1123,112 +1077,93 @@ There are 4 main sections inside sw-description:
 
 
    +-------------+----------+------------+---------------------------------------+
-   |  Name       |  Type    | Applies to |  Description                          |
+   |  名字       |  类型    | 应用于     |  描述                                 |
    +=============+==========+============+=======================================+
-   | filename    | string   | images     |  filename as found in the cpio archive|
+   | filename    | string   | images     | 在cpio存档中找到的文件名。            |
    |             |          | files      |                                       |
    |             |          | scripts    |                                       |
    +-------------+----------+------------+---------------------------------------+
-   | volume      | string   | images     | Just if type = "ubivol". UBI volume   |
-   |             |          |            | where image must be installed.        |
+   | volume      | string   | images     | 仅在 type = "ubivol"时使用。          |
+   |             |          |            | 指明镜像将安装到哪个UBI卷。           |
    +-------------+----------+------------+---------------------------------------+
-   | ubipartition| string   | images     | Just if type = "ubivol". Volume to be |
-   |             |          |            | created or adjusted with a new size   |
+   | ubipartition| string   | images     | 仅在 type = "ubivol"时使用。          |
+   |             |          |            | 要创建或调整大小的UBI卷。             |
    +-------------+----------+------------+---------------------------------------+
-   | device      | string   | images     | devicenode as found in /dev or a      |
-   |             |          | files      | symlink to it. Can be specified as    |
-   |             |          |            | absolute path or a name in /dev folder|
-   |             |          |            | For example if /dev/mtd-dtb is a link |
-   |             |          |            | to /dev/mtd3 "mtd3", "mtd-dtb",       |
-   |             |          |            | "/dev/mtd3" and "/dev/mtd-dtb" are    |
-   |             |          |            | valid names.                          |
-   |             |          |            | Usage depends on handler.             |
-   |             |          |            | For files, it indicates on which      |
-   |             |          |            | device the "filesystem" must be       |
-   |             |          |            | mounted. If not specified, the current|
-   |             |          |            | rootfs will be used.                  |
+   | device      | string   | images     | 在/dev下可找到的设备节点，或者是到它的|
+   |             |          | files      | 符号链接。 可以指定为绝对路径，或/dev |
+   |             |          |            | 下的名字。例如，如果/dev/mtd-dev是一个|
+   |             |          |            | 指向/dev/mtd3的链接，则 "mtd3",       |
+   |             |          |            | "mtd-dtb","/dev/mtd3"和"/dev/mtd-dtb" |
+   |             |          |            | 均是有效的名字。                      |
+   |             |          |            | 用法取决于具体处理程序。              |
+   |             |          |            | 对于文件，用于指明哪个设备用于挂载    |
+   |             |          |            | "filesystem"，如果未指定，则使用当前的|
+   |             |          |            | 根文件系统。                          |
    +-------------+----------+------------+---------------------------------------+
-   | filesystem  | string   | files      | indicates the filesystem type where   |
-   |             |          |            | the file must be installed. Only      |
-   |             |          |            | used if "device" attribute is set.    |
+   | filesystem  | string   | files      | 指示文件安装位置的文件系统类型。      |
+   |             |          |            | 仅在设置了"device"属性时使用。        |
    +-------------+----------+------------+---------------------------------------+
-   | path        | string   | files      | For files: indicates the path         |
-   |             |          |            | (absolute) where the file must be     |
-   |             |          |            | installed. If "device" and            |
-   |             |          |            | "filesystem" are set,                 |
-   |             |          |            | SWUpdate will install the             |
-   |             |          |            | file after mounting "device" with     |
-   |             |          |            | "filesystem" type. (path is always    |
-   |             |          |            | relative to the mount point.)         |
+   | path        | string   | files      | 用于文件:指示用于安装文件的路径       |
+   |             |          |            | (绝对路径)。如果设置了"device" 和     |
+   |             |          |            | "filesystem", Swupdate将在以指定文件  |
+   |             |          |            | 系统类型挂载设备后再安装文件。        |
+   |             |          |            | (路径总是相对于挂载点而言的)          |
    +-------------+----------+------------+---------------------------------------+
-   | preserve-\  | bool     | files      | flag to control whether the following |
-   | attributes  |          |            | attributes will be preserved when     |
-   |             |          |            | files are unpacked from an archive    |
-   |             |          |            | (assuming destination filesystem      |
-   |             |          |            | supports them, of course):            |
+   | preserve-\  | bool     | files      | 标记，用于控制从归档文件解压文件时    |
+   | attributes  |          |            | 是否保留下列属性                      |
+   |             |          |            | (当然，前提是目标文件系统支持它们):   |
    |             |          |            | timestamp, uid/gid (numeric), perms,  |
    |             |          |            | file attributes, extended attributes  |
    +-------------+----------+------------+---------------------------------------+
-   | type        | string   | images     | string identifier for the handler,    |
-   |             |          | files      | as it is set by the handler when it   |
-   |             |          | scripts    | regitsters itself.                    |
-   |             |          |            | Example: "ubivol", "raw", "rawfile",  |
+   | type        | string   | images     | 处理程序的字符串标识符，              |
+   |             |          | files      | 它是由处理程序在注册自身时设置的。    |
+   |             |          | scripts    | 例如: "ubivol", "raw", "rawfile"      |
    +-------------+----------+------------+---------------------------------------+
-   | compressed  | bool     | images     | flag to indicate that "filename" is   |
-   |             |          | files      | zlib-compressed and must be           |
-   |             |          |            | decompressed before being installed   |
+   | compressed  | bool     | images     | 标记，用于指示"filename"是zlib压缩的，|
+   |             |          | files      | 在安装之前必须先解压                  |
    +-------------+----------+------------+---------------------------------------+
-   | installed-\ | bool     | images     | flag to indicate that image is        |
-   | directly    |          |            | streamed into the target without any  |
-   |             |          |            | temporary copy. Not all handlers      |
-   |             |          |            | support streaming.                    |
+   | installed-\ | bool     | images     | 标志，用于指示镜像需流式更新到目标中, |
+   | directly    |          |            | 不需要任何临时副本。                  |
+   |             |          |            | 并非所有处理程序都支持流式更新。      |
    +-------------+----------+------------+---------------------------------------+
-   | name        | string   | bootenv    | name of the bootloader variable to be |
-   |             |          |            | set.                                  |
+   | name        | string   | bootenv    | 要设置的引导程序环境变量的名字。      |
    +-------------+----------+------------+---------------------------------------+
-   | value       | string   | bootenv    | value to be assigned to the           |
-   |             |          |            | bootloader variable                   |
+   | value       | string   | bootenv    | 要赋给引导加载程序环境变量的值。      |
    +-------------+----------+------------+---------------------------------------+
-   | name        | string   | images     | name that identifies the sw-component |
-   |             |          | files      | it can be any string and it is        |
-   |             |          |            | compared with the entries in          |
-   |             |          |            | sw-versions                           |
+   | name        | string   | images     | 标识sw-component的名称，它可以是任何  |
+   |             |          | files      | 字符串，将与sw-versions中的条目做比较 |
    +-------------+----------+------------+---------------------------------------+
-   | version     | string   | images     | version for the sw-component          |
-   |             |          | files      | it can be any string and it is        |
-   |             |          |            | compared with the entries in          |
-   |             |          |            | sw-versions                           |
+   | version     | string   | images     | sw-component的版本，可以是任何字符串，|
+   |             |          | files      | 将与sw-version中的条目做比较          |
    +-------------+----------+------------+---------------------------------------+
-   | description | string   |            | user-friendly description of the      |
-   |             |          |            | swupdate archive (any string)         |
+   | description | string   |            | swupdate归档文件的用户友好的描述      |
+   |             |          |            | (可使用任意字符串)                    |
    +-------------+----------+------------+---------------------------------------+
-   | install-if\ | bool     | images     | flag                                  |
-   | -different  |          | files      | if set, name and version are          |
-   |             |          |            | compared with the entries in          |
+   | install-if\ | bool     | images     | 标志                                  |
+   | -different  |          | files      | 如果设置了，名字和版本会于版本文件中  |
+   |             |          |            | 的条目做比较。                        |
    +-------------+----------+------------+---------------------------------------+
-   | encrypted   | bool     | images     | flag                                  |
-   |             |          | files      | if set, file is encrypted             |
-   |             |          | scripts    | and must be decrypted before          |
-   |             |          |            | installing.                           |
+   | encrypted   | bool     | images     | 标志                                  |
+   |             |          | files      | 如果设置了, 文件会被加密并必须先解密后|
+   |             |          | scripts    | 安装。                                |
    +-------------+----------+------------+---------------------------------------+
-   | data        | string   | images     | This is used to pass arbitrary data   |
-   |             |          | files      | to a handler.                         |
+   | data        | string   | images     | 用于将任意数据传递给处理程序。        |
+   |             |          | files      |                                       |
    |             |          | scripts    |                                       |
    +-------------+----------+------------+---------------------------------------+
-   | sha256      | string   | images     | sha256 hash of image, file or script. |
-   |             |          | files      | Used for verification of signed       |
-   |             |          | scripts    | images.                               |
+   | sha256      | string   | images     | 镜像、文件或脚本的sha256哈希值。      |
+   |             |          | files      | 用于签名镜像的校验。                  |
+   |             |          | scripts    |                                       |
    +-------------+----------+------------+---------------------------------------+
-   | embedded-\  | string   |            | Lua code that is embedded in the      |
-   | script      |          |            | sw-description file.                  |
+   | embedded-\  | string   |            | 嵌入sw-description文件中的Lua代码。   |
+   | script      |          |            |                                       |
    +-------------+----------+------------+---------------------------------------+
-   | offset      | string   | images     | Optional destination offset           |
+   | offset      | string   | images     | 可选的目的位置的偏移量。              |
    +-------------+----------+------------+---------------------------------------+
-   | hook        | string   | images     | The name of the function (Lua) to be  |
-   |             |          | files      | called when the entry is parsed.      |
+   | hook        | string   | images     | 解析条目时要调用的函数(Lua)的名称。   |
+   |             |          | files      |                                       |
    +-------------+----------+------------+---------------------------------------+
-   | mtdname     | string   | images     | name of the MTD to update. Used only  |
-   |             |          |            | by the flash handler to identify the  |
-   |             |          |            | the mtd to update, instead of         |
-   |             |          |            | specifying the devicenode             |
+   | mtdname     | string   | images     | 要更新的MTD的名称。仅被flash处理程序  |
+   |             |          |            | 用来代替具体的设备节点名，以识别要    |
+   |             |          |            | 更新的MTD。                           |
    +-------------+----------+------------+---------------------------------------+
