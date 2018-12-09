@@ -108,7 +108,7 @@ SWUpdate不允许使用#include指令。
 	}
 
 第一个标签是“软件”。整个描述包含在这个标签中。
-可以使用 `Board specific settings`_ _对每个设备的设置进行分组。
+可以使用 `特定的板级设置`_ _对每个设备的设置进行分组。
 
 处理配置的差异
 ----------------------------------
@@ -870,7 +870,7 @@ SWUpdate将在这个板子的引导加载程序环境中将 `bootpart` 设置为
 
 软件集合和操作模式扩展了描述文件语法，
 以提供对之前介绍的所有配置标记的叠加分组。
-这种机制类似于 `Board specific settings`_ ,可用于实现双拷贝策略，
+这种机制类似于 `特定的板级设置`_ ,可用于实现双拷贝策略，
 或者用单个更新文件内同时交付稳定和不稳定版本的镜像。
 
 
@@ -1100,87 +1100,70 @@ Lua函数必须返回2个值:
    |             |          |            | "filesystem"，如果未指定，则使用当前的|
    |             |          |            | 根文件系统。                          |
    +-------------+----------+------------+---------------------------------------+
-   | filesystem  | string   | files      | indicates the filesystem type where   |
-   |             |          |            | the file must be installed. Only      |
-   |             |          |            | used if "device" attribute is set.    |
+   | filesystem  | string   | files      | 指示文件安装位置的文件系统类型。      |
+   |             |          |            | 仅在设置了"device"属性时使用。        |
    +-------------+----------+------------+---------------------------------------+
-   | path        | string   | files      | For files: indicates the path         |
-   |             |          |            | (absolute) where the file must be     |
-   |             |          |            | installed. If "device" and            |
-   |             |          |            | "filesystem" are set,                 |
-   |             |          |            | SWUpdate will install the             |
-   |             |          |            | file after mounting "device" with     |
-   |             |          |            | "filesystem" type. (path is always    |
-   |             |          |            | relative to the mount point.)         |
+   | path        | string   | files      | 用于文件:指示用于安装文件的路径       |
+   |             |          |            | (绝对路径)。如果设置了"device" 和     |
+   |             |          |            | "filesystem", Swupdate将在以指定文件  |
+   |             |          |            | 系统类型挂载设备后再安装文件。        |
+   |             |          |            | (路径总是相对于挂载点而言的)          |
    +-------------+----------+------------+---------------------------------------+
-   | preserve-\  | bool     | files      | flag to control whether the following |
-   | attributes  |          |            | attributes will be preserved when     |
-   |             |          |            | files are unpacked from an archive    |
-   |             |          |            | (assuming destination filesystem      |
-   |             |          |            | supports them, of course):            |
+   | preserve-\  | bool     | files      | 标记，用于控制从归档文件解压文件时    |
+   | attributes  |          |            | 是否保留下列属性                      |
+   |             |          |            | (当然，前提是目标文件系统支持它们):   |
    |             |          |            | timestamp, uid/gid (numeric), perms,  |
    |             |          |            | file attributes, extended attributes  |
    +-------------+----------+------------+---------------------------------------+
-   | type        | string   | images     | string identifier for the handler,    |
-   |             |          | files      | as it is set by the handler when it   |
-   |             |          | scripts    | regitsters itself.                    |
-   |             |          |            | Example: "ubivol", "raw", "rawfile",  |
+   | type        | string   | images     | 处理程序的字符串标识符，              |
+   |             |          | files      | 它是由处理程序在注册自身时设置的。    |
+   |             |          | scripts    | 例如: "ubivol", "raw", "rawfile"      |
    +-------------+----------+------------+---------------------------------------+
-   | compressed  | bool     | images     | flag to indicate that "filename" is   |
-   |             |          | files      | zlib-compressed and must be           |
-   |             |          |            | decompressed before being installed   |
+   | compressed  | bool     | images     | 标记，用于指示"filename"是zlib压缩的，|
+   |             |          | files      | 在安装之前必须先解压                  |
    +-------------+----------+------------+---------------------------------------+
-   | installed-\ | bool     | images     | flag to indicate that image is        |
-   | directly    |          |            | streamed into the target without any  |
-   |             |          |            | temporary copy. Not all handlers      |
-   |             |          |            | support streaming.                    |
+   | installed-\ | bool     | images     | 标志，用于指示镜像需流式更新到目标中, |
+   | directly    |          |            | 不需要任何临时副本。                  |
+   |             |          |            | 并非所有处理程序都支持流式更新。      |
    +-------------+----------+------------+---------------------------------------+
-   | name        | string   | bootenv    | name of the bootloader variable to be |
-   |             |          |            | set.                                  |
+   | name        | string   | bootenv    | 要设置的引导程序环境变量的名字。      |
    +-------------+----------+------------+---------------------------------------+
-   | value       | string   | bootenv    | value to be assigned to the           |
-   |             |          |            | bootloader variable                   |
+   | value       | string   | bootenv    | 要赋给引导加载程序环境变量的值。      |
    +-------------+----------+------------+---------------------------------------+
-   | name        | string   | images     | name that identifies the sw-component |
-   |             |          | files      | it can be any string and it is        |
-   |             |          |            | compared with the entries in          |
-   |             |          |            | sw-versions                           |
+   | name        | string   | images     | 标识sw-component的名称，它可以是任何  |
+   |             |          | files      | 字符串，将与sw-versions中的条目做比较 |
    +-------------+----------+------------+---------------------------------------+
-   | version     | string   | images     | version for the sw-component          |
-   |             |          | files      | it can be any string and it is        |
-   |             |          |            | compared with the entries in          |
-   |             |          |            | sw-versions                           |
+   | version     | string   | images     | sw-component的版本，可以是任何字符串，|
+   |             |          | files      | 将与sw-version中的条目做比较          |
    +-------------+----------+------------+---------------------------------------+
-   | description | string   |            | user-friendly description of the      |
-   |             |          |            | swupdate archive (any string)         |
+   | description | string   |            | swupdate归档文件的用户友好的描述      |
+   |             |          |            | (可使用任意字符串)                    |
    +-------------+----------+------------+---------------------------------------+
-   | install-if\ | bool     | images     | flag                                  |
-   | -different  |          | files      | if set, name and version are          |
-   |             |          |            | compared with the entries in          |
+   | install-if\ | bool     | images     | 标志                                  |
+   | -different  |          | files      | 如果设置了，名字和版本会于版本文件中  |
+   |             |          |            | 的条目做比较。                        |
    +-------------+----------+------------+---------------------------------------+
-   | encrypted   | bool     | images     | flag                                  |
-   |             |          | files      | if set, file is encrypted             |
-   |             |          | scripts    | and must be decrypted before          |
-   |             |          |            | installing.                           |
+   | encrypted   | bool     | images     | 标志                                  |
+   |             |          | files      | 如果设置了, 文件会被加密并必须先解密后|
+   |             |          | scripts    | 安装。                                |
    +-------------+----------+------------+---------------------------------------+
-   | data        | string   | images     | This is used to pass arbitrary data   |
-   |             |          | files      | to a handler.                         |
+   | data        | string   | images     | 用于将任意数据传递给处理程序。        |
+   |             |          | files      |                                       |
    |             |          | scripts    |                                       |
    +-------------+----------+------------+---------------------------------------+
-   | sha256      | string   | images     | sha256 hash of image, file or script. |
-   |             |          | files      | Used for verification of signed       |
-   |             |          | scripts    | images.                               |
+   | sha256      | string   | images     | 镜像、文件或脚本的sha256哈希值。      |
+   |             |          | files      | 用于签名镜像的校验。                  |
+   |             |          | scripts    |                                       |
    +-------------+----------+------------+---------------------------------------+
-   | embedded-\  | string   |            | Lua code that is embedded in the      |
-   | script      |          |            | sw-description file.                  |
+   | embedded-\  | string   |            | 嵌入sw-description文件中的Lua代码。   |
+   | script      |          |            |                                       |
    +-------------+----------+------------+---------------------------------------+
-   | offset      | string   | images     | Optional destination offset           |
+   | offset      | string   | images     | 可选的目的位置的偏移量。              |
    +-------------+----------+------------+---------------------------------------+
-   | hook        | string   | images     | The name of the function (Lua) to be  |
-   |             |          | files      | called when the entry is parsed.      |
+   | hook        | string   | images     | 解析条目时要调用的函数(Lua)的名称。   |
+   |             |          | files      |                                       |
    +-------------+----------+------------+---------------------------------------+
-   | mtdname     | string   | images     | name of the MTD to update. Used only  |
-   |             |          |            | by the flash handler to identify the  |
-   |             |          |            | the mtd to update, instead of         |
-   |             |          |            | specifying the devicenode             |
+   | mtdname     | string   | images     | 要更新的MTD的名称。仅被flash处理程序  |
+   |             |          |            | 用来代替具体的设备节点名，以识别要    |
+   |             |          |            | 更新的MTD。                           |
    +-------------+----------+------------+---------------------------------------+
