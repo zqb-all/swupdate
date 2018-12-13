@@ -1,45 +1,41 @@
 =============================================
-Handlers
+处理程序
 =============================================
 
-Overview
+概览
 --------
 
-It is quite difficult to foresee all possible installation cases.
-Instead of trying to find all use cases, SWUpdate let the
-developer free to add his own installer (that is, a new **handler**),
-that must be responsible to install an image of a certain type.
-An image is marked to be of a defined type to be installed with
-a specific handler.
+很难预见所有可能的安装情况。
+SWUpdate不尝试找出并支持所有用例，
+而是让开发人员能自由添加自己的安装程序(即新的 **处理程序** )，
+它必须负责安装某种类型的镜像。
+镜像被标记为一种已定义的类型，将使用特定的处理程序安装。
 
-The parser make the connection between 'image type' and 'handler'.
-It fills a table containing the list of images to be installed
-with the required handler to execute the installation. Each image
-can have a different installer.
+解析器在 '镜像类型' 和 '处理程序' 之间建立连接。
+它维护一个表用于执行安装，其中包含要安装的镜像列表和处理程序。
+每个镜像可以有不同的安装程序。
 
-Supplied handlers
+已提供的处理程序
 -----------------
 
-In mainline there are the handlers for the most common cases. They include:
-	- flash devices in raw mode (both NOR and NAND)
-	- UBI volumes
-	- raw devices, such as a SD Card partition
-	- bootloader (U-Boot, GRUB, EFI Boot Guard) environment
-	- Lua scripts
+主线代码中有用于最常见情况的处理程序。它们包括:
+	- 裸数据模式的flash设备(NOR 和 NAND)
+	- UBI卷
+	- 裸设备，例如一个SD卡分区
+	- 启动引导程序 (U-Boot, GRUB, EFI Boot Guard) 的环境变量
+	- Lua脚本
 
-For example, if an image is marked to be updated into a UBI volume,
-the parser must fill a supplied table setting "ubi" as required handler,
-and filling the other fields required for this handler: name of volume, size,
-and so on.
+例如，如果将图像标记为要更新到UBI卷，解析器必须在维护的表中设置 "ubi"
+为需要的处理程序，并填充此处理程序所需的其他字段：卷名、大小等等。
 
-Creating own handlers
+创建自己的处理程序
 ---------------------
 
-SWUpdate can be extended with new handlers. The user needs to register his own
-handler with the core and he must provide the callback that SWUpdate uses when
-an image required to be installed with the new handler.
+SWUpdate可以使用新的处理程序进行扩展。
+用户需要向核心注册自己的处理程序，并且必须提供SWUpdate在需要使用新处理程序
+安装镜像时使用的回调。
 
-The prototype for the callback is:
+回调的原型是:
 
 ::
 
@@ -47,31 +43,29 @@ The prototype for the callback is:
 		void __attribute__ ((__unused__)) *data)
 
 
-The most important parameter is the pointer to a struct img_type. It describes
-a single image and inform the handler where the image must be installed. The
-file descriptor of the incoming stream set to the start of the image to be installed is also
-part of the structure.
+最重要的参数是指向struct img_type的指针。
+它描述单个镜像并通知处理程序镜像必须安装在何处。
+输入流的文件描述符会设置为安装镜像的开始，这也是结构的一部分。
 
-The structure *img_type* contains the file descriptor of the stream pointing to the first byte
-of the image to be installed. The handler must read the whole image, and when it returns
-back SWUpdate can go on with the next image in the stream.
+结构 *img_type* 包含指向要安装的镜像的第一个字节的流的文件描述符。
+处理程序必须读取整个镜像，当它返回时，
+SWUpdate可以继续处理流中的下一个镜像。
 
-SWUpdate provides a general function to extract data from the stream and copy
-to somewhere else:
+SWUpdate提供了一个通用函数来从流中提取数据并复制到其他地方:
 
 ::
 
         int copyfile(int fdin, int fdout, int nbytes, unsigned long *offs,
                 int skip_file, int compressed, uint32_t *checksum, unsigned char *hash);
 
-fdin is the input stream, that is img->fdin from the callback. The *hash*, in case of
-signed images, is simply passed to copyfile() to perform the check, exactly as the *checksum*
-parameter. copyfile() will return an error if checksum or hash do not match. The handler
-does not need to bother with them.
-How the handler manages the copied data, is specific to the handler itself. See
-supplied handlers code for a better understanding.
+fdin是输入流，即来自回调的img->fdin。对于签名镜像，只需将 *hash* 传递
+给copyfile()来执行检查，就像 *checksum* 参数一样。如果校验和或散列不匹配，
+copyfile()将返回一个错误。处理程序不需要为它们费心。
 
-The handler's developer registers his own handler with a call to:
+处理程序如何管理复制的数据，是特定于处理程序本身的。
+请参阅提供的处理程序代码以更好地进行理解。
+
+处理程序的开发人员使用以下调用方式注册自己的处理程序：
 
 ::
 
@@ -81,50 +75,42 @@ The handler's developer registers his own handler with a call to:
 		register_handler("mytype", my_handler, my_mask, data);
 	}
 
-SWUpdate uses the gcc constructors, and all supplied handlers are registered
-when SWUpdate is initialized.
+SWUpdate使用gcc构造函数，并且在初始化SWUpdate时注册所有提供的处理程序。
 
-register_handler has the syntax:
+register_handler的语法如下:
 
 ::
 
 	register_handler(my_image_type, my_handler, my_mask, data);
 
-Where:
+其中:
 
-- my_image_type : string identifying the own new image type.
-- my_handler : pointer to the installer to be registered.
-- my_mask : ``HANDLER_MASK`` enum value(s) specifying what
-  input type(s) my_handler can process.
-- data : an optional pointer to an own structure, that SWUpdate
-  saves in the handlers' list and pass to the handler when it will
-  be executed.
+- my_image_type : 标识自己的新镜像类型的字符串。
+- my_handler :指向要注册的安装程序的指针。
+- my_mask : ``HANDLER_MASK`` 枚举值，指定 my_handler 可处理什么输入类型。
+- data : 一个可选的指向自定义结构的指针。SWUpdate会将其保存在处理程序
+  的列表中，并在执行时传递给处理程序。
 
-Handler for UBI Volumes
+UBI卷处理程序
 -----------------------
 
-The handler for UBI volumes is thought to update UBI volumes
-without changing the layout of the storage.
-Volumes must be set before: the handler does not create volumes
-itself. It searches for a volume in all MTD (if they are not
-blacklisted: see UBIBLACKLIST) to find the volume where the image
-must be installed. For this reason, volumes must be unique inside
-the system. Two volumes with the same names are not supported
-and drives to unpredictable results. SWUpdate will install
-an image to the first volume that matches with the name, and this
-maybe is not the desired behavior.
-Updating volumes, it is guaranteed that the erase counters are
-preserved and not lost after an update. The way for updating
-is identical to the "ubiupdatevol" from the mtd-utils. In fact,
-the same library from mtd-utils (libubi) is reused by SWUpdate.
+UBI卷的处理程序被认为可以在不改变存储布局的情况下更新UBI卷。
+卷必须提前设置:处理程序本身不创建卷。它在所有MTD中搜索一个卷
+(如果它们没有被列入黑名单:请参阅 UBIBLACKLIST)，以找到要安装映像的卷。
+因此，卷在系统内必须是惟一的。
+不支持名称相同的两个卷，这会导致不可预知的结果。
+SWUpdate将安装镜像到名称匹配的第一个卷，这可能不是期望的行为。
 
-SWUpdate normally creates dynamic volumes. If a static volume is
-desired, set the handler's data field to "static".
+更新卷时，可以保证擦除计数器在更新后不会丢失。
+更新的方式与来自mtd-utils的 "ubiupdatevol" 相同。
+事实上上，SWUpdate重用了来自mtd-utils (libubi)的同一个库。
 
-If the storage is empty, it is required to setup the layout
-and create the volumes. This can be easy done with a
-preinstall script. Building with meta-SWUpdate, the original
-mtd-utils are available and can be called by a Lua script.
+SWUpdate通常创建动态卷。如果需要静态卷，请将处理程序的数据字段
+设置为 "static"。
+
+如果存储为空，则需要设置布局并创建卷。这可以通过预安装脚本轻松完成。
+使用meta-SWUpdate进行构建时，原始的mtd-utils是可用的，
+并且可以由Lua脚本调用。
 
 Lua Handlers
 ------------
