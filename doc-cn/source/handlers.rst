@@ -112,18 +112,15 @@ SWUpdate通常创建动态卷。如果需要静态卷，请将处理程序的数
 使用meta-SWUpdate进行构建时，原始的mtd-utils是可用的，
 并且可以由Lua脚本调用。
 
-Lua Handlers
+Lua 处理程序
 ------------
 
-In addition to the handlers written in C, it is possible to extend
-SWUpdate with handlers written in Lua that get loaded at SWUpdate
-startup. The Lua handler source code file may either be embedded
-into the SWUpdate binary via the ``CONFIG_EMBEDDED_LUA_HANDLER``
-config option or has to be installed on the target system in Lua's
-search path as ``swupdate_handlers.lua`` so that it can be loaded
-by the embedded Lua interpreter at run-time.
+除了用C编写处理程序之外，还可以使用在Lua编写，并在SWUpdate启动时加载。
+Lua处理程序源代码文件可以通过 ``CONFIG_EMBEDDED_LUA_HANDLER`` 配置选
+项嵌入到SWUpdate二进制文件中，也可以作为 ``swupdate_handlers.lua``
+安装到目标系统的Lua搜索路径中，这样它就可以在运行时由嵌入的lua解释器加载。
 
-In analogy to C handlers, the prototype for a Lua handler is
+与C处理程序类似，Lua处理程序的原型是
 
 ::
 
@@ -131,34 +128,29 @@ In analogy to C handlers, the prototype for a Lua handler is
             ...
         end
 
-where ``image`` is a Lua table (with attributes according to
+其中 ``image`` 是一个 Lua 表 (包含了
 :ref:`sw-description's attribute reference <sw-description-attribute-reference>`)
-that describes a single artifact to be processed by the handler. 
+相关的属性），描述了处理程序要处理的单个工件。
 
-Note that dashes in the attributes' names are replaced with
-underscores for the Lua domain to make them idiomatic, e.g.,
-``installed-directly`` becomes ``installed_directly`` in the
-Lua domain.
+请注意，属性名称中的破折号会被Lua域的下划线所替换，以使其符合惯例，
+例如， ``installed_direct`` 在Lua域中会变为 ``installed_directy`` 。
 
-To register a Lua handler, the ``swupdate`` module provides the
-``swupdate.register_handler()`` method that takes the handler's
-name, the Lua handler function to be registered under that name,
-and, optionally, the types of artifacts for which the handler may
-be called. If the latter is not given, the Lua handler is registered
-for all types of artifacts. The following call registers the
-above function ``lua_handler`` as *my_handler* which may be
-called for images:
+要注册Lua处理程序， ``swupdate`` 模块提供了 ``swupdate.register_handler()``
+方法，该方法接受处理程序的名称、要以该名称注册的Lua处理程序函数，
+以及(可选地)可以调用处理程序的工件类型。
+如果没有提供后者，则Lua处理程序将为所有类型的工件注册。
+以下调用将上述函数 ``lua_handler`` 注册为 *my_handler* ，
+该函数可以用于镜像:
 
 ::
 
         swupdate.register_handler("my_handler", lua_handler, swupdate.HANDLER_MASK.IMAGE_HANDLER)
 
 
-A Lua handler may call C handlers ("chaining") via the
-``swupdate.call_handler()`` method. The callable and registered
-C handlers are available (as keys) in the table
-``swupdate.handler``. The following Lua code is an example of
-a simple handler chain-calling the ``rawfile`` C handler:
+
+Lua处理程序可以通过 ``swupdate.call_handler()`` 方法调用C处理程序("链式")。
+在表 ``swupdate.handler`` 中包含已注册的可被调用的C处理程序(作为键)。
+下面的Lua代码是一个简单的处理程序链的例子——调用 ``rawfile`` C处理程序:
 
 ::
 
@@ -176,27 +168,23 @@ a simple handler chain-calling the ``rawfile`` C handler:
             return 0
         end
 
-Note that when chaining handlers and calling a C handler for
-a different type of artifact than the Lua handler is registered
-for, the ``image`` table's values must satisfy the called
-C handler's expectations: Consider the above Lua handler being
-registered for "images" (``swupdate.HANDLER_MASK.IMAGE_HANDLER``)
-via the ``swupdate.register_handler()`` call shown above. As per the 
+注意，当链式调用C处理程序，用于并非Lua处理程序本身所注册的类型的工件时，
+``image`` 表的值必须满足被调用的C处理程序的期望：考虑上面的Lua处理程序
+，通过上述的 ``swupdate.register_handler()`` 注册为用于"images"
+(``swupdate.HANDLER_MASK.IMAGE_HANDLER``)。根据
 :ref:`sw-description's attribute reference <sw-description-attribute-reference>`,
-the "images" artifact type doesn't have the ``path`` attribute
-but the "file" artifact type does. So, for calling the ``rawfile``
-handler, ``image.path`` has to be set prior to chain-calling the
-``rawfile`` handler, as done in the example above. Usually, however,
-no such adaptation is necessary if the Lua handler is registered for
-handling the type of artifact that ``image`` represents.
+"images"工件类型没有 ``path`` 属性，但是"file"工件类型有。
+所以，为了调用 ``rawfile`` 处理程序， ``image.path`` 必须在链式
+调用 ``rawfile`` 处理程序之前被设置好，如上例所示。
+然而，通常情况下，如果Lua处理程序注册为支持处理 ``image`` 的同一工件类型，
+则不需要进行此类调整。
 
-In addition to calling C handlers, the ``image`` table passed as
-parameter to a Lua handler has a ``image:copy2file()`` method that
-implements the common use case of writing the input stream's data
-to a file, which is passed as this method's argument. On success,
-``image:copy2file()`` returns ``0`` or ``-1`` plus an error
-message on failure. The following Lua code is an example of
-a simple handler calling ``image:copy2file()``:
+
+除了调用C处理程序之外，作为参数传递给Lua处理程序的 ``image`` 表还有一个
+``image:copy2file()`` 方法，该方法实现了将输入流的数据写入文件的常见用例，
+该文件作为该方法的参数传递。如果成功， ``image:copy2file()``  将返回 ``0`` ,
+在失败时则将返回 ``-1`` 并附带一条错误消息。
+下面的Lua代码是一个简单的处理程序调用 ``image:copy2file()`` 的例子:
 
 ::
 
@@ -209,14 +197,13 @@ a simple handler calling ``image:copy2file()``:
             return 0
         end
 
-Beyond using ``image:copy2file()`` or chain-calling C handlers,
-the ``image`` table passed as parameter to a Lua handler has
-a ``image:read(<callback()>)`` method that reads from the input
-stream and calls the Lua callback function ``<callback()>`` for
-every chunk read, passing this chunk as parameter. On success,
-``0`` is returned by ``image:read()``. On error, ``-1`` plus an
-error message is returned. The following Lua code is an example
-of a simple handler printing the artifact's content:
+除了使用 ``image:copy2file()`` 或链式调用C处理程序外，
+作为参数传递给Lua处理程序的 ``image`` 表还有一个
+``image:read(<callback()>)`` 方法，该方法从输入流中读取数据，
+并对每个读取的块调用Lua回调方法 ``<callback()>`` , 读取的块
+会被作为参数传递进去。成功时， ``image:read()`` 返回 ``0`` 。
+失败时，返回 ``-1`` 并附带一条错误信息。
+下面的Lua代码是一个简单的处理程序打印工件内容的例子:
 
 ::
 
@@ -229,39 +216,29 @@ of a simple handler printing the artifact's content:
             return 0
         end
 
-Using the ``image:read()`` method, an artifact's contents may be
-(post-)processed in and leveraging the power of Lua without relying
-on preexisting C handlers for the purpose intended.
+使用 ``image:read()`` 方法，工件的内容可以在Lua中(后)处理并利用
+Lua的功能，而不需要依赖于预先存在的C处理程序来达到预期的目的。
 
+正如C处理程序一样，Lua处理程序必须使用其 ``image`` 参数中描述的工件，
+以便SWUpdate可以在Lua处理程序返回后继续处理流中的下一个工件。
+链式处理程序可调用 ``image:copy2file()`` 或使用 ``image:read()``
+以满足这个要求。
 
-Just as C handlers, a Lua handler must consume the artifact 
-described in its ``image`` parameter so that SWUpdate can 
-continue with the next artifact in the stream after the Lua handler
-returns. Chaining handlers, calling ``image:copy2file()``, or using 
-``image:read()`` satisfies this requirement.
+请注意，尽管Lua处理程序的动态特性在技术上允许将它们嵌入在
+将要处理的 ``swu`` 镜像中，但实际上并未被实现的，因为SWUpdate
+的行为是动态更改的，这么做会带来一些安全问题，
 
-
-Note that although the dynamic nature of Lua handlers would
-technically allow to embed them into a to be processed ``.swu``
-image, this is not implemented as it carries some security
-implications since the behavior of SWUpdate is changed
-dynamically.
-
-Remote handler
+远程处理程序
 --------------
 
-Remote handlers are thought for binding legacy installers
-without having the necessity to rewrite them in Lua. The remote
-handler forward the image to be installed to another process,
-waiting for an acknowledge to be sure that the image is installed
-correctly.
-The remote handler makes use of the zeromq library - this is
-to simplify the IPC with Unix Domain Socket. The remote handler
-is quite general, describing in sw-description with the
-"data" attribute how to communicate with the external process.
-The remote handler always acts as client, and try a connect()
-using the socket identified by the "data" attribute. For example,
-a possible setup using a remote handler could be:
+远程处理程序是用于绑定到传统安装程序，而不需要在Lua中重写它们。
+远程处理程序将要安装的镜像转发到另一个进程，等待确认镜像是否正确安装。
+远程处理程序使用zeromq库——这是为了简化基于Unix域套接字的IPC机制的使用。
+远程处理程序非常通用，在sw-description中用 "data" 属性描述
+如何与外部进程通信。
+远程处理程序始终充当客户机，并尝试使用由 "data" 属性标识的套接字进行连接。
+例如，使用远程处理程序的可能设置是:
+
 
 ::
 
@@ -273,55 +250,46 @@ a possible setup using a remote handler could be:
                  }
         )
 
+连接使用套接字 "/tmp/test_remote" 进行实例化。
+如果connect()失败，远程处理程序将发出更新不成功的信号。
+来自SWUpdate的每个Zeromq消息都是一个分为两帧的多部分消息:
 
-The connection is instantiated using the socket "/tmp/test_remote". If
-connect() fails, the remote handler signals that the update is not successful.
-Each Zeromq Message from SWUpdate is a multi-part message split into two frames:
+        - 第一帧包含一个带命令的字符串。
+        - 第二帧包含数据，可以是0字节。
 
-        - first frame contains a string with a command.
-        - second frame contains data and can be of 0 bytes.
-
-There are currently just two possible commands: INIT and DATA. After
-a successful connect, SWUpdate sends the initialization string in the
-format:
-
+目前只有两个可能的命令:INIT和DATA。
+成功连接后，SWUpdate以以下格式发送初始化字符串:
 
 ::
-        
+
         INIT:<size of image to be installed>
 
-The external installer is informed about the size of the image to be
-installed, and it can assign resources if it needs. It will answer
-with the string *ACK* or *NACK*. The first NACK received by SWUpdate
-will interrupt the update. After sending the INIT command, the remote
-handler will send a sequence of *DATA* commands, where the second
-frame in message will contain chunks of the image to be installed.
-It is duty of the external process to take care of the amount of
-data transferred and to release resources when the last chunk
-is received. For each DATA message, the external process answers with a
-*ACK* or *NACK* message.
+外部安装程序被告知要安装的映像的大小，如果需要，它可以分配资源。
+它将用字符串 *ACK* 或 *NACK* 来回答。SWUpdate接收到的第一个NACK将中断更新。
+发送INIT命令后，远程处理程序将发送一系列 *DATA* 命令，
+其中消息中的第二帧将包含要安装的镜像数据块。
+外部进程要责任处理这一系列传输的数据，并在接收完最后一个块时释放资源。
+对于每个数据消息，外部进程使用 *ACK* 或 *NACK* 消息进行响应。
 
-SWU forwarder
+SWU 转发
 ---------------
 
-The SWU forwarder handler can be used to update other systems where SWUpdate
-is running. It can be used in case of master / slaves systems, where the master
-is connected to the network and the "slaves" are hidden to the external world.
-The master is then the only interface to the world. A general SWU can contain
-embedded SWU images as single artifacts, and the SWU handler will forward it
-to the devices listed in the description of the artifact.
-The handler can have a single "url" properties entry with an array of urls. Each url
-is the address of a secondary board where SWUpdate is running with webserver activated.
-The SWU handler expects to talk with SWUpdate's embedded webserver. This helps
-to update systems where an old version of SWUpdate is running, because the
-embedded webserver is a common feature present in all versions.
-The handler will send the embedded SWU to all URLs at the same time, and setting
-``installed-directly`` is supported by this handler.
+SWU转发器处理程序可用于更新正在运行SWUpdate的其他系统。
+它可以用于主/从系统，其中主机连接到网络，而从机则对外界隐藏。
+因此，主机是与外部世界的唯一接口。
+通常一个SWU镜像可以将另一个SWU镜像作为单个工件进行包含，
+SWU处理程序将它转发到工件描述中列出的设备。
+处理程序可以有一个带有url数组的 "url" 属性条目。
+每个url是一个辅助板的地址，其中运行着激活了webserver的SWUpdate。
+SWU处理程序期望与SWUpdate的嵌入式web服务器通信。
+这有助于更新正在运行旧版本SWUpdate的系统，
+因为嵌入式web服务器是所有版本中都存在的公共特性。
+处理程序将同时将嵌入的SWU发送到所有url，该处理程序支持设置
+``installed_direct`` 。
 
 .. image:: images/SWUGateway.png
 
-The following example shows how to set a SWU as artifact and enables
-the SWU forwarder:
+下面的例子展示了如何将SWU设置为工件并启用SWU转发器:
 
 
 ::
@@ -336,60 +304,58 @@ the SWU forwarder:
 			};
 		});
 
-ucfw handler
-------------
+ucfw 处理程序
+-------------
 
-This handler allows to update the firmware on a microcontroller connected to
-the main controller via UART.
-Parameters for setup are passed via sw-description file.  Its behavior can be
-extended to be more general.
-The protocol is ASCII based. There is a sequence to be done to put the microcontroller
-in programming mode, after that the handler sends the data and waits for an ACK from the
-microcontroller.
+此处理程序允许通过UART更新连接到主控制器的单片机上的固件。
+用于设置的参数将通过sw-description文件传递。
+它的行为可以扩展到更一般的情况。
+协议是基于ASCII的。在处理程序发送数据并等待来自单片机的ACK之后，
+需要完成一个将单片机置于编程模式的序列。
 
-The programming of the firmware shall be:
+对固件的编程动作应该如下:
 
-1. Enter firmware update mode (bootloader)
+1. 进入固件更新模式(引导加载程序)
+        1. 将 "复位线" 设置为逻辑 "低"
+        2. 将 "更新线" 设置为逻辑 "低"
+        3. 将 "复位线" 设置为逻辑 "高"
 
-        1. Set "reset line" to logical "low"
-	2. Set "update line" to logical "low"
-	3. Set "reset line" to logical "high"
-
-2. Send programming message
+2. 发送编程信息
 
 ::
 
         $PROG;<<CS>><CR><LF>
 
-to the microcontroller.  (microcontroller will remain in programming state)
+到单片机。(单片机会保持在编程状态)
 
-3. microcontroller confirms with
+3. 单片机使用以下方式发出确认
 
 ::
 
         $READY;<<CS>><CR><LF>
 
-        4. Data transmissions package based from mainboard to microcontroller
-package definition:
+4.从主板发送数据传输包到单片机
 
-        - within a package the records are sent one after another without the end of line marker <CR><LF>
-        - the package is completed with <CR><LF>
+包定义:
 
-5. The microcontroller requests the next package with $READY;<<CS>><CR><LF>
+        - 在一个包中，记录是一个接一个地发送，没有结束行标记 <CR><LF>
+        - 包以 <CR><CF> 作为结束
 
-6. Repeat step 4 and 5 until the complete firmware is transmitted.
+5. 单片机以$READY;<<CS>><CR><LF>请求下一个包
 
-7. The keypad confirms the firmware completion with $COMPLETED;<<CS>><CR><LF>
+6. 重复步骤4和步骤5，直到传输完整个固件。
 
-8. Leave firmware update mode
-        1. Set "Update line" to logical "high"
-        2. Perform a reset over the "reset line"
+7. 键盘使用 $COMPLETED;<<CS>><CR><LF> 确认更新完成
 
-<<CS>> : checksum. The checksum is calculated as the two's complement of
-the modulo-256 sum over all bytes of the message
-string except for the start marker "$".
-The handler expects to get in the properties the setup for the reset
-and prog gpios. They should be in this format:
+8. 退出升级模式
+        1. 设置 "更新线" 为逻辑 "高"
+        2. 在 "复位线" 上执行复位
+
+
+<<CS>>:校验和。校验和的计算，是对除开始标记 "$" 之外的消息字符串的所有字节
+做和运算，再对256取模，再做补码得到。
+处理程序期望从属性中获得用于初始化的复位线和编程线的gpio口。
+它们应该是这样的格式:
 
 ::
 
@@ -398,7 +364,7 @@ and prog gpios. They should be in this format:
                 prog = "<gpiodevice>:<gpionumber>:<activelow>";
         }
 
-Example:
+例子:
 
 ::
 
