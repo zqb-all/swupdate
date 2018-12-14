@@ -30,7 +30,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="索引" href="genindex.html" />
     <link rel="search" title="搜索" href="search.html" />
-    <link rel="next" title="Update images from verified source" href="signed_images.html" />
+    <link rel="next" title="从可信的来源更新镜像" href="signed_images.html" />
     <link rel="prev" title="SWUpdate: 嵌入式系统的软件升级" href="swupdate.html" /> 
 
   
@@ -95,8 +95,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#id2">处理配置的差异</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#collections">软件集合</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#id4">查找文件元素的优先级</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#using-links">Using links</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id5">硬件兼容性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">使用链接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id6">硬件兼容性</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#partitions-ubi">partitions : UBI 布局</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#images">images</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#files">Files</a></li>
@@ -108,16 +108,16 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#bootloader">bootloader</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id6">特定的板级设置</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id7">软件集合和操作模式</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id8">检查已安装软件的版本</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id9">嵌入脚本</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id7">特定的板级设置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id8">软件集合和操作模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id9">检查已安装软件的版本</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id10">嵌入脚本</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#sw-description-attribute-reference">属性参考</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="signed_images.html">Update images from verified source</a></li>
-<li class="toctree-l1"><a class="reference internal" href="encrypted_images.html">Symmetrically Encrypted Update Images</a></li>
-<li class="toctree-l1"><a class="reference internal" href="handlers.html">Handlers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="signed_images.html">从可信的来源更新镜像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="encrypted_images.html">对称加密更新镜像</a></li>
+<li class="toctree-l1"><a class="reference internal" href="handlers.html">处理程序</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mongoose.html">Mongoose daemon mode</a></li>
 <li class="toctree-l1"><a class="reference internal" href="suricatta.html">Suricatta daemon mode</a></li>
 <li class="toctree-l1"><a class="reference internal" href="swupdate-ipc.html">SWUpdate: API for external programs</a></li>
@@ -297,7 +297,7 @@ SWUpdate不允许使用#include指令。
 </pre></div>
 </div>
 <p>第一个标签是“软件”。整个描述包含在这个标签中。
-可以使用 <a class="reference internal" href="#id6">特定的板级设置</a> _对每个设备的设置进行分组。</p>
+可以使用 <a class="reference internal" href="#id7">特定的板级设置</a> _对每个设备的设置进行分组。</p>
 </div>
 <div class="section" id="id2">
 <h2>处理配置的差异<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
@@ -474,8 +474,8 @@ SWUpdate不允许使用#include指令。
 UBI文件系统。然而，它们都是同一版本的不同格式，可以在sw-description中一起描述。
 重要的是，要理解SWUpdate在解析期间如何按优先级扫描条目。</p>
 </div>
-<div class="section" id="using-links">
-<h2>Using links<a class="headerlink" href="#using-links" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id5">
+<h2>使用链接<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h2>
 <p>sw-description可能变得非常复杂。
 让我们假设只有一个板子，但是存在多个硬件版本，它们在硬件上是不同的。
 这些版本中有些可以统一处理，有些则需要特殊的部分。
@@ -690,8 +690,8 @@ UBI文件系统。然而，它们都是同一版本的不同格式，可以在sw
 </div>
 <p>可以通过链接重定向sw-description中的每个条目，就像上面示例中的 “version” 属性那样。</p>
 </div>
-<div class="section" id="id5">
-<h2>硬件兼容性<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id6">
+<h2>硬件兼容性<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h2>
 <p>硬件兼容性: [ “major.minor”, “major.minor”, … ]</p>
 <p>它列出了与此软件镜像兼容的硬件修订版本。</p>
 <p>例子:</p>
@@ -928,8 +928,8 @@ SWUpdate扫描所有脚本，并在安装镜像后调用它们。
 <p>为了向后兼容以前构建的 <cite>.swu</cite>  镜像，”uboot” 组名仍然作为别名支持。
 但是，它实际上已经被弃用了，不建议继续使用它。</p>
 </div>
-<div class="section" id="id6">
-<h2>特定的板级设置<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id7">
+<h2>特定的板级设置<a class="headerlink" href="#id7" title="永久链接至标题">¶</a></h2>
 <p>每个设置都可以放在与板名匹配的自定义标记下。
 此机制可用于以板卡特有的方式覆盖特定设置。</p>
 <p>假设硬件信息文件 <cite>/etc/hwrevision</cite> 包含以下条目:</p>
@@ -963,11 +963,11 @@ SWUpdate扫描所有脚本，并在安装镜像后调用它们。
 对于所有其他板子， <cite>bootpart</cite> 将被设置为 <cite>0:1</cite> 。
 特定于板子的设置优先于默认作用域的设置。</p>
 </div>
-<div class="section" id="id7">
-<h2>软件集合和操作模式<a class="headerlink" href="#id7" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id8">
+<h2>软件集合和操作模式<a class="headerlink" href="#id8" title="永久链接至标题">¶</a></h2>
 <p>软件集合和操作模式扩展了描述文件语法，
 以提供对之前介绍的所有配置标记的叠加分组。
-这种机制类似于 <a class="reference internal" href="#id6">特定的板级设置</a> ,可用于实现双拷贝策略，
+这种机制类似于 <a class="reference internal" href="#id7">特定的板级设置</a> ,可用于实现双拷贝策略，
 或者用单个更新文件内同时交付稳定和不稳定版本的镜像。</p>
 <p>该机制使用放置在 <cite>software</cite> 标签范围内的自定义用户定义标签。
 标签不能使用以下名字: <cite>version</cite>, <cite>hardware-compatibility</cite>,
@@ -1024,8 +1024,8 @@ SWUpdate扫描所有脚本，并在安装镜像后调用它们。
 <cite>/dev/mmcblk0p2</cite> 分别用于 <cite>main</cite> 模式和 <cite>alt</cite> 模式。</p>
 <p>该特性可以通过显式指定集合和模式来实现双拷贝策略。</p>
 </div>
-<div class="section" id="id8">
-<h2>检查已安装软件的版本<a class="headerlink" href="#id8" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id9">
+<h2>检查已安装软件的版本<a class="headerlink" href="#id9" title="永久链接至标题">¶</a></h2>
 <p>SWUpdate支持可选地验证子镜像是否已经被安装了，
 如果要安装的版本完全相同，则可以跳过它的安装。
 这在安装某些高风险镜像或需要加速升级过程的情况下是非常有用的。</p>
@@ -1051,8 +1051,8 @@ name和version将用于与版本文件中的数据进行比较。
 install-if-different则是一个布尔值，用于对此镜像启用版本检查。
 这样就可以只对要安装的镜像们的一个子集进行版本检查。</p>
 </div>
-<div class="section" id="id9">
-<h2>嵌入脚本<a class="headerlink" href="#id9" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id10">
+<h2>嵌入脚本<a class="headerlink" href="#id10" title="永久链接至标题">¶</a></h2>
 <p>可以将脚本嵌入到sw-description中。这在许多情况下非常有用，
 因为一些参数只有在目标上实际运行时知道。
 脚本是全局的，面向所有部分，但是它可以包含几个函数，
@@ -1125,7 +1125,7 @@ Lua函数必须返回2个值:</p>
 通常，这是在运行时从目标读取数据检测到的。</p>
 </div>
 <div class="section" id="sw-description-attribute-reference">
-<span id="id10"></span><h2>属性参考<a class="headerlink" href="#sw-description-attribute-reference" title="永久链接至标题">¶</a></h2>
+<span id="id11"></span><h2>属性参考<a class="headerlink" href="#sw-description-attribute-reference" title="永久链接至标题">¶</a></h2>
 <p>在sw-description中有4个主要部分:</p>
 <ul class="simple">
 <li>images: 条目是镜像，SWUpdate对它们一无所知。</li>
@@ -1134,8 +1134,8 @@ Lua函数必须返回2个值:</p>
 <li>scripts: 所有条目都被视为可执行文件，它们将被运行两次(作为安装前和安装后脚本)。</li>
 <li>bootenv:条目是引导加载程序环境变量名及其值的键值对。</li>
 </ul>
-<table border="1" class="docutils" id="id11">
-<caption><span class="caption-text">Attributes in sw-description</span><a class="headerlink" href="#id11" title="永久链接至表格">¶</a></caption>
+<table border="1" class="docutils" id="id12">
+<caption><span class="caption-text">Attributes in sw-description</span><a class="headerlink" href="#id12" title="永久链接至表格">¶</a></caption>
 <colgroup>
 <col width="18%" />
 <col width="14%" />
@@ -1329,7 +1329,7 @@ files</td>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="signed_images.html" class="btn btn-neutral float-right" title="Update images from verified source" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="signed_images.html" class="btn btn-neutral float-right" title="从可信的来源更新镜像" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="swupdate.html" class="btn btn-neutral" title="SWUpdate: 嵌入式系统的软件升级" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

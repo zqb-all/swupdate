@@ -303,7 +303,7 @@ SWUpdate根据以下优先级搜索sdw-description文件中的条目:
 UBI文件系统。然而，它们都是同一版本的不同格式，可以在sw-description中一起描述。
 重要的是，要理解SWUpdate在解析期间如何按优先级扫描条目。
 
-Using links
+使用链接
 -----------
 
 sw-description可能变得非常复杂。
