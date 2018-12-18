@@ -1,76 +1,65 @@
-=====================
-Suricatta daemon mode
-=====================
+======================
+Suricatta 守护进程模式
+======================
 
-Introduction
+介绍
 ------------
 
-Suricatta is -- like mongoose -- a daemon mode of SWUpdate, hence the
-name suricatta (engl. meerkat) as it belongs to the mongoose family.
+和mongoose一样，Suricatta也是SWUpdate的守护模式，
+因此得名Suricatta (engl. meerkat)，因为它属于mongoose科。
 
-Suricatta regularly polls a remote server for updates, downloads, and
-installs them. Thereafter, it reboots the system and reports the update
-status to the server, based on an update state variable currently stored
-in bootloader's environment ensuring persistent storage across reboots. Some
-U-Boot script logics or U-Boot's ``bootcount`` feature may be utilized
-to alter this update state variable, e.g., by setting it to reflect
-failure in case booting the newly flashed root file system has failed
-and a switchback had to be performed.
+Suricatta定期轮询远程服务器以获取更新、下载和安装它们。
+然后，它重新引导系统，并根据当前存储在引导装载程序环境中的，可持
+久化的，在reboot之后仍存在的更新状态变量，向服务器报告更新状态。
+可以使用一些U-Boot脚本逻辑或U-Boot的 ``bootcount`` 特性来更改
+这个更新状态变量，例如，将其设置为，在启动新刷写的根文件系统失败，
+并需要执行回退的时候进行设置以表明更新失败。
 
-Suricatta is designed to be extensible in terms of the servers supported
-as described in Section `Supporting different Servers`_. Currently,
-support for the `hawkBit`_ server is implemented via the `hawkBit Direct
-Device Integration API`_.
+在可支持的服务器方面，Suricatta被设计成可扩展的，
+如 `支持不同服务器`_ 部分所述。目前对 `hawkbit`_ 服务器的支持是
+通过 `hawkBit Direct Device Integration API`_ 实现的。
 
 .. _hawkBit Direct Device Integration API:  http://sp.apps.bosch-iot-cloud.com/documentation/developerguide/apispecifications/directdeviceintegrationapi.html
 .. _hawkBit:  https://projects.eclipse.org/projects/iot.hawkbit
 
 
-Running suricatta
+运行suricatta
 -----------------
 
-After having configured and compiled SWUpdate with enabled suricatta
-support,
+在配置和编译了启用suricatta的SWUpdate之后，
 
 .. code::
 
   ./swupdate --help
 
-lists the mandatory and optional arguments to be provided to suricatta
-when using hawkBit as server. As an example,
+列出使用hawkBit作为服务器时提供给suricatta的强制参数和可选参数。
+作为一个例子，
 
 .. code:: bash
 
     ./swupdate -l 5 -u '-t default -u http://10.0.0.2:8080 -i 25'
 
-runs SWUpdate in suricatta daemon mode with log-level ``TRACE``, polling
-a hawkBit instance at ``http://10.0.0.2:8080`` with tenant ``default``
-and device ID ``25``.
+使用日志级别 ``TRACE`` 运行SWUpdate的suricatta守护模式，
+在suricatta守护进程模式下使用日志级别的“TRACE”运行SWUpdate，
+runs SWUpdate in suricatta daemon mode with log-level ``TRACE`` ,
+在 ``http://10.0.0.2:8080`` 使用租户 ``default`` 和设备ID ``25`` 轮询hawkBit实例，
 
+注意，安装了更新之后，在启动时，suricatta试图在进入等待进一步更新的主循环之前，
+将更新状态报告给其上游服务器，例如hawkBit。
+如果初始报告失败，例如，由于未配置的网络或当前不可用的hawkBit服务器，
+SWUpdate可能会退出，并带有相应的错误代码。
+例如，这种行为允许顺序地尝试几个上游服务器。
+如果需要让suricatta一直重试，直到更新状态报告给其上游服务器为止，
+而不考虑错误条件，那么必须在外部实现退出时重新启动SWUpdate。
 
-Note that on startup when having installed an update, suricatta
-tries to report the update status to its upstream server, e.g.,
-hawkBit, prior to entering the main loop awaiting further updates.
-If this initial report fails, e.g., because of a not (yet) configured
-network or a currently unavailable hawkBit server, SWUpdate may exit
-with an according error code. This behavior allows to, for example,
-try several upstream servers sequentially.
-If suricatta should keep retrying until the update status is reported
-to its upstream server irrespective of the error conditions, this has
-to be realized externally in terms of restarting SWUpdate on exit.
+执行更新之后，监听进度接口的代理可能在接收到 ``DONE`` 后执行更新后操作，
+例如重新启动。
+此外，还可以执行配置文件中指定的或由 ``-p`` 命令行选项给出的更新后命令。
 
-
-After an update has been performed, an agent listening on the progress
-interface may execute post-update actions, e.g., a reboot, on receiving
-``DONE``. 
-Additionally, a post-update command specified in the configuration file or
-given by the ``-p`` command line option can be executed.
-
-Note that at least a restart of SWUpdate has to be performed as post-update
-action since only then suricatta tries to report the update status to its
-upstream server. Otherwise, succinct update actions announced by the
-upstream server are skipped with an according message until a restart of
-SWUpdate has happened in order to not install the same update again.
+请注意，至少要将SWUpdate的重启作为更新后操作执行，因为只有这样
+suricatta才会尝试将更新状态报告给其上游服务器。
+否则，上游服务器发布的更新操作将被跳过，并带有一条根据消息，
+直到重新启动SWUpdate，以避免安装相同的更新。
 
 
 Supporting different Servers
