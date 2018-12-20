@@ -62,20 +62,18 @@ suricatta才会尝试将更新状态报告给其上游服务器。
 直到重新启动SWUpdate，以避免安装相同的更新。
 
 
-Supporting different Servers
+支持不同的服务器
 ----------------------------
 
-Support for servers other than hawkBit can be realized by implementing
-the "interfaces" described in ``include/channel.h`` and
-``include/suricatta/server.h``. The former abstracts a particular
-connection to the server, e.g., HTTP-based in case of hawkBit, while
-the latter implements the logics to poll and install updates.
-See ``corelib/channel_curl.c``/``include/channel_curl.h`` and
-``suricatta/server_hawkbit.{c,h}`` for an example implementation
-targeted towards hawkBit.
+通过实现 ``include/channel`` 和 ``include/suricatta/server.h`` 中
+描述的 "interface"，可以实现对hawkBit以外的服务器的支持。
+前者抽象到服务器的特定连接，例如hawkBit中基于http的连接，
+而后者实现轮询和安装更新的逻辑。
+可以查看 ``corelib/channel_curl.c``/``include/channel_curl.h`` 和
+``suricatta/server_hawkbit.{c,h}`` ,这是一个针对hawkBit的示例实现。
 
-``include/channel.h`` describes the functionality a channel
-has to implement:
+
+``include/channel.h`` 描述了通道必须实现的功能。
 
 .. code:: c
 
@@ -86,12 +84,10 @@ has to implement:
 
     channel_t *channel_new(void);
 
-which sets up and returns a ``channel_t`` struct with pointers to
-functions for opening, closing, fetching, and sending data over
-the channel.
+它设置并返回一个 ``channel_t`` 结构体，该结构体具有指针，
+指向通过通道打开、关闭、获取和发送数据的函数。
 
-``include/suricatta/server.h`` describes the functionality a server has
-to implement:
+``include/suricatta/server.h`` 描述服务器必须实现的功能:
 
 .. code:: c
 
@@ -103,14 +99,12 @@ to implement:
     server_op_res_t server_stop(void);
     server_op_res_t server_ipc(int fd);
 
-The type ``server_op_res_t`` is defined in ``include/suricatta/suricatta.h``.
-It represents the valid function return codes for a server's implementation.
+类型 ``server_op_res_t`` 定义在 ``include/suricatta/suricatta.h``.
+它表示服务器实现的有效函数返回码。
 
-In addition to implementing the particular channel and server, the
-``suricatta/Config.in`` file has to be adapted to include a new option
-so that the new implementation becomes selectable in SWUpdate's
-configuration. In the simplest case, adding an option like the following
-one for hawkBit into the ``menu "Server"`` section is sufficient.
+除了实现特定的通道和服务器， ``suricatta/Config.in`` 文件中必须包含
+一个新选项，以便在SWUpdate的配置中可以选择新的实现。
+在最简单的情况下，在 ``menu "Server"`` 部分中为hawkBit添加如下选项就足够了。
 
 .. code:: bash
 
@@ -124,11 +118,11 @@ one for hawkBit into the ``menu "Server"`` section is sufficient.
           Support for hawkBit server.
           https://projects.eclipse.org/projects/iot.hawkbit
 
-Having included the new server implementation into the configuration,
-edit ``suricatta/Makefile`` to specify the implementation's linkage into
-the SWUpdate binary, e.g., for the hawkBit example implementation, the
-following lines add ``server_hawkbit.o`` to the resulting SWUpdate binary
-if ``SURICATTA_HAWKBIT`` was selected while configuring SWUpdate.
+将新的服务器实现包含到配置中之后，编辑 ``suricatta/Makefile`` 来
+指定实现与SWUpdate二进制文件的链接，例如，对于hawkBit示例实现，
+以下几行添加了 ``server_hawkbit.o`` 。
+如果在配置SWUpdate时选择了 ``SURICATTA_HAWKBIT`` ，则将结果包含
+到SWUpdate二进制文件中。
 
 .. code:: bash
 
@@ -137,86 +131,78 @@ if ``SURICATTA_HAWKBIT`` was selected while configuring SWUpdate.
     endif
 
 
-Support for general purpose HTTP server
+支持通用HTTP服务器
 ---------------------------------------
 
-This is a very simple backend that uses standard HTTP response codes to signal if
-an update is available. There are closed source backends implementing this interface,
-but because the interface is very simple interface, this server type is also suitable
-for implementing an own backend server.
+这是一个非常简单的后端，如果更新可用，它将使用标准HTTP响应代码发出信号。
+有一些实现此接口的闭源后端，但是由于该接口非常简单，
+所以这种服务器类型也适合实现自己的后端服务器。
 
-The API consists of a GET with Query parameters to inform the server about the installed version.
-The query string has the format:
+该API由一个带有查询参数的GET组成，用于通知服务器已安装的版本。
+查询字符串的格式为:
 
 ::
 
         http(s)://<base URL>?param1=val1&param2=value2...
 
-As examples for parameters, the device can send its serial number, MAC address and the running version of the software.
-It is duty of the backend to interprete this - SWUpdate just takes them from the "identity" section of
-the configuration file and encodes the URL.
+作为参数示例，设备可以发送序列号、MAC地址和软件运行版本。
+后端需负责对此进行解释——SWUpdate只是从配置文件的 "identity" 部分获取它们，并对URL进行编码。
 
-The server answers with the following return codes:
+服务器用以下返回码作出应答:
 
 +-----------+-------------+------------------------------------------------------------+
-| HTTP Code | Text        | Description                                                |
+| HTTP 码   | 文本        | 描述                                                       |
 +===========+=============+============================================================+
-|    302    | Found       | A new software is available at URL in the Location header  |
+|    302    | Found       | 在位置标头的URL中有一个新软件可用                          |
 +-----------+-------------+------------------------------------------------------------+
-|    400    | Bad Request | Some query parameters are missing or in wrong format       |
+|    400    | Bad Request | 一些查询参数丢失或格式错误                                 |
 +-----------+-------------+------------------------------------------------------------+
-|    403    | Forbidden   | Client certificate not valid                               |
+|    403    | Forbidden   | 客户端证书无效                                             |
 +-----------+-------------+------------------------------------------------------------+
-|    404    | Not found   | No update is available for this device                     |
+|    404    | Not found   | 此设备没有更新可用                                         |
 +-----------+-------------+------------------------------------------------------------+
-|    503    | Unavailable | An update is available but server can't handle another     |
-|           |             | update process now.                                        |
+|    503    | Unavailable | 更新是可用的，但服务器现在不能处理另一个更新进程。         |
 +-----------+-------------+------------------------------------------------------------+
 
-Server's answer can contain the following headers:
+服务器的应答可包含以下头部:
 
 +---------------+--------+------------------------------------------------------------+
-| Header's name | Codes  | Description                                                |
+| 头部名字      | 代码   | 描述                                                       |
 +===============+========+============================================================+
-| Retry-after   |   503  | Contains a number which tells the device how long to wait  |
-|               |        | until ask the next time for updates. (Seconds)             |
+| Retry-after   |   503  | 包含一个数字，该数字告诉设备，在下一次请求更新之前，       |
+|               |        | 需要等待多长时间(秒)                                       |
 +---------------+--------+------------------------------------------------------------+
-| Content-MD5   |   302  | Contains the checksum of the update file which is available|
-|               |        | under the url of location header                           |
+| Content-MD5   |   302  | 包含更新文件的校验和，该校验和在位置标头的url下可用        |
 +---------------+--------+------------------------------------------------------------+
-| Location      |   302  | URL where the update file can be downloaded.               |
+| Location      |   302  | 可以下载更新文件的URL                                      |
 +---------------+--------+------------------------------------------------------------+
 
-The device can send logging data to the server. Any information is transmitted in a HTTP
-PUT request with the data as plain string in the message body. The Content-Type Header
-need to be set to text/plain.
+设备可以向服务器发送日志数据。任何信息都是在HTTP PUT请求中传输的，消息体中的数据是纯字符串。
+内容类型标题需要设置为 text/plain
 
-The URL for the logging can be set as separate URL in the configuration file or via
---logurl command line parameter:
+日志记录的URL可以在配置文件中设置为单独的URL，也可以通过--logurl命令行参数:
 
-The device sends data in a CSV format (Comma Separated Values). The format is:
+设备以CSV格式(逗号分隔的值)发送数据。格式是:
 
 ::
 
         value1,value2,...
 
-The format can be specified in the configuration file. A *format* For each *event* can be set.
-The supported events are:
+可以在配置文件中指定格式。每个 *event* 都可以设置 *format* ，支持的事件有:
 
 +---------------+------------------------------------------------------------+
-| Event         | Description                                                |
-+===============+========+===================================================+
-| check         | dummy. It could send an event each time the server is      |
-|               | polled.                                                    |
+| Event         | 描述                                                       |
++===============+============================================================+
+| check         | dummy。它可以在每次轮询服务器时发送一个事件。              |
 +---------------+------------------------------------------------------------+
-| started       | A new software is found and SWUpdate starts to install it  |
+| started       | 找到一个新软件，SWUpdate开始安装它                         |
 +---------------+------------------------------------------------------------+
-| success       | A new software was successfully installed                  |
+| success       | 新软件安装成功                                             |
 +---------------+------------------------------------------------------------+
-| fail          | Failure by installing the new software                     |
+| fail          | 新软件安装失败                                             |
 +---------------+------------------------------------------------------------+
 
-The `general server` has an own section inside the configuration file. As example:
+`general server` 在配置文件中有自己的部分。如下例:
 
 ::
 
@@ -233,11 +219,9 @@ The `general server` has an own section inside the configuration file. As exampl
         }
 
 
-`date` is a special field and it is interpreted as localtime in RFC 2822 format. Each
-Comma Separated field is looked up inside the `identify` section in the configuration
-file, and if a match is found the substitution occurs. In case of no match, the field
-is sent as it is. For example, if the identify section has the following values:
-
+`date` 是一个特殊的字段，它被解释为RFC 2822格式的localtime。
+在配置文件的 `identify` 部分中查找逗号分隔的每个字段，如果找到匹配项，就进行替换。
+如果没有匹配，字段将按原样发送。例如，如果identify部分具有以下值:
 
 ::
 
@@ -247,8 +231,7 @@ is sent as it is. For example, if the identify section has the following values:
         	{ name = "fw"; value = "1.0"; }
         );
 
-
-with the events set as above, the formatted text in case of "success" will be:
+配合上述事件设置，"success" 的格式化文本将会是:
 
 ::
 
