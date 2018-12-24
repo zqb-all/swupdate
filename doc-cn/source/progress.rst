@@ -1,28 +1,25 @@
-Getting information on running update
+在运行更新时获取信息
 =====================================
 
-It is often required to inform the operator about the status of the running
-update and not just to return if the update was successful or not.
-For example, if the target has a display or a remote interface,
-it can be forwarded which is reached percentage of the update
-to let estimate how much the update will still run.
-SWUpdate has an interface for this ("progress API"). An external
-process can register itself with SWUpdate, and it will receive
-notifications when something in the update was changed. This is
-different from the IPC API, because the last one is mainly used to transfer
-the SWU image, and it is only possible to poll the interface to know
-if the update is still running.
+通常需要告知操作员运行更新的状态，而不仅仅是返回更新是否成功。
+例如，如果目标具有显示或远程接口，则可以转发当前更新的目标及百分比，
+以便估计还有多少更新需要完成。
+
+SWUpdate为此提供了一个接口(“progress API”)。
+外部进程可以在SWUpdate中注册自己，
+当更新中的某些内容发生更改时，它将接收通知。
+这与IPC API不同，因为后者主要用于传输SWU镜像，
+只有轮询接口才能知道更新是否仍在运行。
 
 
-API Description
+API 描述
 ---------------
 
-An external process registers itself to SWUpdate with a connect()
-request to the domain socket "/tmp/swupdateprog" as per default
-configuration of SWUpdate. There is no information to send, and
-SWUpdate simply inserts the new connection into the list of processes
-to be informed. SWUpdate will send a frame back after any change in
-the update process with the following data (see include/progress_ipc.h):
+外部进程将自己注册到SWUpdate，并向SWUpdate默认配置的域套接字
+"/tmp/swupdateprog" 发出connect()请求。
+当没有要发送的信息时，SWUpdate只是将新连接插入要通知的进程列表中。
+SWUpdate在更新过程中发生任何更改后，将使用以下数据
+(请参见include/progress_ipc.h)发回一帧数据:
 
 ::
 
@@ -40,23 +37,20 @@ the update process with the following data (see include/progress_ipc.h):
         	char		info[2048];   	/* additional information about install */
         };
 
-The single fields have the following meaning:
+单个字段的含义如下:
 
-        - *magic* is not yet used, it could be added for simply verification of the frame.
-        - *status* is one of the values in swupdate_status.h (START, RUN, SUCCESS, FAILURE, DOWNLOAD, DONE).
-        - *dwl_percent* is the percentage of downloaded data when status = DOWNLOAD.
-        - *nsteps* is the total number of installers (handlers) to be run.
-        - *cur_step* is the index of the running handler. cur_step is in the range 1..nsteps
-        - *cur_percent* is the percentage of work done inside the current handler. This is useful
-          when updating a slow interface, such as a slow flash, and signals which is the percentage
-          of image already copied into the destination.
-        - *cur_image* is the name of the image in sw-description that is currently being installed.
-        - *hnd_name* reports the name of the running handler.
-        - *source* is the interface that triggered the update.
-        - *infolen* length of data in the following info field.
-        - *info* additional information about installation.
+        - *magic* 尚未使用，它可以被添加为帧的简单验证。
+        - *status* 是swupdate_status.h中的值之一(START, RUN, SUCCESS, FAILURE, DOWNLOAD, DONE)。
+        - *dwl_percent* 是status = Download 时下载数据的百分比。
+        - *nsteps* 是要运行的安装程序(处理程序)的总数。
+        - *cur_step* 是正在运行的处理程序的索引。cur_step在1..nsteps范围内
+        - *cur_percent* 是在当前处理程序中完成的工作的百分比。这在通过慢速接口，如低速flash,
+          进行更新时非常有用。信号是镜像已经复制到目标的百分比。
+        - *cur_image* 是当前正在安装的镜像在sw-description中的名称。
+        - *hnd_name* 报告正在运行的处理程序的名称。
+        - *source* 是触发更新的接口。
+        - *infolen* 后续info字段的数据长度。
+        - *info* 关于安装的附加信息。
 
-
-As an example for a progress client, ``tools/progress.c`` prints the status
-on the console and drives "psplash" to draw a progress bar on a display.
-
+进度客户端的一个例子是 ``tools/progress`` 。
+在控制台打印状态，并驱动 "psplash" 在屏幕上绘制进度条。
