@@ -16,7 +16,7 @@ Suricatta定期轮询远程服务器以获取更新、下载和安装它们。
 并需要执行回退的时候进行设置以表明更新失败。
 
 在可支持的服务器方面，Suricatta被设计成可扩展的，
-如 `支持不同服务器`_ 部分所述。目前对 `hawkbit`_ 服务器的支持是
+如 `支持不同的服务器`_ 部分所述。目前对 `hawkbit`_ 服务器的支持是
 通过 `hawkBit Direct Device Integration API`_ 实现的。
 
 .. _hawkBit Direct Device Integration API:  http://sp.apps.bosch-iot-cloud.com/documentation/developerguide/apispecifications/directdeviceintegrationapi.html
