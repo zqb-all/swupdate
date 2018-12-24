@@ -1,32 +1,26 @@
 ===================================
-SWUpdate: API for external programs
+SWUpdate:用于外部程序的API
 ===================================
 
-Overview
+概览
 ========
 
-SWUpdate contains an integrated web-server to allow remote updating.
-However, which protocols are involved during an update is project
-specific and differs significantly. Some projects can decide
-to use FTP to load an image from an external server, or using
-even a proprietary protocol.
-The integrated web-server uses this interface.
+SWUpdate包含一个集成的web服务器，可实现远程更新。
+但是，在更新过程中涉及的协议是特定于项目的，并且有很大的不同。
+有些项目可以决定使用FTP从外部服务器加载映像，或者可以使用专有协议。
+集成的web服务器使用这个接口。
 
-SWUpdate has a simple interface to let external programs
-to communicate with the installer. Clients can start an upgrade
-and stream an image to the installer, querying then for the status
-and the final result. The API is at the moment very simple, but it can
-easy be extended in the future if new use cases will arise.
+SWUpdate有一个简单的接口，可以让外部程序与安装程序通信。
+客户端可以启动升级并将镜像流式传递到安装程序，然后查询状态和最终结果。
+API目前非常简单，但是如果将来出现新的用例，它可以很容易地进行扩展。
 
-API Description
+API描述
 ===============
 
-The communication runs via UDS (Unix Domain Socket). The socket is created
-at startup by SWUpdate in /tmp/sockinstctrl as per default configuration.
-This socket should, however, not be used directly but instead by the Client
-Library explained below.
+通信通过UDS (Unix域套接字)运行。套接字在启动时由SWUpdate按照配置创建，
+默认是/tmp/sockinstctrl。但是，这个套接字不应该直接使用，而应该由下述客户端库使用。
 
-The exchanged packets are described in network_ipc.h
+交换的包在network_ipc.h中描述
 
 ::
 
@@ -37,31 +31,28 @@ The exchanged packets are described in network_ipc.h
 	} ipc_message;
 
 
-Where the fields have the meaning:
+字段的含义:
 
-- magic : a magic number as simple proof of the packet
-- type : one of REQ_INSTALL, ACK, NACK, GET_STATUS, POST_UPDATE
-- msgdata : a buffer used by the client to send the image
-  or by SWUpdate to report back notifications and status.
+- magic : 魔术数字作为包的简单证明
+- type : REQ_INSTALL, ACK, NACK, GET_STATUS, POST_UPDATE之一
+- msgdata : 客户端用来发送镜像或SWUpdate用来报告通知和状态的缓冲区。
 
-The client sends a REQ_INSTALL packet and waits for an answer.
-SWUpdate sends back ACK or NACK, if for example an update is already in progress.
+客户端发送一个REQ_INSTALL包并等待应答。
+如果更新已经在进行中，SWUpdate将返回ACK或NACK。
 
-After the ACK, the client sends the whole image as a stream. SWUpdate
-expects that all bytes after the ACK are part of the image to be installed.
-SWUpdate recognizes the size of the image from the CPIO header.
-Any error lets SWUpdate to leave the update state, and further packets
-will be ignored until a new REQ_INSTALL will be received.
+在ACK之后，客户端将整个图像作为流发送。SWUpdate希望ACK之后的所有字节
+都是要安装的镜像的一部分。SWUpdate从CPIO标头识别图像的大小。
+任何错误都将使得SWUpdate退出更新状态，并且在接收到新的REQ_INSTALL之前，
+将忽略其他数据包。
 
 .. image:: images/API.png
 
-Client Library
+客户端库
 ==============
 
-A library simplifies the usage of the IPC making available a way to
-start asynchronously an update.
+库简化了IPC的使用，提供了异步启动更新的方法。
 
-The library consists of one function and several call-backs.
+这个库由一个函数和几个回调组成。
 
 ::
 
@@ -71,15 +62,12 @@ The library consists of one function and several call-backs.
         typedef int (*getstatus)(ipc_message *msg);
         typedef int (*terminated)(RECOVERY_STATUS status);
 
-swupdate_async_start creates a new thread and start the communication with SWUpdate,
-triggering for a new update. The wr_func is called to get the image to be installed.
-It is responsibility of the callback to provide the buffer and the size of
-the chunk of data.
+swupdate_async_start创建一个新线程，并启动与SWUpdate的通信，触发新的更新。
+wr_func会被调用，以获取要安装的镜像。回调函数负责提供缓冲区和数据块的大小。
 
-The getstatus call-back is called after the stream was downloaded to check
-how upgrade is going on. It can be omitted if only the result is required.
+流下载完毕后，可调用getstatus回调，以检查升级进行的状况。
+如果只需要结果，则可以省略。
 
-The terminated call-back is called when SWUpdate has finished with the result
-of the upgrade.
+当SWUpdate完成升级后，将调用terminated回调。
 
-Example about using this library is in the examples/client directory.
+关于使用这个库的示例，在examples/client目录中。

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Suricatta daemon mode &mdash; Embedded Software Update Documentation 2018.11 文档</title>
+  <title>Suricatta 守护进程模式 &mdash; Embedded Software Update Documentation 2018.11 文档</title>
   
 
   
@@ -30,8 +30,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="索引" href="genindex.html" />
     <link rel="search" title="搜索" href="search.html" />
-    <link rel="next" title="SWUpdate: API for external programs" href="swupdate-ipc.html" />
-    <link rel="prev" title="Mongoose daemon mode" href="mongoose.html" /> 
+    <link rel="next" title="SWUpdate:用于外部程序的API" href="swupdate-ipc.html" />
+    <link rel="prev" title="Mongoose 守护进程模式" href="mongoose.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -94,16 +94,16 @@
 <li class="toctree-l1"><a class="reference internal" href="signed_images.html">从可信的来源更新镜像</a></li>
 <li class="toctree-l1"><a class="reference internal" href="encrypted_images.html">对称加密更新镜像</a></li>
 <li class="toctree-l1"><a class="reference internal" href="handlers.html">处理程序</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mongoose.html">Mongoose daemon mode</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Suricatta daemon mode</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#running-suricatta">Running suricatta</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#supporting-different-servers">Supporting different Servers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#support-for-general-purpose-http-server">Support for general purpose HTTP server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mongoose.html">Mongoose 守护进程模式</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Suricatta 守护进程模式</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">运行suricatta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">支持不同的服务器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#http">支持通用HTTP服务器</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="swupdate-ipc.html">SWUpdate: API for external programs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="progress.html">Getting information on running update</a></li>
+<li class="toctree-l1"><a class="reference internal" href="swupdate-ipc.html">SWUpdate:用于外部程序的API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="progress.html">在运行更新时获取信息</a></li>
 <li class="toctree-l1"><a class="reference internal" href="building-with-yocto.html">meta-swupdate: building with Yocto</a></li>
 </ul>
 <ul>
@@ -157,7 +157,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Suricatta daemon mode</li>
+      <li>Suricatta 守护进程模式</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -176,73 +176,61 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="suricatta-daemon-mode">
-<h1>Suricatta daemon mode<a class="headerlink" href="#suricatta-daemon-mode" title="永久链接至标题">¶</a></h1>
-<div class="section" id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="永久链接至标题">¶</a></h2>
-<p>Suricatta is – like mongoose – a daemon mode of SWUpdate, hence the
-name suricatta (engl. meerkat) as it belongs to the mongoose family.</p>
-<p>Suricatta regularly polls a remote server for updates, downloads, and
-installs them. Thereafter, it reboots the system and reports the update
-status to the server, based on an update state variable currently stored
-in bootloader’s environment ensuring persistent storage across reboots. Some
-U-Boot script logics or U-Boot’s <code class="docutils literal notranslate"><span class="pre">bootcount</span></code> feature may be utilized
-to alter this update state variable, e.g., by setting it to reflect
-failure in case booting the newly flashed root file system has failed
-and a switchback had to be performed.</p>
-<p>Suricatta is designed to be extensible in terms of the servers supported
-as described in Section <a class="reference internal" href="#supporting-different-servers">Supporting different Servers</a>. Currently,
-support for the <a class="reference external" href="https://projects.eclipse.org/projects/iot.hawkbit">hawkBit</a> server is implemented via the <a class="reference external" href="http://sp.apps.bosch-iot-cloud.com/documentation/developerguide/apispecifications/directdeviceintegrationapi.html">hawkBit Direct
-Device Integration API</a>.</p>
+  <div class="section" id="suricatta">
+<h1>Suricatta 守护进程模式<a class="headerlink" href="#suricatta" title="永久链接至标题">¶</a></h1>
+<div class="section" id="id1">
+<h2>介绍<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>和mongoose一样，Suricatta也是SWUpdate的守护模式，
+因此得名Suricatta (engl. meerkat)，因为它属于mongoose科。</p>
+<p>Suricatta定期轮询远程服务器以获取更新、下载和安装它们。
+然后，它重新引导系统，并根据当前存储在引导装载程序环境中的，可持
+久化的，在reboot之后仍存在的更新状态变量，向服务器报告更新状态。
+可以使用一些U-Boot脚本逻辑或U-Boot的 <code class="docutils literal notranslate"><span class="pre">bootcount</span></code> 特性来更改
+这个更新状态变量，例如，将其设置为，在启动新刷写的根文件系统失败，
+并需要执行回退的时候进行设置以表明更新失败。</p>
+<p>在可支持的服务器方面，Suricatta被设计成可扩展的，
+如 <a class="reference internal" href="#id3">支持不同的服务器</a> 部分所述。目前对 <a class="reference external" href="https://projects.eclipse.org/projects/iot.hawkbit">hawkbit</a> 服务器的支持是
+通过 <a class="reference external" href="http://sp.apps.bosch-iot-cloud.com/documentation/developerguide/apispecifications/directdeviceintegrationapi.html">hawkBit Direct Device Integration API</a> 实现的。</p>
 </div>
-<div class="section" id="running-suricatta">
-<h2>Running suricatta<a class="headerlink" href="#running-suricatta" title="永久链接至标题">¶</a></h2>
-<p>After having configured and compiled SWUpdate with enabled suricatta
-support,</p>
+<div class="section" id="id2">
+<h2>运行suricatta<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>在配置和编译了启用suricatta的SWUpdate之后，</p>
 <div class="code highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">swupdate</span> <span class="o">--</span><span class="n">help</span>
 </pre></div>
 </div>
-<p>lists the mandatory and optional arguments to be provided to suricatta
-when using hawkBit as server. As an example,</p>
+<p>列出使用hawkBit作为服务器时提供给suricatta的强制参数和可选参数。
+作为一个例子，</p>
 <div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">swupdate</span> <span class="o">-</span><span class="n">l</span> <span class="mi">5</span> <span class="o">-</span><span class="n">u</span> <span class="s1">&#39;-t default -u http://10.0.0.2:8080 -i 25&#39;</span>
 </pre></div>
 </div>
-<p>runs SWUpdate in suricatta daemon mode with log-level <code class="docutils literal notranslate"><span class="pre">TRACE</span></code>, polling
-a hawkBit instance at <code class="docutils literal notranslate"><span class="pre">http://10.0.0.2:8080</span></code> with tenant <code class="docutils literal notranslate"><span class="pre">default</span></code>
-and device ID <code class="docutils literal notranslate"><span class="pre">25</span></code>.</p>
-<p>Note that on startup when having installed an update, suricatta
-tries to report the update status to its upstream server, e.g.,
-hawkBit, prior to entering the main loop awaiting further updates.
-If this initial report fails, e.g., because of a not (yet) configured
-network or a currently unavailable hawkBit server, SWUpdate may exit
-with an according error code. This behavior allows to, for example,
-try several upstream servers sequentially.
-If suricatta should keep retrying until the update status is reported
-to its upstream server irrespective of the error conditions, this has
-to be realized externally in terms of restarting SWUpdate on exit.</p>
-<p>After an update has been performed, an agent listening on the progress
-interface may execute post-update actions, e.g., a reboot, on receiving
-<code class="docutils literal notranslate"><span class="pre">DONE</span></code>.
-Additionally, a post-update command specified in the configuration file or
-given by the <code class="docutils literal notranslate"><span class="pre">-p</span></code> command line option can be executed.</p>
-<p>Note that at least a restart of SWUpdate has to be performed as post-update
-action since only then suricatta tries to report the update status to its
-upstream server. Otherwise, succinct update actions announced by the
-upstream server are skipped with an according message until a restart of
-SWUpdate has happened in order to not install the same update again.</p>
+<p>使用日志级别 <code class="docutils literal notranslate"><span class="pre">TRACE</span></code> 运行SWUpdate的suricatta守护模式，
+在suricatta守护进程模式下使用日志级别的“TRACE”运行SWUpdate，
+runs SWUpdate in suricatta daemon mode with log-level <code class="docutils literal notranslate"><span class="pre">TRACE</span></code> ,
+在 <code class="docutils literal notranslate"><span class="pre">http://10.0.0.2:8080</span></code> 使用租户 <code class="docutils literal notranslate"><span class="pre">default</span></code> 和设备ID <code class="docutils literal notranslate"><span class="pre">25</span></code> 轮询hawkBit实例，</p>
+<p>注意，安装了更新之后，在启动时，suricatta试图在进入等待进一步更新的主循环之前，
+将更新状态报告给其上游服务器，例如hawkBit。
+如果初始报告失败，例如，由于未配置的网络或当前不可用的hawkBit服务器，
+SWUpdate可能会退出，并带有相应的错误代码。
+例如，这种行为允许顺序地尝试几个上游服务器。
+如果需要让suricatta一直重试，直到更新状态报告给其上游服务器为止，
+而不考虑错误条件，那么必须在外部实现退出时重新启动SWUpdate。</p>
+<p>执行更新之后，监听进度接口的代理可能在接收到 <code class="docutils literal notranslate"><span class="pre">DONE</span></code> 后执行更新后操作，
+例如重新启动。
+此外，还可以执行配置文件中指定的或由 <code class="docutils literal notranslate"><span class="pre">-p</span></code> 命令行选项给出的更新后命令。</p>
+<p>请注意，至少要将SWUpdate的重启作为更新后操作执行，因为只有这样
+suricatta才会尝试将更新状态报告给其上游服务器。
+否则，上游服务器发布的更新操作将被跳过，并带有一条根据消息，
+直到重新启动SWUpdate，以避免安装相同的更新。</p>
 </div>
-<div class="section" id="supporting-different-servers">
-<h2>Supporting different Servers<a class="headerlink" href="#supporting-different-servers" title="永久链接至标题">¶</a></h2>
-<p>Support for servers other than hawkBit can be realized by implementing
-the “interfaces” described in <code class="docutils literal notranslate"><span class="pre">include/channel.h</span></code> and
-<code class="docutils literal notranslate"><span class="pre">include/suricatta/server.h</span></code>. The former abstracts a particular
-connection to the server, e.g., HTTP-based in case of hawkBit, while
-the latter implements the logics to poll and install updates.
-See <code class="docutils literal notranslate"><span class="pre">corelib/channel_curl.c</span></code>/<code class="docutils literal notranslate"><span class="pre">include/channel_curl.h</span></code> and
-<code class="docutils literal notranslate"><span class="pre">suricatta/server_hawkbit.{c,h}</span></code> for an example implementation
-targeted towards hawkBit.</p>
-<p><code class="docutils literal notranslate"><span class="pre">include/channel.h</span></code> describes the functionality a channel
-has to implement:</p>
+<div class="section" id="id3">
+<h2>支持不同的服务器<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>通过实现 <code class="docutils literal notranslate"><span class="pre">include/channel</span></code> 和 <code class="docutils literal notranslate"><span class="pre">include/suricatta/server.h</span></code> 中
+描述的 “interface”，可以实现对hawkBit以外的服务器的支持。
+前者抽象到服务器的特定连接，例如hawkBit中基于http的连接，
+而后者实现轮询和安装更新的逻辑。
+可以查看 <code class="docutils literal notranslate"><span class="pre">corelib/channel_curl.c</span></code>/<code class="docutils literal notranslate"><span class="pre">include/channel_curl.h</span></code> 和
+<code class="docutils literal notranslate"><span class="pre">suricatta/server_hawkbit.{c,h}</span></code> ,这是一个针对hawkBit的示例实现。</p>
+<p><code class="docutils literal notranslate"><span class="pre">include/channel.h</span></code> 描述了通道必须实现的功能。</p>
 <div class="code c highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="n">struct</span> <span class="n">channel</span> <span class="n">channel_t</span><span class="p">;</span>
 <span class="n">struct</span> <span class="n">channel</span> <span class="p">{</span>
     <span class="o">...</span>
@@ -251,11 +239,9 @@ has to implement:</p>
 <span class="n">channel_t</span> <span class="o">*</span><span class="n">channel_new</span><span class="p">(</span><span class="n">void</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>which sets up and returns a <code class="docutils literal notranslate"><span class="pre">channel_t</span></code> struct with pointers to
-functions for opening, closing, fetching, and sending data over
-the channel.</p>
-<p><code class="docutils literal notranslate"><span class="pre">include/suricatta/server.h</span></code> describes the functionality a server has
-to implement:</p>
+<p>它设置并返回一个 <code class="docutils literal notranslate"><span class="pre">channel_t</span></code> 结构体，该结构体具有指针，
+指向通过通道打开、关闭、获取和发送数据的函数。</p>
+<p><code class="docutils literal notranslate"><span class="pre">include/suricatta/server.h</span></code> 描述服务器必须实现的功能:</p>
 <div class="code c highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">server_op_res_t</span> <span class="n">server_has_pending_action</span><span class="p">(</span><span class="nb">int</span> <span class="o">*</span><span class="n">action_id</span><span class="p">);</span>
 <span class="n">server_op_res_t</span> <span class="n">server_install_update</span><span class="p">(</span><span class="n">void</span><span class="p">);</span>
 <span class="n">server_op_res_t</span> <span class="n">server_send_target_data</span><span class="p">(</span><span class="n">void</span><span class="p">);</span>
@@ -265,13 +251,11 @@ to implement:</p>
 <span class="n">server_op_res_t</span> <span class="n">server_ipc</span><span class="p">(</span><span class="nb">int</span> <span class="n">fd</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>The type <code class="docutils literal notranslate"><span class="pre">server_op_res_t</span></code> is defined in <code class="docutils literal notranslate"><span class="pre">include/suricatta/suricatta.h</span></code>.
-It represents the valid function return codes for a server’s implementation.</p>
-<p>In addition to implementing the particular channel and server, the
-<code class="docutils literal notranslate"><span class="pre">suricatta/Config.in</span></code> file has to be adapted to include a new option
-so that the new implementation becomes selectable in SWUpdate’s
-configuration. In the simplest case, adding an option like the following
-one for hawkBit into the <code class="docutils literal notranslate"><span class="pre">menu</span> <span class="pre">&quot;Server&quot;</span></code> section is sufficient.</p>
+<p>类型 <code class="docutils literal notranslate"><span class="pre">server_op_res_t</span></code> 定义在 <code class="docutils literal notranslate"><span class="pre">include/suricatta/suricatta.h</span></code>.
+它表示服务器实现的有效函数返回码。</p>
+<p>除了实现特定的通道和服务器， <code class="docutils literal notranslate"><span class="pre">suricatta/Config.in</span></code> 文件中必须包含
+一个新选项，以便在SWUpdate的配置中可以选择新的实现。
+在最简单的情况下，在 <code class="docutils literal notranslate"><span class="pre">menu</span> <span class="pre">&quot;Server&quot;</span></code> 部分中为hawkBit添加如下选项就足够了。</p>
 <div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="n">SURICATTA_HAWKBIT</span>
     <span class="nb">bool</span> <span class="s2">&quot;hawkBit support&quot;</span>
     <span class="n">depends</span> <span class="n">on</span> <span class="n">HAVE_LIBCURL</span>
@@ -283,32 +267,30 @@ one for hawkBit into the <code class="docutils literal notranslate"><span class=
       <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">projects</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">projects</span><span class="o">/</span><span class="n">iot</span><span class="o">.</span><span class="n">hawkbit</span>
 </pre></div>
 </div>
-<p>Having included the new server implementation into the configuration,
-edit <code class="docutils literal notranslate"><span class="pre">suricatta/Makefile</span></code> to specify the implementation’s linkage into
-the SWUpdate binary, e.g., for the hawkBit example implementation, the
-following lines add <code class="docutils literal notranslate"><span class="pre">server_hawkbit.o</span></code> to the resulting SWUpdate binary
-if <code class="docutils literal notranslate"><span class="pre">SURICATTA_HAWKBIT</span></code> was selected while configuring SWUpdate.</p>
+<p>将新的服务器实现包含到配置中之后，编辑 <code class="docutils literal notranslate"><span class="pre">suricatta/Makefile</span></code> 来
+指定实现与SWUpdate二进制文件的链接，例如，对于hawkBit示例实现，
+以下几行添加了 <code class="docutils literal notranslate"><span class="pre">server_hawkbit.o</span></code> 。
+如果在配置SWUpdate时选择了 <code class="docutils literal notranslate"><span class="pre">SURICATTA_HAWKBIT</span></code> ，则将结果包含
+到SWUpdate二进制文件中。</p>
 <div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>ifneq ($(CONFIG_SURICATTA_HAWKBIT),)
 lib-$(CONFIG_SURICATTA) += server_hawkbit.o
 endif
 </pre></div>
 </div>
 </div>
-<div class="section" id="support-for-general-purpose-http-server">
-<h2>Support for general purpose HTTP server<a class="headerlink" href="#support-for-general-purpose-http-server" title="永久链接至标题">¶</a></h2>
-<p>This is a very simple backend that uses standard HTTP response codes to signal if
-an update is available. There are closed source backends implementing this interface,
-but because the interface is very simple interface, this server type is also suitable
-for implementing an own backend server.</p>
-<p>The API consists of a GET with Query parameters to inform the server about the installed version.
-The query string has the format:</p>
+<div class="section" id="http">
+<h2>支持通用HTTP服务器<a class="headerlink" href="#http" title="永久链接至标题">¶</a></h2>
+<p>这是一个非常简单的后端，如果更新可用，它将使用标准HTTP响应代码发出信号。
+有一些实现此接口的闭源后端，但是由于该接口非常简单，
+所以这种服务器类型也适合实现自己的后端服务器。</p>
+<p>该API由一个带有查询参数的GET组成，用于通知服务器已安装的版本。
+查询字符串的格式为:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>http(s)://&lt;base URL&gt;?param1=val1&amp;param2=value2...
 </pre></div>
 </div>
-<p>As examples for parameters, the device can send its serial number, MAC address and the running version of the software.
-It is duty of the backend to interprete this - SWUpdate just takes them from the “identity” section of
-the configuration file and encodes the URL.</p>
-<p>The server answers with the following return codes:</p>
+<p>作为参数示例，设备可以发送序列号、MAC地址和软件运行版本。
+后端需负责对此进行解释——SWUpdate只是从配置文件的 “identity” 部分获取它们，并对URL进行编码。</p>
+<p>服务器用以下返回码作出应答:</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="13%" />
@@ -316,36 +298,35 @@ the configuration file and encodes the URL.</p>
 <col width="71%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head">HTTP Code</th>
-<th class="head">Text</th>
-<th class="head">Description</th>
+<tr class="row-odd"><th class="head">HTTP 码</th>
+<th class="head">文本</th>
+<th class="head">描述</th>
 </tr>
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td>302</td>
 <td>Found</td>
-<td>A new software is available at URL in the Location header</td>
+<td>在位置标头的URL中有一个新软件可用</td>
 </tr>
 <tr class="row-odd"><td>400</td>
 <td>Bad Request</td>
-<td>Some query parameters are missing or in wrong format</td>
+<td>一些查询参数丢失或格式错误</td>
 </tr>
 <tr class="row-even"><td>403</td>
 <td>Forbidden</td>
-<td>Client certificate not valid</td>
+<td>客户端证书无效</td>
 </tr>
 <tr class="row-odd"><td>404</td>
 <td>Not found</td>
-<td>No update is available for this device</td>
+<td>此设备没有更新可用</td>
 </tr>
 <tr class="row-even"><td>503</td>
 <td>Unavailable</td>
-<td>An update is available but server can’t handle another
-update process now.</td>
+<td>更新是可用的，但服务器现在不能处理另一个更新进程。</td>
 </tr>
 </tbody>
 </table>
-<p>Server’s answer can contain the following headers:</p>
+<p>服务器的应答可包含以下头部:</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="18%" />
@@ -353,67 +334,61 @@ update process now.</td>
 <col width="72%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head">Header’s name</th>
-<th class="head">Codes</th>
-<th class="head">Description</th>
+<tr class="row-odd"><th class="head">头部名字</th>
+<th class="head">代码</th>
+<th class="head">描述</th>
 </tr>
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td>Retry-after</td>
 <td>503</td>
-<td>Contains a number which tells the device how long to wait
-until ask the next time for updates. (Seconds)</td>
+<td>包含一个数字，该数字告诉设备，在下一次请求更新之前，
+需要等待多长时间(秒)</td>
 </tr>
 <tr class="row-odd"><td>Content-MD5</td>
 <td>302</td>
-<td>Contains the checksum of the update file which is available
-under the url of location header</td>
+<td>包含更新文件的校验和，该校验和在位置标头的url下可用</td>
 </tr>
 <tr class="row-even"><td>Location</td>
 <td>302</td>
-<td>URL where the update file can be downloaded.</td>
+<td>可以下载更新文件的URL</td>
 </tr>
 </tbody>
 </table>
-<p>The device can send logging data to the server. Any information is transmitted in a HTTP
-PUT request with the data as plain string in the message body. The Content-Type Header
-need to be set to text/plain.</p>
-<p>The URL for the logging can be set as separate URL in the configuration file or via
-–logurl command line parameter:</p>
-<p>The device sends data in a CSV format (Comma Separated Values). The format is:</p>
+<p>设备可以向服务器发送日志数据。任何信息都是在HTTP PUT请求中传输的，消息体中的数据是纯字符串。
+内容类型标题需要设置为 text/plain</p>
+<p>日志记录的URL可以在配置文件中设置为单独的URL，也可以通过–logurl命令行参数:</p>
+<p>设备以CSV格式(逗号分隔的值)发送数据。格式是:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">value1</span><span class="p">,</span><span class="n">value2</span><span class="p">,</span><span class="o">...</span>
 </pre></div>
 </div>
-<p>The format can be specified in the configuration file. A <em>format</em> For each <em>event</em> can be set.
-The supported events are:</p>
+<p>可以在配置文件中指定格式。每个 <em>event</em> 都可以设置 <em>format</em> ，支持的事件有:</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="20%" />
-<col width="11%" />
-<col width="69%" />
+<col width="80%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Event</th>
-<th class="head" colspan="2">Description</th>
+<th class="head">描述</th>
 </tr>
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td>check</td>
-<td colspan="2">dummy. It could send an event each time the server is
-polled.</td>
+<td>dummy。它可以在每次轮询服务器时发送一个事件。</td>
 </tr>
 <tr class="row-odd"><td>started</td>
-<td colspan="2">A new software is found and SWUpdate starts to install it</td>
+<td>找到一个新软件，SWUpdate开始安装它</td>
 </tr>
 <tr class="row-even"><td>success</td>
-<td colspan="2">A new software was successfully installed</td>
+<td>新软件安装成功</td>
 </tr>
 <tr class="row-odd"><td>fail</td>
-<td colspan="2">Failure by installing the new software</td>
+<td>新软件安装失败</td>
 </tr>
 </tbody>
 </table>
-<p>The <cite>general server</cite> has an own section inside the configuration file. As example:</p>
+<p><cite>general server</cite> 在配置文件中有自己的部分。如下例:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gservice</span> <span class="o">=</span>
 <span class="p">{</span>
         <span class="n">url</span>             <span class="o">=</span> <span class="o">....</span><span class="p">;</span>
@@ -427,10 +402,9 @@ polled.</td>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><cite>date</cite> is a special field and it is interpreted as localtime in RFC 2822 format. Each
-Comma Separated field is looked up inside the <cite>identify</cite> section in the configuration
-file, and if a match is found the substitution occurs. In case of no match, the field
-is sent as it is. For example, if the identify section has the following values:</p>
+<p><cite>date</cite> 是一个特殊的字段，它被解释为RFC 2822格式的localtime。
+在配置文件的 <cite>identify</cite> 部分中查找逗号分隔的每个字段，如果找到匹配项，就进行替换。
+如果没有匹配，字段将按原样发送。例如，如果identify部分具有以下值:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">identify</span> <span class="p">:</span> <span class="p">(</span>
         <span class="p">{</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;sp&quot;</span><span class="p">;</span> <span class="n">value</span> <span class="o">=</span> <span class="s2">&quot;333&quot;</span><span class="p">;</span> <span class="p">},</span>
         <span class="p">{</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;hw&quot;</span><span class="p">;</span> <span class="n">value</span> <span class="o">=</span> <span class="s2">&quot;ipse&quot;</span><span class="p">;</span> <span class="p">},</span>
@@ -438,7 +412,7 @@ is sent as it is. For example, if the identify section has the following values:
 <span class="p">);</span>
 </pre></div>
 </div>
-<p>with the events set as above, the formatted text in case of “success” will be:</p>
+<p>配合上述事件设置，”success” 的格式化文本将会是:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Formatted</span> <span class="n">log</span><span class="p">:</span> <span class="c1">#13,Mon, 17 Sep 2018 10:55:18 CEST,1.0,ipse,333</span>
 </pre></div>
 </div>
@@ -453,10 +427,10 @@ is sent as it is. For example, if the identify section has the following values:
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="swupdate-ipc.html" class="btn btn-neutral float-right" title="SWUpdate: API for external programs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="swupdate-ipc.html" class="btn btn-neutral float-right" title="SWUpdate:用于外部程序的API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="mongoose.html" class="btn btn-neutral" title="Mongoose daemon mode" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="mongoose.html" class="btn btn-neutral" title="Mongoose 守护进程模式" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

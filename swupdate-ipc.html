@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>SWUpdate: API for external programs &mdash; Embedded Software Update Documentation 2018.11 文档</title>
+  <title>SWUpdate:用于外部程序的API &mdash; Embedded Software Update Documentation 2018.11 文档</title>
   
 
   
@@ -30,8 +30,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="索引" href="genindex.html" />
     <link rel="search" title="搜索" href="search.html" />
-    <link rel="next" title="Getting information on running update" href="progress.html" />
-    <link rel="prev" title="Suricatta daemon mode" href="suricatta.html" /> 
+    <link rel="next" title="在运行更新时获取信息" href="progress.html" />
+    <link rel="prev" title="Suricatta 守护进程模式" href="suricatta.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -94,15 +94,15 @@
 <li class="toctree-l1"><a class="reference internal" href="signed_images.html">从可信的来源更新镜像</a></li>
 <li class="toctree-l1"><a class="reference internal" href="encrypted_images.html">对称加密更新镜像</a></li>
 <li class="toctree-l1"><a class="reference internal" href="handlers.html">处理程序</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mongoose.html">Mongoose daemon mode</a></li>
-<li class="toctree-l1"><a class="reference internal" href="suricatta.html">Suricatta daemon mode</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">SWUpdate: API for external programs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#api-description">API Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#client-library">Client Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mongoose.html">Mongoose 守护进程模式</a></li>
+<li class="toctree-l1"><a class="reference internal" href="suricatta.html">Suricatta 守护进程模式</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">SWUpdate:用于外部程序的API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">概览</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api">API描述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">客户端库</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="progress.html">Getting information on running update</a></li>
+<li class="toctree-l1"><a class="reference internal" href="progress.html">在运行更新时获取信息</a></li>
 <li class="toctree-l1"><a class="reference internal" href="building-with-yocto.html">meta-swupdate: building with Yocto</a></li>
 </ul>
 <ul>
@@ -156,7 +156,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>SWUpdate: API for external programs</li>
+      <li>SWUpdate:用于外部程序的API</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -175,29 +175,23 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="swupdate-api-for-external-programs">
-<h1>SWUpdate: API for external programs<a class="headerlink" href="#swupdate-api-for-external-programs" title="永久链接至标题">¶</a></h1>
-<div class="section" id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="永久链接至标题">¶</a></h2>
-<p>SWUpdate contains an integrated web-server to allow remote updating.
-However, which protocols are involved during an update is project
-specific and differs significantly. Some projects can decide
-to use FTP to load an image from an external server, or using
-even a proprietary protocol.
-The integrated web-server uses this interface.</p>
-<p>SWUpdate has a simple interface to let external programs
-to communicate with the installer. Clients can start an upgrade
-and stream an image to the installer, querying then for the status
-and the final result. The API is at the moment very simple, but it can
-easy be extended in the future if new use cases will arise.</p>
+  <div class="section" id="swupdate-api">
+<h1>SWUpdate:用于外部程序的API<a class="headerlink" href="#swupdate-api" title="永久链接至标题">¶</a></h1>
+<div class="section" id="id1">
+<h2>概览<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>SWUpdate包含一个集成的web服务器，可实现远程更新。
+但是，在更新过程中涉及的协议是特定于项目的，并且有很大的不同。
+有些项目可以决定使用FTP从外部服务器加载映像，或者可以使用专有协议。
+集成的web服务器使用这个接口。</p>
+<p>SWUpdate有一个简单的接口，可以让外部程序与安装程序通信。
+客户端可以启动升级并将镜像流式传递到安装程序，然后查询状态和最终结果。
+API目前非常简单，但是如果将来出现新的用例，它可以很容易地进行扩展。</p>
 </div>
-<div class="section" id="api-description">
-<h2>API Description<a class="headerlink" href="#api-description" title="永久链接至标题">¶</a></h2>
-<p>The communication runs via UDS (Unix Domain Socket). The socket is created
-at startup by SWUpdate in /tmp/sockinstctrl as per default configuration.
-This socket should, however, not be used directly but instead by the Client
-Library explained below.</p>
-<p>The exchanged packets are described in network_ipc.h</p>
+<div class="section" id="api">
+<h2>API描述<a class="headerlink" href="#api" title="永久链接至标题">¶</a></h2>
+<p>通信通过UDS (Unix域套接字)运行。套接字在启动时由SWUpdate按照配置创建，
+默认是/tmp/sockinstctrl。但是，这个套接字不应该直接使用，而应该由下述客户端库使用。</p>
+<p>交换的包在network_ipc.h中描述</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="n">struct</span> <span class="p">{</span>
         <span class="nb">int</span> <span class="n">magic</span><span class="p">;</span>
         <span class="nb">int</span> <span class="nb">type</span><span class="p">;</span>
@@ -205,27 +199,24 @@ Library explained below.</p>
 <span class="p">}</span> <span class="n">ipc_message</span><span class="p">;</span>
 </pre></div>
 </div>
-<p>Where the fields have the meaning:</p>
+<p>字段的含义:</p>
 <ul class="simple">
-<li>magic : a magic number as simple proof of the packet</li>
-<li>type : one of REQ_INSTALL, ACK, NACK, GET_STATUS, POST_UPDATE</li>
-<li>msgdata : a buffer used by the client to send the image
-or by SWUpdate to report back notifications and status.</li>
+<li>magic : 魔术数字作为包的简单证明</li>
+<li>type : REQ_INSTALL, ACK, NACK, GET_STATUS, POST_UPDATE之一</li>
+<li>msgdata : 客户端用来发送镜像或SWUpdate用来报告通知和状态的缓冲区。</li>
 </ul>
-<p>The client sends a REQ_INSTALL packet and waits for an answer.
-SWUpdate sends back ACK or NACK, if for example an update is already in progress.</p>
-<p>After the ACK, the client sends the whole image as a stream. SWUpdate
-expects that all bytes after the ACK are part of the image to be installed.
-SWUpdate recognizes the size of the image from the CPIO header.
-Any error lets SWUpdate to leave the update state, and further packets
-will be ignored until a new REQ_INSTALL will be received.</p>
+<p>客户端发送一个REQ_INSTALL包并等待应答。
+如果更新已经在进行中，SWUpdate将返回ACK或NACK。</p>
+<p>在ACK之后，客户端将整个图像作为流发送。SWUpdate希望ACK之后的所有字节
+都是要安装的镜像的一部分。SWUpdate从CPIO标头识别图像的大小。
+任何错误都将使得SWUpdate退出更新状态，并且在接收到新的REQ_INSTALL之前，
+将忽略其他数据包。</p>
 <img alt="_images/API.png" src="_images/API.png" />
 </div>
-<div class="section" id="client-library">
-<h2>Client Library<a class="headerlink" href="#client-library" title="永久链接至标题">¶</a></h2>
-<p>A library simplifies the usage of the IPC making available a way to
-start asynchronously an update.</p>
-<p>The library consists of one function and several call-backs.</p>
+<div class="section" id="id2">
+<h2>客户端库<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>库简化了IPC的使用，提供了异步启动更新的方法。</p>
+<p>这个库由一个函数和几个回调组成。</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">swupdate_async_start</span><span class="p">(</span><span class="n">writedata</span> <span class="n">wr_func</span><span class="p">,</span> <span class="n">getstatus</span> <span class="n">status_func</span><span class="p">,</span>
         <span class="n">terminated</span> <span class="n">end_func</span><span class="p">)</span>
 <span class="n">typedef</span> <span class="nb">int</span> <span class="p">(</span><span class="o">*</span><span class="n">writedata</span><span class="p">)(</span><span class="n">char</span> <span class="o">**</span><span class="n">buf</span><span class="p">,</span> <span class="nb">int</span> <span class="o">*</span><span class="n">size</span><span class="p">);</span>
@@ -233,15 +224,12 @@ start asynchronously an update.</p>
 <span class="n">typedef</span> <span class="nb">int</span> <span class="p">(</span><span class="o">*</span><span class="n">terminated</span><span class="p">)(</span><span class="n">RECOVERY_STATUS</span> <span class="n">status</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>swupdate_async_start creates a new thread and start the communication with SWUpdate,
-triggering for a new update. The wr_func is called to get the image to be installed.
-It is responsibility of the callback to provide the buffer and the size of
-the chunk of data.</p>
-<p>The getstatus call-back is called after the stream was downloaded to check
-how upgrade is going on. It can be omitted if only the result is required.</p>
-<p>The terminated call-back is called when SWUpdate has finished with the result
-of the upgrade.</p>
-<p>Example about using this library is in the examples/client directory.</p>
+<p>swupdate_async_start创建一个新线程，并启动与SWUpdate的通信，触发新的更新。
+wr_func会被调用，以获取要安装的镜像。回调函数负责提供缓冲区和数据块的大小。</p>
+<p>流下载完毕后，可调用getstatus回调，以检查升级进行的状况。
+如果只需要结果，则可以省略。</p>
+<p>当SWUpdate完成升级后，将调用terminated回调。</p>
+<p>关于使用这个库的示例，在examples/client目录中。</p>
 </div>
 </div>
 
@@ -253,10 +241,10 @@ of the upgrade.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="progress.html" class="btn btn-neutral float-right" title="Getting information on running update" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="progress.html" class="btn btn-neutral float-right" title="在运行更新时获取信息" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="suricatta.html" class="btn btn-neutral" title="Suricatta daemon mode" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="suricatta.html" class="btn btn-neutral" title="Suricatta 守护进程模式" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
