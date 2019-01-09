@@ -1,29 +1,31 @@
 ================
-Help and support
+帮助和支持
 ================
 
-Mailing List
+邮件列表
 ============
 
-There is a mailing list for this project:
+这个项目有一个邮件列表:
 
 	swupdate@googlegroups.com
 
-Issue related to the project or to the documentation are discussed
-here.
+这里讨论与项目或文档相关的问题。
 
-SWUpdate Flyer
-==============
 
-A short description about the project and the features (in English and German)
-can be found in the `flyer <http://www.denx.de/en/pub/Software/WebHome/we-update.pdf>`_
+SWUpdate 宣传单
+===============
 
-Workshop and SWUpdate integration in project
+关于项目及其特性的简短描述(英语和德语)可以这里找到
+`flyer <http://www.denx.de/en/pub/Software/WebHome/we-update.pdf>`_
+
+在项目中集成SWUpdate的研讨会
 ============================================
 
-For quick integration of SWUpdate in your project, you could be interested in the `Workshop <http://www.denx.de/wiki/Training2/WebHome#WorkshopSWUpdate>`_
+要在项目中快速集成SWUpdate，你可能会对
+`Workshop <http://www.denx.de/wiki/Training2/WebHome#WorkshopSWUpdate>`_
+感兴趣
 
-Talks about SWUpdate
+关于SWUpdate的探讨
 ====================
 
        - `Software Update in Embedded Systems by Stefano Babic <http://events.linuxfoundation.org/sites/events/files/slides/SoftwareUpdateForEmbedded.pdf>`_
@@ -49,7 +51,7 @@ Talks about SWUpdate
          `Slides <http://events.linuxfoundation.org/sites/events/files/slides/SWUpdateELCE2017.pdf>`_,
          `Video <https://www.youtube.com/watch?v=6sKLH95g4Do>`_
 
-Useful references
+有用的参考
 =================
 
         - `Boundary Devices, Using SWUpdate to upgrade your system <https://boundarydevices.com/using-swupdate-upgrade-system>`_
