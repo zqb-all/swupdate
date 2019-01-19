@@ -1,83 +1,68 @@
-Contributing to SWUpdate
+为SWUpdate做贡献
 ========================
 
-Contributions are welcome ! Please follow the following guideline for contributions.
+欢迎贡献！请按以下指引进行贡献。
 
-Contribution Checklist
+贡献检查列表
 ----------------------
 
-These are mostly general recommendations and are common practise in a lot of
-FOSS projects.
+这些主要是一般性建议，在很多自由/开源项目中都是通用的。
 
-- use git to manage your changes [*recomended*]
+- 使用git管理你的更改[*推荐*]
 
-- follow as much as possible kernel codestyle [*recomended*]
-  Nevertheless, some rules are not so strict as in kernel. The maximum line length
-  can be extended over 80 chars if this increase code readability.
+- 尽可能遵循内核代码风格[*推荐*]
+  然而，有些规则并没有内核中那么严格。
+  如果能增加代码的可读性，最大行长度可以扩展到80字符以上。
 
-- add the required copyright header to each new file introduced [**required**]
+- 将所需的版权头部信息添加到引入的每个新文件[**必要要求**]
 
-- add signed-off to all patches [**required**]
-    - to certify the "Developer's Certificate of Origin", see below
-    - check with your employer when not working on your own!
+- 在所有补丁中添加签名信息(signed-off)[**必要要求**]
+    - 用于证明"开发者的原始证明", 请参阅下文
+    - 当你并非独立工作时，请向你的雇主确认这些信息!
 
-- add version number for your patches if follow-up versions are requested [*recomended*]
-    - Add a "Change from Vx" description under the commit message to take track
-      of the history of the patch.
-    - It is suggested to use excellent "patman" tool to manage patches series.
-      This is part of U-Boot's project (tools/patman), but it can be used in other projects, too.
+- 增加你的补丁的版本，如果有后续版本需要的话 [*推荐*]
+    - 在提交信息下添加 "Change from Vx" 描述，以跟踪补丁的历史
+    - 建议使用优秀的 "patman" 工具管理补丁。这是U-Boot项目的一部分(tools/patman)，
+      但它也可以用于其他项目。
 
-- check that your patches do not break build [**required**]
+- 检查以确认你的补丁没有破坏构建[**必要要求**]
+  - 在 `configs/` 目录下有一组配置文件
+    请对目录中的所有文件运行构建，以确保SWUpdate仍然可以从与你的配置不同的配置中构建。
 
-  - There is a set of configuration files in the `configs/` directory.
-    Please run a build for all files in the directory to ensure that SWUpdate is
-    still buildable from configurations different as yours.
 
-- post patches to mailing list [**required**]
-    - use `git format-patch` to generate your patches.
-    - use `git send-email` if possible. This avoid corruptions due
-      to the mailers
-    - add a prefix [meta-swupdate] if patches are intended to the Yocto's meta layer.
-    - send patches inline, do not append them
-    - no HTML emails!
 
-- do not use github Pull Request. github facilities are not used for this project.
-  The review is done in a single place : the Mailing List. PR from github are ignored.
+- 将补丁发送到邮件列表[**必要要求**]
+    - 使用 `git format-patch` 生成你的patch
+    - 如果可能的话，使用 `git send-email` . 则可以避免可能由发件人带来的破坏
+    - 如果补丁是针对Yocto的meta层，则添加前缀[meta-swupdate]
+    - 将patch添加在正文，不要使用附件
+    - 不接受 HTML 邮件!
 
-Patches are tracked by patchwork (see http://jk.ozlabs.org/projects/patchwork/).
-You can see the status of your patches at http://patchwork.ozlabs.org/project/swupdate/list.
+- 不要使用github Pull Request。本项目不使用github设施。
+  评审只在一个地方进行:邮件列表。github的PR将被忽略。
 
-Developer's Certificate of Origin 1.1
+补丁由patchwork跟踪(参考 http://jk.ozlabs.org/projects/patchwork/).
+你可以在此查看补丁状态 http://patchwork.ozlabs.org/project/swupdate/list.
+
+开发者的代码签名证明1.1
 -------------------------------------
 
-When signing-off a patch for this project like this
+当用如下形式对一个此项目的patch进行signing-off
 
     Signed-off-by: Random J Developer <random@developer.example.org>
 
-using your real name (no pseudonyms or anonymous contributions), you declare the
-following:
+请使用你的真实名字(不要使用假名或匿名进行贡献)，并意味着你声明了:
 
-    By making a contribution to this project, I certify that:
+    通过对本项目的做出贡献，我证明:
 
-        (a) The contribution was created in whole or in part by me and I
-            have the right to submit it under the open source license
-            indicated in the file; or
+        (a) 贡献的全部或部分由我创建，我有权按照文件中所示的开源许可提交文件;或
 
-        (b) The contribution is based upon previous work that, to the best
-            of my knowledge, is covered under an appropriate open source
-            license and I have the right under that license to submit that
-            work with modifications, whether created in whole or in part
-            by me, under the same open source license (unless I am
-            permitted to submit under a different license), as indicated
-            in the file; or
+        (b) 贡献基于我所知的在适当的开源许可下涵盖的以前的工作，
+            并且我有权在该许可下提交该工作的修改，无论该修改是全部还是部分由我
+            在同一开源许可下创建的(除非我被允许在不同的许可下提交)，如文件中所示;或
 
-        (c) The contribution was provided directly to me by some other
-            person who certified (a), (b) or (c) and I have not modified
-            it.
+        (c) 这个贡献是由另一个人直接提供给我的，他证明了(a)、(b)或(c)，而我并没有修改它。
 
-        (d) I understand and agree that this project and the contribution
-            are public and that a record of the contribution (including all
-            personal information I submit with it, including my sign-off) is
-            maintained indefinitely and may be redistributed consistent with
-            this project or the open source license(s) involved.
+        (d) 我理解并同意本项目及其贡献是公开的，且该贡献的记录(包括我随其提交的所有个人信息，
+            包括我的签名)将无限期地保留，并可能根据本项目或涉及的开源许可重新分发。
 

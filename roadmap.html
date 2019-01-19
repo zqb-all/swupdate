@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Project’s road-map &mdash; Embedded Software Update Documentation 2018.11 文档</title>
+  <title>项目规划 &mdash; Embedded Software Update Documentation 2018.11 文档</title>
   
 
   
@@ -30,7 +30,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="索引" href="genindex.html" />
     <link rel="search" title="搜索" href="search.html" />
-    <link rel="prev" title="Contributing to SWUpdate" href="contributing.html" /> 
+    <link rel="prev" title="为SWUpdate做贡献" href="contributing.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -97,35 +97,35 @@
 <li class="toctree-l1"><a class="reference internal" href="suricatta.html">Suricatta 守护进程模式</a></li>
 <li class="toctree-l1"><a class="reference internal" href="swupdate-ipc.html">SWUpdate:用于外部程序的API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="progress.html">在运行更新时获取信息</a></li>
-<li class="toctree-l1"><a class="reference internal" href="building-with-yocto.html">meta-swupdate: building with Yocto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="building-with-yocto.html">meta-swupdate: 使用Yocto进行编译</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="help_and_support.html">Help and support</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to SWUpdate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help_and_support.html">帮助和支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">为SWUpdate做贡献</a></li>
 </ul>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Project’s road-map</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#main-goal">Main goal</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#swupdate-as-updater-gateway">SWUpdate as Updater Gateway</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#binary-delta-updates">Binary delta updates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#integration-in-linux-distro">Integration in Linux distro</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#handlers">Handlers:</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#new-handlers">New Handlers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#flash-handler">Flash handler</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#handlers-installable-as-plugin-at-runtime">Handlers installable as plugin at runtime</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">项目规划</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">主要目标</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#swupdate">SWUpdate作为更新网关</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">二进制差分更新</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#linxu">集成到Linxu发行版</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">处理程序:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">新的处理程序</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#flash">Flash处理程序</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">在运行时将处理程序作为插件安装</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#support-for-evaluation-boards">Support for evaluation boards</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#backend-support-suricatta-mode">Backend support (suricatta mode)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#backend-hawkbit-offline-support">Backend: Hawkbit Offline support</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#backend-consolidate-general-server">Backend: Consolidate “general server”</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#backend-support-for-mender">Backend: support for Mender</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#support-for-multiple-servers-simultaneously">Support for multiple Servers simultaneously</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id7">对评估板的支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#suricatta">后端支持 (suricatta 模式)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hawkbit">后端: Hawkbit 的离线支持</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">后端:整合“通用服务器”</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mender">后端: 支持 Mender</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">同时支持多个服务器</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#swupdate-gui-for-rescue">SWUpdate GUI for rescue</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#test-and-continuos-integration">Test and Continuos Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#swupdate-gui">SWUpdate 用于救援系统的GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id10">测试和持续集成</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id11">文档</a></li>
 </ul>
 </li>
 </ul>
@@ -173,7 +173,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Project’s road-map</li>
+      <li>项目规划</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -192,159 +192,134 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="project-s-road-map">
-<h1>Project’s road-map<a class="headerlink" href="#project-s-road-map" title="永久链接至标题">¶</a></h1>
-<p>Please take into account that most of the items here are proposals.
-I get some ideas talking with customers, some ideas are my own thoughts.
-There is no plan when these features will be implemented - this depends
-if enough interest is raised and if there will be contribution to the project
-in terms of patches or financial contribution to develop a feature.</p>
-<p>Thanks again to all companies that have supported my work up now and to
-everybody who has contributed to the project, let me bring SWUpdate
-to the current status !</p>
-<div class="section" id="main-goal">
-<h2>Main goal<a class="headerlink" href="#main-goal" title="永久链接至标题">¶</a></h2>
-<p>First goal is to reach a quite big audience, making
-SWUpdate suitable for a large number of products.
-This will help to build a community around the project
-itself.</p>
+  <div class="section" id="id1">
+<h1>项目规划<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>请注意到这里的大多数项目都是建议。
+有一些想法来自于我跟客户的沟通，另一些想法是我自己的想法。
+没有计划何时实现这些特性——这取决于是否引起了足够的兴趣，
+以及是否会为项目提供补丁或提供资金来开发特性。</p>
+<p>再次感谢所有支持我工作到现在的伙伴，以及所有为这个项目
+做出贡献的人，让我把SWUpdate带到现在的状态!</p>
+<div class="section" id="id2">
+<h2>主要目标<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>第一个目标是获得大量受众，使SWUpdate适合于大量的产品。
+这将有助于围绕项目本身建立一个社区。</p>
 </div>
-<div class="section" id="swupdate-as-updater-gateway">
-<h2>SWUpdate as Updater Gateway<a class="headerlink" href="#swupdate-as-updater-gateway" title="永久链接至标题">¶</a></h2>
-<p>This feature was introduced with the “swuforward” handler. It is already
-possible to update a tree of devices if each of them runs SWUpdate. This
-feature is already implemented in SWUpdate for embedded linux.</p>
-<p>Anyway, a lot of embedded devices have small processors and maybe not a full
-blown OS. Ensuring security for all of them can be a risk, and it is
-easier to make sure on a single device. If the device running SWUpdate is
-acting as gateway, it can translate protocols from backend and send
-package updates to the connected small devices.</p>
-<p>One example could be if SWUpdate runs as MQTT-broker and takes updates
-from Hawkbit. SWUpdate should be able to run multiple instances of
-suricatta to do this.</p>
-<p>One other examples is using LWM2M. The gateway should be generic enough
-to allow to add further protocols in future.</p>
+<div class="section" id="swupdate">
+<h2>SWUpdate作为更新网关<a class="headerlink" href="#swupdate" title="永久链接至标题">¶</a></h2>
+<p>这个特性是通过 “swuforward” 处理程序引入的。如果每个设备都运行SWUpdate，
+那么已经可以更新一个设备树。这个特性已经在针对嵌入式linux的SWUpdate中实现。</p>
+<p>尽管如此，许多嵌入式设备都有小型处理器，可能还没有完全成熟的操作系统。
+要确保所有设备的安全性是比较有风险的，如果只是在单一设备上则更容易确保。
+如果运行SWUpdate的设备充当网关，它可以将协议从后端转换并将包更新发送
+到连接的小设备。</p>
+<p>一个例子是，如果SWUpdate以MQTT-broker的形式运行，并从Hawkbit获取更新。
+SWUpdate应该能够运行suricatta的多个实例来实现这一点。
+另一个例子是使用LWM2M。网关应该具有足够的通用性，以便将来能够添加更多的协议。</p>
 </div>
-<div class="section" id="binary-delta-updates">
-<h2>Binary delta updates<a class="headerlink" href="#binary-delta-updates" title="永久链接至标题">¶</a></h2>
-<p>A whole update could be very traffic intensive. Specially in case
-of low-bandwidth connections, it could be interesting to introduce
-a way for delta binary updates.
-There was already several discussions on the Mailing List about
-this. If introducing binary delta is high desired, on the other side
-it is strictly required to not reduce the reliability of the update
-and the feature should not introduce leaks and make the system
-more vulnerable. It is accepted that different technologies could be added,
-each of them solves a specific use case for a delta update.</p>
+<div class="section" id="id3">
+<h2>二进制差分更新<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>进行完整更新可能会占用大量的流量。特别是在低带宽连接的情况下，引入增量
+二进制更新的方法可能会很有意义。
+邮件列表上已经讨论了好几次了。如果需要引入二进制增量，则严格要求不降低
+更新的可靠性，不引入泄漏，不能使系统更加脆弱。
+一种可接受的做法是添加不同的技术，每个技术都只处理增量更新的特定用例。</p>
 </div>
-<div class="section" id="integration-in-linux-distro">
-<h2>Integration in Linux distro<a class="headerlink" href="#integration-in-linux-distro" title="永久链接至标题">¶</a></h2>
-<p>To allow an easer leraning with SWUpdate and also for test purposes with the
-SWU forwarder handler, it makes sense to package SWUpdate for PC Linux distro.
-SWUpdate already supports debian package. Some help from community is asked to
-let the package merged into Debian distro.</p>
+<div class="section" id="linxu">
+<h2>集成到Linxu发行版<a class="headerlink" href="#linxu" title="永久链接至标题">¶</a></h2>
+<p>为了便于学习SWUpdate，也为了使用SWU转发器处理程序进行测试，
+有必要为PC Linux发行版打包SWUpdate。
+SWUpdate已经支持debian软件包。让包合并到Debian发行版中需要来自社区的一些帮助。</p>
 </div>
-<div class="section" id="handlers">
-<h2>Handlers:<a class="headerlink" href="#handlers" title="永久链接至标题">¶</a></h2>
-<div class="section" id="new-handlers">
-<h3>New Handlers<a class="headerlink" href="#new-handlers" title="永久链接至标题">¶</a></h3>
-<p>Users develop own custom handlers - I just enforce and encourage everyone
-to send them and discuss how to integrate custom handler in mainline.</p>
-<p>A handler to update a microntroller connected via UART is introduced.
-It could be enhanced to support other interfaces (SPI for example).</p>
+<div class="section" id="id4">
+<h2>处理程序:<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id5">
+<h3>新的处理程序<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h3>
+<p>用户们开发自己的自定义处理程序 - 我只是执行并鼓励每个人发送它们，
+并讨论如何在主线中集成自定义处理程序。</p>
+<p>引入了用于更新经由UART连接的微处理器的处理程序。
+可以对其进行增强，以支持其他接口(例如SPI)。</p>
 <dl class="docutils">
-<dt>Some ideas for new handlers:</dt>
+<dt>一些新的处理程序的想法:</dt>
 <dd><ul class="first last simple">
-<li>handlers to update microcontrollers</li>
-<li>FPGA updater for FPGA with Flash</li>
-<li>Package handler to install packages (ipk, deb)
-Packages can be inserted into the SWU and the atomicity is
-guaranteed by SWUpdate.</li>
-<li>Lua handlers should be added if possible to the project
-to show how to solve custom install.</li>
+<li>用于更新微控制器的处理程序</li>
+<li>用于更新带Flash的FPGA的FPGA更新程序</li>
+<li>安装软件包的软件包处理程序(ipk, deb)
+可以将包插入到SWU中，原子性由SWUpdate保证</li>
+<li>如有可能，应将Lua处理程序添加到项目中以演示如何解决自定义安装。</li>
 </ul>
 </dd>
 </dl>
 </div>
-<div class="section" id="flash-handler">
-<h3>Flash handler<a class="headerlink" href="#flash-handler" title="永久链接至标题">¶</a></h3>
-<p>The flash handler for raw-devices (mainly NOR flashes) does not allow to
-stream the image and an error is reported if “installed-directly” is set.
-The handler can be extended to stream images.</p>
+<div class="section" id="flash">
+<h3>Flash处理程序<a class="headerlink" href="#flash" title="永久链接至标题">¶</a></h3>
+<p>裸设备的flash处理程序(主要是NOR flash)不允许流式镜像，
+如果设置了 “installed-directly”，就会报错。
+该处理程序可以扩展到流式镜像。</p>
 </div>
-<div class="section" id="handlers-installable-as-plugin-at-runtime">
-<h3>Handlers installable as plugin at runtime<a class="headerlink" href="#handlers-installable-as-plugin-at-runtime" title="永久链接至标题">¶</a></h3>
-<p>The project supports Lua as script language for pre- and postinstall
-script. It will be easy to add a way for installing a handler at runtime
-written in Lua, allowing to expand SWUpdate to the cases not covered
-in the design phase of a product.</p>
-<p>Of course, this issue is related to the security features: it must be
-ensured that only verified handlers can be added to the system to avoid
-that malware can get the control of the target.</p>
-<p>Current release supports verified images. That means that a handler
-written in Lua could be now be part of the compound image, because
-a unauthenticated handler cannot run.</p>
+<div class="section" id="id6">
+<h3>在运行时将处理程序作为插件安装<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h3>
+<p>该项目支持Lua作为脚本语言用于安装前和安装后脚本。
+添加一种在运行时安装用Lua编写的处理程序的方法是很容易的，
+它允许将SWUpdate扩展到产品设计阶段没有覆盖的情况。</p>
+<p>当然，这个问题与安全特性有关:必须确保只有经过验证的
+处理程序才能添加到系统中，以避免恶意软件能够控制目标。</p>
+<p>当前版本支持经过验证的镜像。这意味着用Lua编写的处理程序现在
+可作为复合镜像的一部分，因为未经身份验证的处理程序无法运行。</p>
 </div>
 </div>
-<div class="section" id="support-for-evaluation-boards">
-<h2>Support for evaluation boards<a class="headerlink" href="#support-for-evaluation-boards" title="永久链接至标题">¶</a></h2>
-<p>New is meta-swupdate-boards - examples regarding evaluation boards are
-put there. Currently, there are examples for Beaglebone Black,
-Raspberri PI 3 and Wandboard. Maybe some more boards ? Patches welcome.</p>
+<div class="section" id="id7">
+<h2>对评估板的支持<a class="headerlink" href="#id7" title="永久链接至标题">¶</a></h2>
+<p>新的是meta-swupdate-board - 关于评估板的例子放在那里。
+目前，有Beaglebone Black, Raspberri PI 3和Wandboard。
+也许要再多一些板？欢迎提交补丁</p>
 </div>
-<div class="section" id="backend-support-suricatta-mode">
-<h2>Backend support (suricatta mode)<a class="headerlink" href="#backend-support-suricatta-mode" title="永久链接至标题">¶</a></h2>
-<div class="section" id="backend-hawkbit-offline-support">
-<h3>Backend: Hawkbit Offline support<a class="headerlink" href="#backend-hawkbit-offline-support" title="永久链接至标题">¶</a></h3>
-<p>There are several discussions on Hawkbit’s ML about how to synchronize
-an offline update (done locally or via the internal Webserver) with
-the Hawkbit’s server. Currently, Hawkbit thinks to be the only one
-deploying software. Hawkbit DDI API should be extended, and afterwards
-changes must be implemented in SWUpdate.</p>
+<div class="section" id="suricatta">
+<h2>后端支持 (suricatta 模式)<a class="headerlink" href="#suricatta" title="永久链接至标题">¶</a></h2>
+<div class="section" id="hawkbit">
+<h3>后端: Hawkbit 的离线支持<a class="headerlink" href="#hawkbit" title="永久链接至标题">¶</a></h3>
+<p>在Hawkbit的邮件列表中，有一些关于如何离线同步Hawkbit服务器更新
+(在本地完成或通过内部web服务器完成)的讨论。
+目前，Hawkbit 被认为是唯一的部署软件。需要扩展Hawkbit DDI API，
+随后Swupdate需要做一些改动。</p>
 </div>
-<div class="section" id="backend-consolidate-general-server">
-<h3>Backend: Consolidate “general server”<a class="headerlink" href="#backend-consolidate-general-server" title="永久链接至标题">¶</a></h3>
-<p>A second OTA server was introduced with 2018.11, but there is not
-an open source solution for a server. Anyway, the very simple interface
-of the “general server” can be used by anyone to introduce an own server
-instead of a more complicate solution with a backend like Hawkbit.</p>
+<div class="section" id="id8">
+<h3>后端:整合“通用服务器”<a class="headerlink" href="#id8" title="永久链接至标题">¶</a></h3>
+<p>第二个OTA服务器是在2018.11中引入的，但是没有针对服务器的开源解决方案。
+无论如何，任何人都可以使用非常简单的“通用服务器”接口来引入自己的服务器，
+而不是像Hawkbit这样的复杂的后端解决方案。</p>
 </div>
-<div class="section" id="backend-support-for-mender">
-<h3>Backend: support for Mender<a class="headerlink" href="#backend-support-for-mender" title="永久链接至标题">¶</a></h3>
-<p>There was several discussion how to make a stronger collaboration between
-different update solution and a proposal discussed prevviously is to use SWUpdate as client
-to upgrade from a Mender server, see <a class="reference external" href="https://elinux.org/images/0/0c/BoF_secure_ota_linux.pdf">BOF at ELCE 2017</a></p>
+<div class="section" id="mender">
+<h3>后端: 支持 Mender<a class="headerlink" href="#mender" title="永久链接至标题">¶</a></h3>
+<p>对于如何在不同的更新解决方案之间进行更强的协作进行了多次讨论，
+之前讨论过的建议是使用SWUpdate作为客户端从一个Mender服务器进行升级，
+参见 <a class="reference external" href="https://elinux.org/images/0/0c/BoF_secure_ota_linux.pdf">BOF at ELCE 2017</a></p>
 </div>
-<div class="section" id="support-for-multiple-servers-simultaneously">
-<h3>Support for multiple Servers simultaneously<a class="headerlink" href="#support-for-multiple-servers-simultaneously" title="永久链接至标题">¶</a></h3>
-<p>Currently, suricatta’s server backends are a mutually exclusive
-compile-time choice. There is no interest to have multiple OTA at the same time.
-This feature won’t be implemented and I will remove this from roadmap if no
-interest will be waked up.</p>
+<div class="section" id="id9">
+<h3>同时支持多个服务器<a class="headerlink" href="#id9" title="永久链接至标题">¶</a></h3>
+<p>目前，suricatta的服务器后端是一个互斥的编译时的选项。没有必要同时拥有多个OTA服务器。
+如果没有激起兴趣，这个特性将不会被实现，我将从规划中删除它。</p>
 </div>
 </div>
-<div class="section" id="swupdate-gui-for-rescue">
-<h2>SWUpdate GUI for rescue<a class="headerlink" href="#swupdate-gui-for-rescue" title="永久链接至标题">¶</a></h2>
-<p>In case of rescue for HMI devices, it is often required to have a small GUI
-for an operator to set some parameters (network,..) and start an update.
-A first version of SWUpdate-GUI was released with a base set of features. The goal of this simple GUI
-is to have a low footprint compared to GUI developed with state of art frameworks.
-This lets to still have a rescue that fits in small devices.</p>
+<div class="section" id="swupdate-gui">
+<h2>SWUpdate 用于救援系统的GUI<a class="headerlink" href="#swupdate-gui" title="永久链接至标题">¶</a></h2>
+<p>在对HMI设备进行救援的情况下，通常需要一个小的GUI，让操作员设置一些参数(网络)并开始更新。
+SWUpdate-GUI的第一个版本发布时附带了一组基本特性。这个简单GUI的目标是，
+与使用最新技术框架开发的GUI相比，具有较低的内存占用。这使得救援系统仍然适用于小型设备。</p>
 </div>
-<div class="section" id="test-and-continuos-integration">
-<h2>Test and Continuos Integration<a class="headerlink" href="#test-and-continuos-integration" title="永久链接至标题">¶</a></h2>
-<p>The number of configurations and features in SWUpdate is steadily increasing and
-it becomes urgent to find a way to test all incoming patch to fix regression issues.
-One step in this direction is the support for Travis build - a set of configuration
-files is stored with the project and should help to find fast breakages in the build.
-More in this direction must be done to perform test on targets. A suitable test framework
-should be found. Scope is to have a “SWUpdate factory” where patches are fast integrated
-and tested on real hardware.</p>
+<div class="section" id="id10">
+<h2>测试和持续集成<a class="headerlink" href="#id10" title="永久链接至标题">¶</a></h2>
+<p>SWUpdate中配置和特性的数量正在稳步增加，
+迫切需要找到一种方法来测试所有传入补丁以修复回归问题。
+这个方向的一个步骤是支持Travis构建 - 一组配置文件存储在项目中，
+应该有助于在构建中快速找到受破坏的点。
+必须朝这个方向做更多的工作，以便对目标进行测试。
+应该找到一个合适的测试框架。
+目标是拥有一个“SWUpdate工厂”，让补丁可以在真实硬件上快速集成和测试。</p>
 </div>
-<div class="section" id="documentation">
-<h2>Documentation<a class="headerlink" href="#documentation" title="永久链接至标题">¶</a></h2>
-<p>Documentation should be improved. There is just a little documentation for meta-swupdate
-how to set it up with different configurations.</p>
+<div class="section" id="id11">
+<h2>文档<a class="headerlink" href="#id11" title="永久链接至标题">¶</a></h2>
+<p>应该改进文档。关于如何在不同的配置下，设置meta-swupdate，目前仍然只有少量文档。</p>
 </div>
 </div>
 
@@ -357,7 +332,7 @@ how to set it up with different configurations.</p>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="contributing.html" class="btn btn-neutral" title="Contributing to SWUpdate" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="contributing.html" class="btn btn-neutral" title="为SWUpdate做贡献" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

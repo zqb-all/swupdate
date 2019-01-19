@@ -1,109 +1,94 @@
 ==================================
-meta-swupdate: building with Yocto
+meta-swupdate: 使用Yocto进行编译
 ==================================
 
-Overview
+概览
 ========
 
-The Yocto-Project_ is a community project under the umbrella of the Linux
-Foundation that provides tools and template to create the own custom Linux-based
-software for embedded systems.
+Yocto-Project_ 是Linux基金会旗下的一个社区项目，
+它提供了为嵌入式系统创建自定义的基于Linux的软件的工具和模板。
 
 .. _Yocto-Project: http://www.yoctoproject.org
 .. _meta-SWUpdate:  https://github.com/sbabic/meta-swupdate.git
 
-Add-on features can be added using *layers*. meta-swupdate_ is the layer to
-cross-compile the SWUpdate application and to generate the compound SWU images
-containing the release of the product. As described in Yocto's documentation
-about layers, you should include it in your *bblayers.conf* file to use it.
+可以使用 *layers* 添加附加功能。meta-swupdate_ 是交叉编译SWUpdate应用程序
+并生成包含发布产品的复合SWU镜像的层。正如Yocto关于层的文档中所描述的，
+你应该在 *bblayers.conf* 中包含它，以使用它。
 
-The swupdate class
+swupdate 类
 ==================
 
-meta-swupdate contains a class specific for SWUpdate. It helps to generate the
-SWU image starting from images built inside the Yocto. It requires that all
-components, that means the artifacts that are part of the SWU image, are present
-in the Yocto's deploy directory.  This class should be inherited by recipes
-generating the SWU. The class defines new variables, all of them have the prefix
-*SWUPDATE_* in the name.
+meta-sWUpdate 包含用于SWUpdate的类。它有助于基于Yocto中的构建的镜像生成SWU镜像。
+它要求所有组件(即将要构成SWU映像的构件)都包含在Yocto的deploy目录中。
+这个类应该由生成SWU的菜谱继承。这个类定义了一些新的变量，
+它们的名称中都有前缀 *SWUPDATE_* 。
 
-- **SWUPDATE_IMAGES** : this is a list of the artifacts to be packaged together.
-  The list contains the name of images without any extension for MACHINE or
-  filetype, that are added automatically.
-  Example :
+- **SWUPDATE_IMAGES**:这是要打包在一起的工件的列表。
+  该列表包含自动添加的没有任何机器或文件类型扩展名的图像的名称。
+  例如:
 
 ::
 
         SWUPDATE_IMAGES = "core-image-full-cmdline uImage"
 
-- **SWUPDATE_IMAGES_FSTYPES** : extension of the artifact. Each artifact can
-  have multiple extension according to the IMAGE_FSTYPES variable.
-  For example, an image can be generated as tarball and as UBIFS for target.
-  Setting the variable for each artifact telles the class which file must
-  be packed into the SWU image.
-
+- **SWUPDATE_IMAGES_FSTYPES**:工件的扩展名。根据IMAGE_FSTYPES变量，每个工件可以有
+  多个扩展名。例如，可以将镜像生成为目标的tarball和UBIFS。
+  为每个工件设置变量可以告诉类必须将哪个文件打包到SWU映像中。
 
 ::
 
         SWUPDATE_IMAGES_FSTYPES[core-image-full-cmdline] = ".ubifs"
 
-- **SWUPDATE_IMAGES_NOAPPEND_MACHINE** : flag to use drop the machine name from the
-  artifact file. Most images in *deploy* have the name of the Yocto's machine in the
-  filename. The class adds automatically the name of the MACHINE to the file, but some
-  artifacts can be deploes without it.
+- **SWUPDATE_IMAGES_NOAPPEND_MACHINE**:用于指示从工件文件名中删除机器名称的标志。
+  *deploy* 中的大多数镜像在文件名中都有Yocto机器的名称。
+  该类会自动将机器的名称添加到文件中，但是有些工件可以在没有它的情况下进行部署。
 
 ::
 
         SWUPDATE_IMAGES_NOAPPEND_MACHINE[my-image] = "1"
 
-- **SWUPDATE_SIGNING** : if set, the SWU is signed. There are 3 allowed values:
-  RSA, CMS, CUSTOM. This value determines used signing mechanism.
-- **SWUPDATE_SIGN_TOOL** : instead of using openssl, use SWUPDATE_SIGN_TOOL to sign
-  the image. A typical use case is together with a hardware key. It is
-  available if SWUPDATE_SIGNING is set to CUSTOM
-- **SWUPDATE_PRIVATE_KEY** : this is the file with the private key used to sign the
-  image using RSA mechanism. Is available if SWUPDATE_SIGNING is set to RSA.
-- **SWUPDATE_PASSWORD_FILE** : an optional file containing the password for the private
-  key. It is available if SWUPDATE_SIGNING is set to RSA.
-- **SWUPDATE_CMS_KEY** : this is the file with the private key used in signing
-  process using CMS mechanism. It is available if SWUPDATE_SIGNING is set to
-  CMS.
-- **SWUPDATE_CMS_CERT** : this is the file with the certificate used in signing
-  process using using CMS method. It is available if SWUPDATE_SIGNING is
-  set to CMS.
+- **SWUPDATE_SIGNING** : 如果设置，SWU将被签名。有3个允许的值:RSA, CMS, CUSTOM。
+  此值确定使用的签名机制。
+- **SWUPDATE_SIGN_TOOL** : 使用SWUPDATE_SIGN_TOOL来签名，而不是使用openssl。
+  一个典型的用例是与硬件密钥一起使用。此变量在swupdate_sign设置为CUSTOM时生效。
+- **SWUPDATE_PRIVATE_KEY** : 这个私钥用于使用RSA机制对镜像进行签名。
+  此变量在swupdate_sign设置为RSA时生效。
+- **SWUPDATE_PASSWORD_FILE** : 一个可选的包含私钥密码的文件。
+  此变量在swupdate_sign设置为RSA时生效。
+- **SWUPDATE_CMS_KEY** : 使用CMS机制签名过程中使用的私钥。
+  此变量在swupdate_sign设置为CMS时生效。
+- **SWUPDATE_CMS_CERT** : 使用CMS机制签名过程中使用的证书文件。
+  此变量在swupdate_sign设置为CMS时生效。
 
-Automatic sha256 in sw-description
+sw-description中的自动sha256
 ----------------------------------
 
-The swupdate class takes care of computing and inserting sha256 hashes in the
-sw-description file. The attribute *sha256* **must** be set in case the image
-is signed. Each artifact must have the attribute:
+swupdate类负责计算并在sw-description文件中插入sha256散列。
+如果镜像有签名，则 **必须** 设置属性 *sha256* 。每个工件必须具有以下属性:
 
 ::
 
         sha256 = "@artifact-file-name"
 
-For example, to add sha256 to the standard Yocto core-image-full-cmdline:
+例如，将sha256添加到标准的Yocto core-image-full-cmdline中:
 
 ::
 
         sha256 = "@core-image-full-cmdline-machine.ubifs";
 
+文件的名称必须与deploy目录中的名称相同。
 
-The name of the file must be the same as in deploy directory.
-
-BitBake variable expansion in sw-description
+sw-description 中的 BitBake 变量展开
 --------------------------------------------
 
-To insert the value of a BitBake variable into the update file, pre- and
-postfix the variable name with "@@".
-For example, to automatically set the version tag:
+若要将位Bitbake变量的值插入到更新文件中，请在变量名的前后加上“@@”。
+例如，要自动设置版本标签:
 
 ::
 
         version = "@@DISTRO_VERSION@@";
 
-Template for recipe using the class
+使用该类的菜谱的模板
 -----------------------------------
 
 ::

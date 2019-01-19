@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Contributing to SWUpdate &mdash; Embedded Software Update Documentation 2018.11 文档</title>
+  <title>为SWUpdate做贡献 &mdash; Embedded Software Update Documentation 2018.11 文档</title>
   
 
   
@@ -30,8 +30,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="索引" href="genindex.html" />
     <link rel="search" title="搜索" href="search.html" />
-    <link rel="next" title="Project’s road-map" href="roadmap.html" />
-    <link rel="prev" title="Help and support" href="help_and_support.html" /> 
+    <link rel="next" title="项目规划" href="roadmap.html" />
+    <link rel="prev" title="帮助和支持" href="help_and_support.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -98,18 +98,18 @@
 <li class="toctree-l1"><a class="reference internal" href="suricatta.html">Suricatta 守护进程模式</a></li>
 <li class="toctree-l1"><a class="reference internal" href="swupdate-ipc.html">SWUpdate:用于外部程序的API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="progress.html">在运行更新时获取信息</a></li>
-<li class="toctree-l1"><a class="reference internal" href="building-with-yocto.html">meta-swupdate: building with Yocto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="building-with-yocto.html">meta-swupdate: 使用Yocto进行编译</a></li>
 </ul>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="help_and_support.html">Help and support</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing to SWUpdate</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#contribution-checklist">Contribution Checklist</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#developer-s-certificate-of-origin-1-1">Developer’s Certificate of Origin 1.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help_and_support.html">帮助和支持</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">为SWUpdate做贡献</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">贡献检查列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">开发者的代码签名证明1.1</a></li>
 </ul>
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="roadmap.html">Project’s road-map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">项目规划</a></li>
 </ul>
 
             
@@ -155,7 +155,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Contributing to SWUpdate</li>
+      <li>为SWUpdate做贡献</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -174,93 +174,82 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="contributing-to-swupdate">
-<h1>Contributing to SWUpdate<a class="headerlink" href="#contributing-to-swupdate" title="永久链接至标题">¶</a></h1>
-<p>Contributions are welcome ! Please follow the following guideline for contributions.</p>
-<div class="section" id="contribution-checklist">
-<h2>Contribution Checklist<a class="headerlink" href="#contribution-checklist" title="永久链接至标题">¶</a></h2>
-<p>These are mostly general recommendations and are common practise in a lot of
-FOSS projects.</p>
-<ul class="simple">
-<li>use git to manage your changes [<em>recomended</em>]</li>
-<li>follow as much as possible kernel codestyle [<em>recomended</em>]
-Nevertheless, some rules are not so strict as in kernel. The maximum line length
-can be extended over 80 chars if this increase code readability.</li>
-<li>add the required copyright header to each new file introduced [<strong>required</strong>]</li>
+  <div class="section" id="swupdate">
+<h1>为SWUpdate做贡献<a class="headerlink" href="#swupdate" title="永久链接至标题">¶</a></h1>
+<p>欢迎贡献！请按以下指引进行贡献。</p>
+<div class="section" id="id1">
+<h2>贡献检查列表<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>这些主要是一般性建议，在很多自由/开源项目中都是通用的。</p>
+<ul>
+<li><p class="first">使用git管理你的更改[<em>推荐</em>]</p>
+</li>
+<li><p class="first">尽可能遵循内核代码风格[<em>推荐</em>]
+然而，有些规则并没有内核中那么严格。
+如果能增加代码的可读性，最大行长度可以扩展到80字符以上。</p>
+</li>
+<li><p class="first">将所需的版权头部信息添加到引入的每个新文件[<strong>必要要求</strong>]</p>
+</li>
 <li><dl class="first docutils">
-<dt>add signed-off to all patches [<strong>required</strong>]</dt>
-<dd><ul class="first last">
-<li>to certify the “Developer’s Certificate of Origin”, see below</li>
-<li>check with your employer when not working on your own!</li>
+<dt>在所有补丁中添加签名信息(signed-off)[<strong>必要要求</strong>]</dt>
+<dd><ul class="first last simple">
+<li>用于证明”开发者的原始证明”, 请参阅下文</li>
+<li>当你并非独立工作时，请向你的雇主确认这些信息!</li>
 </ul>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt>add version number for your patches if follow-up versions are requested [<em>recomended</em>]</dt>
-<dd><ul class="first last">
-<li>Add a “Change from Vx” description under the commit message to take track
-of the history of the patch.</li>
-<li>It is suggested to use excellent “patman” tool to manage patches series.
-This is part of U-Boot’s project (tools/patman), but it can be used in other projects, too.</li>
+<dt>增加你的补丁的版本，如果有后续版本需要的话 [<em>推荐</em>]</dt>
+<dd><ul class="first last simple">
+<li>在提交信息下添加 “Change from Vx” 描述，以跟踪补丁的历史</li>
+<li>建议使用优秀的 “patman” 工具管理补丁。这是U-Boot项目的一部分(tools/patman)，
+但它也可以用于其他项目。</li>
 </ul>
 </dd>
 </dl>
 </li>
-<li>check that your patches do not break build [<strong>required</strong>]<ul>
-<li>There is a set of configuration files in the <cite>configs/</cite> directory.
-Please run a build for all files in the directory to ensure that SWUpdate is
-still buildable from configurations different as yours.</li>
-</ul>
+<li><p class="first">检查以确认你的补丁没有破坏构建[<strong>必要要求</strong>]
+- 在 <cite>configs/</cite> 目录下有一组配置文件</p>
+<blockquote>
+<div><p>请对目录中的所有文件运行构建，以确保SWUpdate仍然可以从与你的配置不同的配置中构建。</p>
+</div></blockquote>
 </li>
 <li><dl class="first docutils">
-<dt>post patches to mailing list [<strong>required</strong>]</dt>
-<dd><ul class="first last">
-<li>use <cite>git format-patch</cite> to generate your patches.</li>
-<li>use <cite>git send-email</cite> if possible. This avoid corruptions due
-to the mailers</li>
-<li>add a prefix [meta-swupdate] if patches are intended to the Yocto’s meta layer.</li>
-<li>send patches inline, do not append them</li>
-<li>no HTML emails!</li>
+<dt>将补丁发送到邮件列表[<strong>必要要求</strong>]</dt>
+<dd><ul class="first last simple">
+<li>使用 <cite>git format-patch</cite> 生成你的patch</li>
+<li>如果可能的话，使用 <cite>git send-email</cite> . 则可以避免可能由发件人带来的破坏</li>
+<li>如果补丁是针对Yocto的meta层，则添加前缀[meta-swupdate]</li>
+<li>将patch添加在正文，不要使用附件</li>
+<li>不接受 HTML 邮件!</li>
 </ul>
 </dd>
 </dl>
 </li>
-<li>do not use github Pull Request. github facilities are not used for this project.
-The review is done in a single place : the Mailing List. PR from github are ignored.</li>
+<li><p class="first">不要使用github Pull Request。本项目不使用github设施。
+评审只在一个地方进行:邮件列表。github的PR将被忽略。</p>
+</li>
 </ul>
-<p>Patches are tracked by patchwork (see <a class="reference external" href="http://jk.ozlabs.org/projects/patchwork/">http://jk.ozlabs.org/projects/patchwork/</a>).
-You can see the status of your patches at <a class="reference external" href="http://patchwork.ozlabs.org/project/swupdate/list">http://patchwork.ozlabs.org/project/swupdate/list</a>.</p>
+<p>补丁由patchwork跟踪(参考 <a class="reference external" href="http://jk.ozlabs.org/projects/patchwork/">http://jk.ozlabs.org/projects/patchwork/</a>).
+你可以在此查看补丁状态 <a class="reference external" href="http://patchwork.ozlabs.org/project/swupdate/list">http://patchwork.ozlabs.org/project/swupdate/list</a>.</p>
 </div>
-<div class="section" id="developer-s-certificate-of-origin-1-1">
-<h2>Developer’s Certificate of Origin 1.1<a class="headerlink" href="#developer-s-certificate-of-origin-1-1" title="永久链接至标题">¶</a></h2>
-<p>When signing-off a patch for this project like this</p>
+<div class="section" id="id2">
+<h2>开发者的代码签名证明1.1<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>当用如下形式对一个此项目的patch进行signing-off</p>
 <blockquote>
 <div>Signed-off-by: Random J Developer &lt;<a class="reference external" href="mailto:random&#37;&#52;&#48;developer&#46;example&#46;org">random<span>&#64;</span>developer<span>&#46;</span>example<span>&#46;</span>org</a>&gt;</div></blockquote>
-<p>using your real name (no pseudonyms or anonymous contributions), you declare the
-following:</p>
+<p>请使用你的真实名字(不要使用假名或匿名进行贡献)，并意味着你声明了:</p>
 <blockquote>
-<div><p>By making a contribution to this project, I certify that:</p>
+<div><p>通过对本项目的做出贡献，我证明:</p>
 <blockquote>
 <div><ol class="loweralpha simple">
-<li>The contribution was created in whole or in part by me and I
-have the right to submit it under the open source license
-indicated in the file; or</li>
-<li>The contribution is based upon previous work that, to the best
-of my knowledge, is covered under an appropriate open source
-license and I have the right under that license to submit that
-work with modifications, whether created in whole or in part
-by me, under the same open source license (unless I am
-permitted to submit under a different license), as indicated
-in the file; or</li>
-<li>The contribution was provided directly to me by some other
-person who certified (a), (b) or (c) and I have not modified
-it.</li>
-<li>I understand and agree that this project and the contribution
-are public and that a record of the contribution (including all
-personal information I submit with it, including my sign-off) is
-maintained indefinitely and may be redistributed consistent with
-this project or the open source license(s) involved.</li>
+<li>贡献的全部或部分由我创建，我有权按照文件中所示的开源许可提交文件;或</li>
+<li>贡献基于我所知的在适当的开源许可下涵盖的以前的工作，
+并且我有权在该许可下提交该工作的修改，无论该修改是全部还是部分由我
+在同一开源许可下创建的(除非我被允许在不同的许可下提交)，如文件中所示;或</li>
+<li>这个贡献是由另一个人直接提供给我的，他证明了(a)、(b)或(c)，而我并没有修改它。</li>
+<li>我理解并同意本项目及其贡献是公开的，且该贡献的记录(包括我随其提交的所有个人信息，
+包括我的签名)将无限期地保留，并可能根据本项目或涉及的开源许可重新分发。</li>
 </ol>
 </div></blockquote>
 </div></blockquote>
@@ -275,10 +264,10 @@ this project or the open source license(s) involved.</li>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="roadmap.html" class="btn btn-neutral float-right" title="Project’s road-map" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="roadmap.html" class="btn btn-neutral float-right" title="项目规划" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="help_and_support.html" class="btn btn-neutral" title="Help and support" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="help_and_support.html" class="btn btn-neutral" title="帮助和支持" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

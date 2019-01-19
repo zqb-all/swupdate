@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>meta-swupdate: building with Yocto &mdash; Embedded Software Update Documentation 2018.11 文档</title>
+  <title>meta-swupdate: 使用Yocto进行编译 &mdash; Embedded Software Update Documentation 2018.11 文档</title>
   
 
   
@@ -30,7 +30,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="索引" href="genindex.html" />
     <link rel="search" title="搜索" href="search.html" />
-    <link rel="next" title="Help and support" href="help_and_support.html" />
+    <link rel="next" title="帮助和支持" href="help_and_support.html" />
     <link rel="prev" title="在运行更新时获取信息" href="progress.html" /> 
 
   
@@ -98,23 +98,23 @@
 <li class="toctree-l1"><a class="reference internal" href="suricatta.html">Suricatta 守护进程模式</a></li>
 <li class="toctree-l1"><a class="reference internal" href="swupdate-ipc.html">SWUpdate:用于外部程序的API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="progress.html">在运行更新时获取信息</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">meta-swupdate: building with Yocto</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#the-swupdate-class">The swupdate class</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#automatic-sha256-in-sw-description">Automatic sha256 in sw-description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#bitbake-variable-expansion-in-sw-description">BitBake variable expansion in sw-description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#template-for-recipe-using-the-class">Template for recipe using the class</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">meta-swupdate: 使用Yocto进行编译</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">概览</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#swupdate">swupdate 类</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sw-descriptionsha256">sw-description中的自动sha256</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sw-description-bitbake">sw-description 中的 BitBake 变量展开</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">使用该类的菜谱的模板</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="help_and_support.html">Help and support</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to SWUpdate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help_and_support.html">帮助和支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">为SWUpdate做贡献</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="roadmap.html">Project’s road-map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">项目规划</a></li>
 </ul>
 
             
@@ -160,7 +160,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>meta-swupdate: building with Yocto</li>
+      <li>meta-swupdate: 使用Yocto进行编译</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -179,96 +179,83 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="meta-swupdate-building-with-yocto">
-<h1>meta-swupdate: building with Yocto<a class="headerlink" href="#meta-swupdate-building-with-yocto" title="永久链接至标题">¶</a></h1>
-<div class="section" id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="永久链接至标题">¶</a></h2>
-<p>The <a class="reference external" href="http://www.yoctoproject.org">Yocto-Project</a> is a community project under the umbrella of the Linux
-Foundation that provides tools and template to create the own custom Linux-based
-software for embedded systems.</p>
-<p>Add-on features can be added using <em>layers</em>. <a class="reference external" href="https://github.com/sbabic/meta-swupdate.git">meta-swupdate</a> is the layer to
-cross-compile the SWUpdate application and to generate the compound SWU images
-containing the release of the product. As described in Yocto’s documentation
-about layers, you should include it in your <em>bblayers.conf</em> file to use it.</p>
+  <div class="section" id="meta-swupdate-yocto">
+<h1>meta-swupdate: 使用Yocto进行编译<a class="headerlink" href="#meta-swupdate-yocto" title="永久链接至标题">¶</a></h1>
+<div class="section" id="id1">
+<h2>概览<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p><a class="reference external" href="http://www.yoctoproject.org">Yocto-Project</a> 是Linux基金会旗下的一个社区项目，
+它提供了为嵌入式系统创建自定义的基于Linux的软件的工具和模板。</p>
+<p>可以使用 <em>layers</em> 添加附加功能。<a class="reference external" href="https://github.com/sbabic/meta-swupdate.git">meta-swupdate</a> 是交叉编译SWUpdate应用程序
+并生成包含发布产品的复合SWU镜像的层。正如Yocto关于层的文档中所描述的，
+你应该在 <em>bblayers.conf</em> 中包含它，以使用它。</p>
 </div>
-<div class="section" id="the-swupdate-class">
-<h2>The swupdate class<a class="headerlink" href="#the-swupdate-class" title="永久链接至标题">¶</a></h2>
-<p>meta-swupdate contains a class specific for SWUpdate. It helps to generate the
-SWU image starting from images built inside the Yocto. It requires that all
-components, that means the artifacts that are part of the SWU image, are present
-in the Yocto’s deploy directory.  This class should be inherited by recipes
-generating the SWU. The class defines new variables, all of them have the prefix
-<em>SWUPDATE_</em> in the name.</p>
+<div class="section" id="swupdate">
+<h2>swupdate 类<a class="headerlink" href="#swupdate" title="永久链接至标题">¶</a></h2>
+<p>meta-sWUpdate 包含用于SWUpdate的类。它有助于基于Yocto中的构建的镜像生成SWU镜像。
+它要求所有组件(即将要构成SWU映像的构件)都包含在Yocto的deploy目录中。
+这个类应该由生成SWU的菜谱继承。这个类定义了一些新的变量，
+它们的名称中都有前缀 <em>SWUPDATE_</em> 。</p>
 <ul class="simple">
-<li><strong>SWUPDATE_IMAGES</strong> : this is a list of the artifacts to be packaged together.
-The list contains the name of images without any extension for MACHINE or
-filetype, that are added automatically.
-Example :</li>
+<li><strong>SWUPDATE_IMAGES</strong>:这是要打包在一起的工件的列表。
+该列表包含自动添加的没有任何机器或文件类型扩展名的图像的名称。
+例如:</li>
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SWUPDATE_IMAGES</span> <span class="o">=</span> <span class="s2">&quot;core-image-full-cmdline uImage&quot;</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><strong>SWUPDATE_IMAGES_FSTYPES</strong> : extension of the artifact. Each artifact can
-have multiple extension according to the IMAGE_FSTYPES variable.
-For example, an image can be generated as tarball and as UBIFS for target.
-Setting the variable for each artifact telles the class which file must
-be packed into the SWU image.</li>
+<li><strong>SWUPDATE_IMAGES_FSTYPES</strong>:工件的扩展名。根据IMAGE_FSTYPES变量，每个工件可以有
+多个扩展名。例如，可以将镜像生成为目标的tarball和UBIFS。
+为每个工件设置变量可以告诉类必须将哪个文件打包到SWU映像中。</li>
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SWUPDATE_IMAGES_FSTYPES</span><span class="p">[</span><span class="n">core</span><span class="o">-</span><span class="n">image</span><span class="o">-</span><span class="n">full</span><span class="o">-</span><span class="n">cmdline</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;.ubifs&quot;</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><strong>SWUPDATE_IMAGES_NOAPPEND_MACHINE</strong> : flag to use drop the machine name from the
-artifact file. Most images in <em>deploy</em> have the name of the Yocto’s machine in the
-filename. The class adds automatically the name of the MACHINE to the file, but some
-artifacts can be deploes without it.</li>
+<li><strong>SWUPDATE_IMAGES_NOAPPEND_MACHINE</strong>:用于指示从工件文件名中删除机器名称的标志。
+<em>deploy</em> 中的大多数镜像在文件名中都有Yocto机器的名称。
+该类会自动将机器的名称添加到文件中，但是有些工件可以在没有它的情况下进行部署。</li>
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SWUPDATE_IMAGES_NOAPPEND_MACHINE</span><span class="p">[</span><span class="n">my</span><span class="o">-</span><span class="n">image</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><strong>SWUPDATE_SIGNING</strong> : if set, the SWU is signed. There are 3 allowed values:
-RSA, CMS, CUSTOM. This value determines used signing mechanism.</li>
-<li><strong>SWUPDATE_SIGN_TOOL</strong> : instead of using openssl, use SWUPDATE_SIGN_TOOL to sign
-the image. A typical use case is together with a hardware key. It is
-available if SWUPDATE_SIGNING is set to CUSTOM</li>
-<li><strong>SWUPDATE_PRIVATE_KEY</strong> : this is the file with the private key used to sign the
-image using RSA mechanism. Is available if SWUPDATE_SIGNING is set to RSA.</li>
-<li><strong>SWUPDATE_PASSWORD_FILE</strong> : an optional file containing the password for the private
-key. It is available if SWUPDATE_SIGNING is set to RSA.</li>
-<li><strong>SWUPDATE_CMS_KEY</strong> : this is the file with the private key used in signing
-process using CMS mechanism. It is available if SWUPDATE_SIGNING is set to
-CMS.</li>
-<li><strong>SWUPDATE_CMS_CERT</strong> : this is the file with the certificate used in signing
-process using using CMS method. It is available if SWUPDATE_SIGNING is
-set to CMS.</li>
+<li><strong>SWUPDATE_SIGNING</strong> : 如果设置，SWU将被签名。有3个允许的值:RSA, CMS, CUSTOM。
+此值确定使用的签名机制。</li>
+<li><strong>SWUPDATE_SIGN_TOOL</strong> : 使用SWUPDATE_SIGN_TOOL来签名，而不是使用openssl。
+一个典型的用例是与硬件密钥一起使用。此变量在swupdate_sign设置为CUSTOM时生效。</li>
+<li><strong>SWUPDATE_PRIVATE_KEY</strong> : 这个私钥用于使用RSA机制对镜像进行签名。
+此变量在swupdate_sign设置为RSA时生效。</li>
+<li><strong>SWUPDATE_PASSWORD_FILE</strong> : 一个可选的包含私钥密码的文件。
+此变量在swupdate_sign设置为RSA时生效。</li>
+<li><strong>SWUPDATE_CMS_KEY</strong> : 使用CMS机制签名过程中使用的私钥。
+此变量在swupdate_sign设置为CMS时生效。</li>
+<li><strong>SWUPDATE_CMS_CERT</strong> : 使用CMS机制签名过程中使用的证书文件。
+此变量在swupdate_sign设置为CMS时生效。</li>
 </ul>
-<div class="section" id="automatic-sha256-in-sw-description">
-<h3>Automatic sha256 in sw-description<a class="headerlink" href="#automatic-sha256-in-sw-description" title="永久链接至标题">¶</a></h3>
-<p>The swupdate class takes care of computing and inserting sha256 hashes in the
-sw-description file. The attribute <em>sha256</em> <strong>must</strong> be set in case the image
-is signed. Each artifact must have the attribute:</p>
+<div class="section" id="sw-descriptionsha256">
+<h3>sw-description中的自动sha256<a class="headerlink" href="#sw-descriptionsha256" title="永久链接至标题">¶</a></h3>
+<p>swupdate类负责计算并在sw-description文件中插入sha256散列。
+如果镜像有签名，则 <strong>必须</strong> 设置属性 <em>sha256</em> 。每个工件必须具有以下属性:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sha256</span> <span class="o">=</span> <span class="s2">&quot;@artifact-file-name&quot;</span>
 </pre></div>
 </div>
-<p>For example, to add sha256 to the standard Yocto core-image-full-cmdline:</p>
+<p>例如，将sha256添加到标准的Yocto core-image-full-cmdline中:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sha256</span> <span class="o">=</span> <span class="s2">&quot;@core-image-full-cmdline-machine.ubifs&quot;</span><span class="p">;</span>
 </pre></div>
 </div>
-<p>The name of the file must be the same as in deploy directory.</p>
+<p>文件的名称必须与deploy目录中的名称相同。</p>
 </div>
-<div class="section" id="bitbake-variable-expansion-in-sw-description">
-<h3>BitBake variable expansion in sw-description<a class="headerlink" href="#bitbake-variable-expansion-in-sw-description" title="永久链接至标题">¶</a></h3>
-<p>To insert the value of a BitBake variable into the update file, pre- and
-postfix the variable name with “&#64;&#64;”.
-For example, to automatically set the version tag:</p>
+<div class="section" id="sw-description-bitbake">
+<h3>sw-description 中的 BitBake 变量展开<a class="headerlink" href="#sw-description-bitbake" title="永久链接至标题">¶</a></h3>
+<p>若要将位Bitbake变量的值插入到更新文件中，请在变量名的前后加上“&#64;&#64;”。
+例如，要自动设置版本标签:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">version</span> <span class="o">=</span> <span class="s2">&quot;@@DISTRO_VERSION@@&quot;</span><span class="p">;</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="template-for-recipe-using-the-class">
-<h3>Template for recipe using the class<a class="headerlink" href="#template-for-recipe-using-the-class" title="永久链接至标题">¶</a></h3>
+<div class="section" id="id2">
+<h3>使用该类的菜谱的模板<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DESCRIPTION</span> <span class="o">=</span> <span class="s2">&quot;Example recipe generating SWU image&quot;</span>
 <span class="n">SECTION</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
@@ -306,7 +293,7 @@ For example, to automatically set the version tag:</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="help_and_support.html" class="btn btn-neutral float-right" title="Help and support" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="help_and_support.html" class="btn btn-neutral float-right" title="帮助和支持" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="progress.html" class="btn btn-neutral" title="在运行更新时获取信息" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
