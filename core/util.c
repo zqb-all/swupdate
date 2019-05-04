@@ -21,6 +21,7 @@
 #include <dirent.h>
 #include <limits.h>
 #include <time.h>
+#include <libgen.h>
 
 #include "swupdate.h"
 #include "util.h"
@@ -134,6 +135,42 @@ void freeargs (char **argv)
 	}
 }
 
+/*
+ * Concatente array of strings in a single string
+ * The allocated string must be freed by the caller
+ * delim can be used to separate substrings
+ */
+char *mstrcat(const char **nodes, const char *delim)
+{
+	const char **node;
+	char *dest = NULL, *buf = NULL;
+
+	if (!delim)
+		delim = "";
+	for (node = nodes; *node != NULL; node++) {
+		/* first run, just copy first entry */
+		if (!dest) {
+			dest = strdup(*node);
+			if (!dest)
+				return NULL;
+		} else {
+			if (asprintf(&buf, "%s%s%s", dest, delim, *node) ==
+				ENOMEM_ASPRINTF) {
+				ERROR("Path too long, OOM");
+				free(dest);
+				return NULL;
+			}
+
+			/*
+			 * Free previous concatenated string
+			 */
+			free(dest);
+			dest = buf;
+		}
+	}
+	return dest;
+}
+
 int openfileoutput(const char *filename)
 {
 	int fdout;
@@ -143,6 +180,24 @@ int openfileoutput(const char *filename)
 		ERROR("I cannot open %s %d", filename, errno);
 
 	return fdout;
+}
+
+int mkpath(char *dir, mode_t mode)
+{
+	if (!dir) {
+		return -EINVAL;
+	}
+
+	if (strlen(dir) == 1 && dir[0] == '/')
+		return 0;
+
+	mkpath(dirname(strdupa(dir)), mode);
+
+	if (mkdir(dir, mode) == -1) {
+		if (errno != EEXIST)
+			return 1;
+	}
+	return 0;
 }
 
 /*

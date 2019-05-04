@@ -1,7 +1,7 @@
-VERSION = 2018
-PATCHLEVEL = 11
+VERSION = 2019
+PATCHLEVEL = 04
 SUBLEVEL = 0
-EXTRAVERSION = -rc1
+EXTRAVERSION =
 NAME =
 
 # *DOCUMENTATION*
@@ -369,11 +369,26 @@ tools-bins	:= $(patsubst $(tools-y)/%.c,$(tools-y)/%,$(wildcard $(tools-y)/*.c))
 tools-bins-unstr:= $(patsubst %,%_unstripped,$(tools-bins))
 tools-all	:= $(tools-objs)
 
+ifeq ($(HAVE_LUA),y)
+lua_swupdate	:= lua_swupdate.so.0.1
+endif
+
 shared-dirs	:= $(shareds-y)
 shared-libs	:= $(patsubst %,%/built-in.o, $(shareds-y))
 shared-all	:= $(shared-libs)
 
-all: swupdate ${tools-bins} lua_swupdate.so
+PHONY += cfg-sanity-check
+cfg-sanity-check:
+	@if [ "x$(CONFIG_SETSWDESCRIPTION)" = "xy" -a -z "$(patsubst "%",%,$(strip $(CONFIG_SWDESCRIPTION)))" ]; then \
+		echo "ERROR: CONFIG_SETSWDESCRIPTION set but not CONFIG_SWDESCRIPTION"; \
+		exit 1; \
+	fi
+	@if [ "x$(CONFIG_SETEXTPARSERNAME)" = "xy" -a -z "$(patsubst "%",%,$(strip $(CONFIG_EXTPARSERNAME)))" ]; then \
+		echo "ERROR: CONFIG_SETEXTPARSERNAME set but not CONFIG_EXTPARSERNAME"; \
+		exit 1; \
+	fi
+
+all: swupdate ${tools-bins} ${lua_swupdate}
 
 # Do modpost on a prelinked vmlinux. The finally linked vmlinux has
 # relevant sections renamed as per the linker script.
@@ -404,13 +419,13 @@ quiet_cmd_shared = LD      $@
       cmd_shared = $(srctree)/scripts/trylink \
       "$@" \
       "$(CC)" \
-      "-shared " \
+      "-shared -Wl,-soname,$@" \
       "$(KBUILD_CFLAGS) $(CFLAGS_swupdate)" \
       "$(LDFLAGS) $(EXTRA_LDFLAGS) $(LDFLAGS_swupdate)" \
       "$(shared-libs) ipc/lib.a" \
       "$(LDLIBS)"
 
-lua_swupdate.so: $(shared-libs) ${swupdate-libs} FORCE
+lua_swupdate.so.0.1: $(shared-libs) ${swupdate-libs} FORCE
 	$(call if_changed,shared)
 
 ifeq ($(SKIP_STRIP),y)
@@ -422,7 +437,7 @@ cmd_strip = $(STRIP) -s --remove-section=.note --remove-section=.comment \
                $@_unstripped -o $@; chmod a+x $@
 endif
 
-swupdate: swupdate_unstripped
+swupdate: cfg-sanity-check swupdate_unstripped
 	$(call cmd,strip)
 
 ${tools-bins}: ${tools-objs} ${swupdate-libs} FORCE
@@ -434,7 +449,6 @@ install: all
 	install -d ${DESTDIR}/usr/bin
 	install -d ${DESTDIR}/usr/include
 	install -d ${DESTDIR}/usr/lib
-	install -d ${DESTDIR}/usr/lib/lua/$(LUAVER)
 	install -m 755 swupdate ${DESTDIR}/usr/bin
 	for i in ${tools-bins};do \
 		install -m 755 $$i ${DESTDIR}/usr/bin; \
@@ -443,7 +457,10 @@ install: all
 	install -m 0644 include/swupdate_status.h ${DESTDIR}/usr/include
 	install -m 0644 include/progress_ipc.h ${DESTDIR}/usr/include
 	install -m 0755 ipc/lib.a ${DESTDIR}/usr/lib/libswupdate.a
-	install -m 0755 lua_swupdate.so $(DESTDIR)/usr/lib/lua/$(LUAVER)
+	if [ $(HAVE_LUA) = y ]; then \
+		install -d ${DESTDIR}/usr/lib/lua/$(LUAVER); \
+		install -m 0755 ${lua_swupdate} $(DESTDIR)/usr/lib/lua/$(LUAVER); \
+	fi
 
 PHONY += run-tests
 tests: \

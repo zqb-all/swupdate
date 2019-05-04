@@ -26,24 +26,21 @@
 	} \
 } while(0)
 
-bool is_state_valid(update_state_t state) {
-	if ((state < STATE_OK) || (state > STATE_ERROR)) {
-		ERROR("Unknown update state=%c", state);
-		return false;
-	}
-	return true;
+static server_op_res_t do_save_state(char *key, char* value)
+{
+	CHECK_STATE_VAR(key);
+	return bootloader_env_set(key, value) == 0 ? SERVER_OK : SERVER_EERR;
 }
 
 server_op_res_t save_state(char *key, update_state_t value)
 {
-	int ret;
 	char value_str[2] = {value, '\0'};
+	return do_save_state(key, value_str);
+}
 
-	CHECK_STATE_VAR(key);
-
-	ret = bootloader_env_set(key, value_str);
-
-	return ret == 0 ? SERVER_OK : SERVER_EERR;
+server_op_res_t save_state_string(char *key, update_state_t value)
+{
+	return do_save_state(key, get_state_string(value));
 }
 
 server_op_res_t read_state(char *key, update_state_t *value)
@@ -84,5 +81,9 @@ update_state_t get_state(void) {
 	}
 	TRACE("Read state=%c from persistent storage.\n", state);
 
-	return is_state_valid(state) ? state : STATE_ERROR;
+	if (is_valid_state(state)) {
+		return state;
+	}
+	ERROR("Unknown update state=%c", state);
+	return STATE_ERROR;
 }

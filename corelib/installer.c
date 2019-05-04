@@ -169,7 +169,7 @@ static int update_bootloader_env(struct swupdate_cfg *cfg, const char *script)
 
 		if (!key || !value)
 			continue;
-		snprintf(buf, sizeof(buf), "%s %s\n", key, value);
+		snprintf(buf, sizeof(buf), "%s=%s\n", key, value);
 		if (write(fd, buf, strlen(buf)) != (ssize_t)strlen(buf)) {
 			  TRACE("Error saving temporary bootloader environment file");
 			  close(fd);
@@ -457,8 +457,7 @@ int postupdate(struct swupdate_cfg *swcfg, const char *info)
 {
 	swupdate_progress_done(info);
 
-	if ((swcfg) && (swcfg->globals.postupdatecmd) &&
-	    (strnlen(swcfg->globals.postupdatecmd,
+	if ((swcfg) && (strnlen(swcfg->globals.postupdatecmd,
 		     SWUPDATE_GENERAL_STRING_SIZE) > 0)) {
 		DEBUG("Executing post-update command '%s'",
 		      swcfg->globals.postupdatecmd);

@@ -55,6 +55,7 @@ struct file_upload_state {
 	int fd;
 };
 
+static bool run_postupdate;
 static struct mg_serve_http_opts s_http_server_opts;
 static void upload_handler(struct mg_connection *nc, int ev, void *p);
 
@@ -195,10 +196,10 @@ static void *broadcast_message_thread(void *data)
 
 static void *broadcast_progress_thread(void *data)
 {
-	int status = -1;
-	int source = -1;
-	int step = 0;
-	int percent = 0;
+	RECOVERY_STATUS status = -1;
+	sourcetype source = -1;
+	unsigned int step = 0;
+	unsigned int percent = 0;
 	int fd = -1;
 
 	for (;;) {
@@ -238,7 +239,7 @@ static void *broadcast_progress_thread(void *data)
 			broadcast(mgr, str);
 		}
 
-		if (msg.status == SUCCESS && msg.source == SOURCE_WEBSERVER) {
+		if (msg.status == SUCCESS && msg.source == SOURCE_WEBSERVER && run_postupdate) {
 			ipc_message ipc = {};
 
 			ipc_postupdate(&ipc);
@@ -491,6 +492,8 @@ static int mongoose_settings(void *elem, void  __attribute__ ((__unused__)) *dat
 	if (strlen(tmp)) {
 		opts->auth_domain = strdup(tmp);
 	}
+	get_field(LIBCFG_PARSER, elem, "run-postupdate", &run_postupdate);
+
 	return 0;
 }
 
@@ -548,6 +551,11 @@ int start_mongoose(const char *cfgfname, int argc, char *argv[])
 
 	/* No listing directory as default */
 	opts.listing = false;
+
+	/*
+	 * Default value is active
+	 */
+	run_postupdate = true;
 
 	if (cfgfname) {
 		read_module_settings(cfgfname, "webserver", mongoose_settings, &opts);

@@ -148,6 +148,13 @@ static bool get_common_fields(parsertype p, void *cfg, struct swupdate_cfg *swcf
 		TRACE("Description %s", swcfg->description);
 	}
 
+	swcfg->bootloader_transaction_marker = true;
+	if((setting = find_node(p, cfg, "bootloader_transaction_marker", swcfg)) != NULL) {
+		get_field(p, setting, NULL, &swcfg->bootloader_transaction_marker);
+		TRACE("Setting bootloader transaction marker: %s",
+			  swcfg->bootloader_transaction_marker == true ? "true" : "false");
+	}
+
 	return true;
 }
 
@@ -409,8 +416,8 @@ static int parse_bootloader(parsertype p, void *cfg, struct swupdate_cfg *swcfg)
 	void *setting, *elem;
 	int count, i;
 	struct img_type *script;
-	char name[32];
-	char value[255];
+	char name[SWUPDATE_GENERAL_STRING_SIZE];
+	char value[MAX_BOOT_SCRIPT_LINE_LENGTH];
 
 	setting = find_node(p, cfg, "uboot", swcfg);
 

@@ -827,7 +827,7 @@ server_op_res_t server_handle_initial_state(update_state_t stateovrrd)
 	if (stateovrrd != STATE_NOT_AVAILABLE) {
 		state = stateovrrd;
 		TRACE("Got state=%c from command line.", state);
-		if (!is_state_valid(state)) {
+		if (!is_valid_state(state)) {
 			return SERVER_EINIT;
 		}
 	} else {
@@ -1046,7 +1046,7 @@ server_op_res_t server_process_update_artifact(int action_id,
 #ifdef CONFIG_SURICATTA_SSL
 		if (strncmp((char *)&channel_data.sha1hash,
 			    json_object_get_string(json_data_artifact_sha1hash),
-			    SHA_DIGEST_LENGTH) != 0) {
+			    SWUPDATE_SHA_DIGEST_LENGTH) != 0) {
 				ERROR(
 			    "Checksum does not match: Should be '%s', but "
 			    "actually is '%s'.\n",
@@ -1320,6 +1320,8 @@ server_op_res_t server_send_target_data(void)
 	bool first = true;
 	int len = 0;
 	server_op_res_t result = SERVER_OK;
+	char *json_reply_string = NULL;
+	char *url = NULL;
 
 	assert(channel != NULL);
 	len = get_target_data_length();
@@ -1376,8 +1378,6 @@ server_op_res_t server_send_target_data(void)
 	}
 	);
 
-	char *url = NULL;
-	char *json_reply_string = NULL;
 	channel_data_t channel_data_reply = channel_data_defaults;
 	char fdate[15 + 1];
 	time_t now = time(NULL) == (time_t)-1 ? 0 : time(NULL);
@@ -1789,7 +1789,7 @@ static server_op_res_t server_activation_ipc(ipc_message *msg)
 	if ((response != SERVER_UPDATE_AVAILABLE) && (response != SERVER_OK))
 		result = SERVER_EERR;
 	else {
-		server_hawkbit.update_state = SERVER_OK;
+		server_hawkbit.update_state = STATE_OK;
 
 		/*
 		 * Save the state

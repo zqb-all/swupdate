@@ -46,7 +46,7 @@
 #include "parselib.h"
 #include "swupdate_settings.h"
 #include "pctl.h"
-#include "bootloader.h"
+#include "state.h"
 
 #ifdef CONFIG_SYSTEMD
 #include <systemd/sd-daemon.h>
@@ -79,8 +79,10 @@ static struct option long_options[] = {
 	{"output", required_argument, NULL, 'o'},
 	{"dry-run", no_argument, NULL, 'n'},
 	{"no-downgrading", required_argument, NULL, 'N'},
+	{"no-reinstalling", required_argument, NULL, 'R'},
 #ifdef CONFIG_SIGNED_IMAGES
 	{"key", required_argument, NULL, 'k'},
+	{"ca-path", required_argument, NULL, 'k'},
 	{"cert-purpose", required_argument, NULL, '1'},
 	{"forced-signer-name", required_argument, NULL, '2'},
 #endif
@@ -131,6 +133,7 @@ static void usage(char *programname)
 		"     --cert-purpose <purpose>   : set expected certificate purpose\n"
 		"                                  [emailProtection|codeSigning] (default: emailProtection)\n"
 		"     --forced-signer-name <cn>  : set expected common name of signer certificate\n"
+		"     --ca-path                  : path to the Certificate Authority (PEM)\n"
 #endif
 #ifdef CONFIG_ENCRYPTED_IMAGES
 		" -K, --key-aes <key file>       : the file contains the symmetric key to be used\n"
@@ -138,6 +141,7 @@ static void usage(char *programname)
 #endif
 		" -n, --dry-run                  : run SWUpdate without installing the software\n"
 		" -N, --no-downgrading <version> : not install a release older as <version>\n"
+		" -R, --no-reinstalling <version>: not install a release same as <version>\n"
 		" -o, --output <output file>     : saves the incoming stream\n"
 		" -v, --verbose                  : be verbose, set maximum loglevel\n"
 		"     --version                  : print SWUpdate version and exit\n"
@@ -327,7 +331,6 @@ static int install_from_file(char *fname, int check)
 		exit(EXIT_FAILURE);
 	}
 
-
 	if (check_hw_compatibility(&swcfg)) {
 		ERROR("SW not compatible with hardware");
 		exit(EXIT_FAILURE);
@@ -366,7 +369,9 @@ static int install_from_file(char *fname, int check)
 	/*
 	 * Set "recovery_status" as begin of the transaction"
 	 */
-	bootloader_env_set("recovery_status", "in_progress");
+	if (swcfg.bootloader_transaction_marker) {
+		save_state_string((char*)BOOTVAR_TRANSACTION, STATE_IN_PROGRESS);
+	}
 
 	ret = install_images(&swcfg, fdsw, 1);
 
@@ -379,7 +384,9 @@ static int install_from_file(char *fname, int check)
 		return EXIT_FAILURE;
 	}
 
-	bootloader_env_unset("recovery_status");
+	if (swcfg.bootloader_transaction_marker) {
+		reset_state((char*)BOOTVAR_TRANSACTION);
+	}
 	fprintf(stdout, "Software updated successfully\n");
 	fprintf(stdout, "Please reboot the device to start the new software\n");
 
@@ -491,6 +498,8 @@ static int read_globals_settings(void *elem, void *data)
 	GET_FIELD_STRING(LIBCFG_PARSER, elem,
 				"public-key-file", sw->globals.publickeyfname);
 	GET_FIELD_STRING(LIBCFG_PARSER, elem,
+				"ca-path", sw->globals.publickeyfname);
+	GET_FIELD_STRING(LIBCFG_PARSER, elem,
 				"aes-key-file", sw->globals.aeskeyfname);
 	GET_FIELD_STRING(LIBCFG_PARSER, elem,
 				"mtd-blacklist", sw->globals.mtdblacklist);
@@ -500,9 +509,13 @@ static int read_globals_settings(void *elem, void *data)
 	get_field(LIBCFG_PARSER, elem, "loglevel", &sw->globals.loglevel);
 	get_field(LIBCFG_PARSER, elem, "syslog", &sw->globals.syslog_enabled);
 	GET_FIELD_STRING(LIBCFG_PARSER, elem,
-				"no-downgrading", sw->globals.current_version);
-	if (strlen(sw->globals.current_version))
+				"no-downgrading", sw->globals.minimum_version);
+	if (strlen(sw->globals.minimum_version))
 		sw->globals.no_downgrading = 1;
+	GET_FIELD_STRING(LIBCFG_PARSER, elem,
+				"no-reinstalling", sw->globals.current_version);
+	if (strlen(sw->globals.current_version))
+		sw->globals.no_reinstalling = 1;
 	GET_FIELD_STRING(LIBCFG_PARSER, elem,
 				"cert-purpose", tmp);
 	if (tmp[0] != '\0')
@@ -595,7 +608,7 @@ int main(int argc, char **argv)
 #endif
 	memset(main_options, 0, sizeof(main_options));
 	memset(image_url, 0, sizeof(image_url));
-	strcpy(main_options, "vhni:e:l:Lcf:p:o:N:");
+	strcpy(main_options, "vhni:e:l:Lcf:p:o:N:R:");
 #ifdef CONFIG_MTD
 	strcat(main_options, "b:");
 #endif
@@ -738,6 +751,11 @@ int main(int argc, char **argv)
 #endif
 		case 'N':
 			swcfg.globals.no_downgrading = 1;
+			strncpy(swcfg.globals.minimum_version, optarg,
+				sizeof(swcfg.globals.minimum_version));
+			break;
+		case 'R':
+			swcfg.globals.no_reinstalling = 1;
 			strncpy(swcfg.globals.current_version, optarg,
 				sizeof(swcfg.globals.current_version));
 			break;
@@ -955,7 +973,9 @@ int main(int argc, char **argv)
 		result = install_from_file(fname, opt_c);
 		switch (result) {
 		case EXIT_FAILURE:
-			bootloader_env_set("recovery_status", "failed");
+			if (swcfg.bootloader_transaction_marker) {
+				save_state_string((char*)BOOTVAR_TRANSACTION, STATE_FAILED);
+			}
 			break;
 		case EXIT_SUCCESS:
 			notify(SUCCESS, 0, INFOLEVEL, NULL);

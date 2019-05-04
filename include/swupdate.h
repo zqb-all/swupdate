@@ -9,10 +9,13 @@
 #define _SWUPDATE_H
 
 #include <sys/types.h>
+#include <stdbool.h>
 #include "bsdqueue.h"
 #include "globals.h"
 #include "mongoose_interface.h"
 #include "swupdate_dict.h"
+
+#define BOOTVAR_TRANSACTION "recovery_status"
 
 /*
  * swupdate uses SHA256 hashes
@@ -109,9 +112,11 @@ struct swupdate_global_cfg {
 	int syslog_enabled;
 	int dry_run;
 	int no_downgrading;
+	int no_reinstalling;
 	char publickeyfname[SWUPDATE_GENERAL_STRING_SIZE];
 	char aeskeyfname[SWUPDATE_GENERAL_STRING_SIZE];
 	char postupdatecmd[SWUPDATE_GENERAL_STRING_SIZE];
+	char minimum_version[SWUPDATE_GENERAL_STRING_SIZE];
 	char current_version[SWUPDATE_GENERAL_STRING_SIZE];
 	int cert_purpose;
 	char forced_signer_name[SWUPDATE_GENERAL_STRING_SIZE];
@@ -121,6 +126,7 @@ struct swupdate_cfg {
 	char name[SWUPDATE_GENERAL_STRING_SIZE];
 	char description[SWUPDATE_UPDATE_DESCRIPTION_STRING_SIZE];
 	char version[SWUPDATE_GENERAL_STRING_SIZE];
+	bool bootloader_transaction_marker;
 	char software_set[SWUPDATE_GENERAL_STRING_SIZE];
 	char running_mode[SWUPDATE_GENERAL_STRING_SIZE];
 	char output[SWUPDATE_GENERAL_STRING_SIZE];

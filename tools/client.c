@@ -34,12 +34,24 @@
 #include "network_ipc.h"
 
 static void usage(void) {
-	printf("client <image .swu to be installed>...\n");
+	fprintf(stdout, "client [OPTIONS] <image .swu to be installed>...\n");
+	fprintf(stdout, " With - or no swu file given, read from STDIN.\n");
+	fprintf(stdout,
+		" Available OPTIONS\n"
+		" -h : print help and exit\n"
+		" -d : ask the server to only perform a dryrun\n"
+		" -q : go quite, resets verbosity\n"
+		" -v : go verbose, essentially print upgrade status messages from server\n"
+		" -p : ask the server to run post-update commands if upgrade succeeds\n"
+		);
 }
 
 char buf[256];
-int fd;
+int fd = STDIN_FILENO;
 int verbose = 1;
+bool dryrun = false;
+bool run_postupdate = false;
+int end_status = EXIT_SUCCESS;
 
 pthread_mutex_t mymutex;
 
@@ -68,22 +80,32 @@ static int readimage(char **p, int *size) {
 static int printstatus(ipc_message *msg)
 {
 	if (verbose)
-		printf("Status: %d message: %s\n",
+		fprintf(stdout, "Status: %d message: %s\n",
 			msg->data.status.current,
-			msg->data.status.desc ? msg->data.status.desc : "");
+			strlen(msg->data.status.desc) > 0 ? msg->data.status.desc : "");
 
 	return 0;
 }
 
 /*
  * this is called at the end reporting the status
- * of the upgrade
+ * of the upgrade and running any post-update actions
+ * if successful
  */
 static int end(RECOVERY_STATUS status)
 {
-	printf("Swupdate %s\n",
+	end_status = (status == SUCCESS) ? EXIT_SUCCESS : EXIT_FAILURE;
+
+	fprintf(stdout, "Swupdate %s\n",
 		status == FAILURE ? "*failed* !" :
 			"was successful !");
+
+	if (status == SUCCESS && run_postupdate) {
+		fprintf(stdout, "Executing post-update actions.\n");
+		ipc_message msg;
+		if (ipc_postupdate(&msg) != 0)
+			fprintf(stderr, "Running post-update failed!\n");
+	}
 
 	pthread_mutex_unlock(&mymutex);
 
@@ -95,17 +117,28 @@ static int end(RECOVERY_STATUS status)
  */
 static int send_file(const char* filename) {
 	int rc;
-	if ( (fd = open(filename, O_RDONLY)) < 0) {
-		printf ("I cannot open %s\n", filename);
-		return 1;
+	if (filename && (fd = open(filename, O_RDONLY)) < 0) {
+		fprintf(stderr, "Unable to open %s\n", filename);
+		return EXIT_FAILURE;
 	}
 
 	/* synchronize with a mutex */
 	pthread_mutex_lock(&mymutex);
+
+
+	/* May be set non-zero by end() function on failure */
+	end_status = EXIT_SUCCESS;
+
 	rc = swupdate_async_start(readimage, printstatus,
-				end, false);
-	if (rc)
-		printf("swupdate_async_start returns %d\n", rc);
+				end, dryrun);
+
+	/* return if we've hit an error scenario */
+	if (rc < 0) {
+		fprintf(stderr, "swupdate_async_start returns %d\n", rc);
+		pthread_mutex_unlock(&mymutex);
+		close(fd);
+		return EXIT_FAILURE;
+	}
 
 	/* Now block */
 	pthread_mutex_lock(&mymutex);
@@ -113,7 +146,10 @@ static int send_file(const char* filename) {
 	/* End called, unlock and exit */
 	pthread_mutex_unlock(&mymutex);
 
-	return 0;
+	if (filename)
+		close(fd);
+
+	return end_status;
 }
 
 
@@ -126,8 +162,11 @@ int main(int argc, char *argv[]) {
 	pthread_mutex_init(&mymutex, NULL);
 
 	/* parse command line options */
-	while ((c = getopt(argc, argv, "hqv")) != EOF) {
+	while ((c = getopt(argc, argv, "dhqvp")) != EOF) {
 		switch (c) {
+		case 'd':
+			dryrun = true;
+			break;
 		case 'h':
 			usage();
 			return 0;
@@ -136,6 +175,9 @@ int main(int argc, char *argv[]) {
 			break;
 		case 'v':
 			verbose++;
+			break;
+		case 'p':
+			run_postupdate = true;
 			break;
 		default:
 			usage();
@@ -146,6 +188,7 @@ int main(int argc, char *argv[]) {
 	argv += optind;
 
 	if (argc == 0 || (argc == 1 && strcmp(argv[0], "-") == 0)) {
+		fprintf(stdout, "no input given, reading from STDIN...\n");
 		if (send_file(NULL)) exit(1);
 	} else {
 		for (int i = 0; i < argc; i++) {

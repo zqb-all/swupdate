@@ -20,6 +20,9 @@
 #define NOTIFY_BUF_SIZE 	2048
 #define ENOMEM_ASPRINTF		-1
 
+#define SWUPDATE_SHA_DIGEST_LENGTH	20
+#define AES_BLOCK_SIZE	16
+
 extern int loglevel;
 
 typedef enum {
@@ -156,6 +159,9 @@ typedef int (*writeimage) (void *out, const void *buf, unsigned int len);
 
 int openfile(const char *filename);
 int copy_write(void *out, const void *buf, unsigned int len);
+#if defined(__FreeBSD__)
+int copy_write_padded(void *out, const void *buf, unsigned int len);
+#endif
 int copyfile(int fdin, void *out, unsigned int nbytes, unsigned long *offs,
 	unsigned long long seek,
 	int skip_file, int compressed, uint32_t *checksum,
@@ -165,6 +171,7 @@ int extract_sw_description(int fd, const char *descfile, off_t *offs);
 off_t extract_next_file(int fd, int fdout, off_t start, int compressed,
 			int encrypted, unsigned char *hash);
 int openfileoutput(const char *filename);
+int mkpath(char *dir, mode_t mode);
 
 int register_notifier(notifier client);
 void notify(RECOVERY_STATUS status, int error, int level, const char *msg);
@@ -172,6 +179,7 @@ void notify_init(void);
 int syslog_init(void);
 
 char **splitargs(char *args, int *argc);
+char *mstrcat(const char **nodes, const char *delim);
 char** string_split(const char* a_str, const char a_delim);
 void freeargs (char **argv);
 int get_hw_revision(struct hw_type *hw);

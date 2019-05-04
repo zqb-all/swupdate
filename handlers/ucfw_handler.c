@@ -139,13 +139,21 @@ static int switch_mode(char *devreset, int resoffset, char *devprog, int progoff
 		goto freegpios;
 	}
 
+#ifdef CONFIG_UCFW_OLD_LIBGPIOD
 	status = gpiod_line_request_output(linereset, RESET_CONSUMER, false, 0);
+#else
+	status = gpiod_line_request_output(linereset, RESET_CONSUMER, 0);
+#endif
 	if (status) {
 		ret  =-ENODEV;
 		ERROR("Cannot request reset line");
 		goto freegpios;
 	}
+#ifdef CONFIG_UCFW_OLD_LIBGPIOD
 	status = gpiod_line_request_output(lineprog, PROG_CONSUMER, false, mode);
+#else
+	status = gpiod_line_request_output(lineprog, PROG_CONSUMER, mode);
+#endif
 	if (status) {
 		ret  =-ENODEV;
 		ERROR("Cannot request prog line");
@@ -348,10 +356,10 @@ static int receive_msg(int fd, char *rx, size_t size,
 
 static int write_data(int fd, char *buf, size_t size)
 {
-	int written;
+	size_t written;
 	written = write(fd, buf, size);
 	if (written != size) {
-		ERROR("Error in write %d", written);
+		ERROR("Error in write %zu", written);
 		return -EFAULT;
 	}
 
@@ -501,7 +509,8 @@ static int install_uc_firmware_image(struct img_type *img,
 	struct handler_priv hnd_data;
 	struct dict_list *properties;
 	struct dict_list_elem *entry;
-	int cnt, ret = 0;
+	unsigned int cnt;
+	int ret = 0;
 	struct mode_setup *gpio;
 
 	memset(&hnd_data, 0, sizeof(hnd_data));
